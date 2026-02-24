@@ -1,0 +1,57 @@
+version: "3.9"
+
+# ─── Production overrides ─────────────────────────────────────────────────────
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+    command: >
+      sh -c "python manage.py wait_for_db &&
+             python manage.py migrate --noinput &&
+             python manage.py collectstatic --noinput &&
+             gunicorn auditshield.wsgi:application
+               --bind 0.0.0.0:8000
+               --workers 4
+               --threads 2
+               --worker-class gthread
+               --timeout 120
+               --max-requests 1000
+               --max-requests-jitter 100
+               --log-level info
+               --access-logfile -
+               --error-logfile -"
+    restart: always
+    ports: []  # not exposed directly — go through nginx
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    volumes: []
+    ports: []  # served via nginx
+
+  nginx:
+    volumes:
+      - ./nginx/nginx.prod.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - media_data:/app/media:ro
+      - static_data:/app/static:ro
+    ports:
+      - "80:80"
+      - "443:443"
+
+  db:
+    restart: always
+    ports: []  # never expose DB in production
+
+  redis:
+    restart: always
+
+  celery_worker:
+    restart: always
+
+  celery_beat:
+    restart: always
