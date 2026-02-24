@@ -42,6 +42,8 @@ THIRD_PARTY_APPS = [
     "django_celery_beat",
     "django_celery_results",
     "axes",
+    # GraphQL (Strawberry — Apollo-compatible)
+    "strawberry_django",
 ]
 
 LOCAL_APPS = [
