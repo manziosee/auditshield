@@ -64,3 +64,10 @@ backups/
 
 # Uploads (managed by storage)
 uploads/
+# Claude / AI Tools
+.claude/
+claude.json
+claude.config.js
+claude.config.ts
+.anthropic/
+anthropic.json
