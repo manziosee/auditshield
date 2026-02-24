@@ -8,6 +8,11 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
+from drf_spectacular.utils import (
+    extend_schema, extend_schema_view, OpenApiResponse, OpenApiParameter,
+    OpenApiExample,
+)
+from drf_spectacular.types import OpenApiTypes
 
 from .models import Employee, Department
 from .serializers import (
@@ -22,6 +27,33 @@ class TenantQuerysetMixin:
         return self.queryset.filter(company=self.request.user.company)
 
 
+@extend_schema_view(
+    list=extend_schema(
+        tags=["departments"],
+        summary="List departments",
+        description="Returns all departments within the authenticated user's company.",
+    ),
+    create=extend_schema(
+        tags=["departments"],
+        summary="Create a department",
+    ),
+    retrieve=extend_schema(
+        tags=["departments"],
+        summary="Get a department",
+    ),
+    update=extend_schema(
+        tags=["departments"],
+        summary="Update a department",
+    ),
+    partial_update=extend_schema(
+        tags=["departments"],
+        summary="Partially update a department",
+    ),
+    destroy=extend_schema(
+        tags=["departments"],
+        summary="Delete a department",
+    ),
+)
 class DepartmentViewSet(TenantQuerysetMixin, ModelViewSet):
     queryset = Department.objects.all()
     serializer_class = DepartmentSerializer
@@ -31,6 +63,52 @@ class DepartmentViewSet(TenantQuerysetMixin, ModelViewSet):
         serializer.save(company=self.request.user.company)
 
 
+@extend_schema_view(
+    list=extend_schema(
+        tags=["employees"],
+        summary="List employees",
+        description=(
+            "Returns a paginated list of employees. Supports filtering, searching, and ordering.\n\n"
+            "**Filters**: `employment_status`, `contract_type`, `department`, `is_active`\n"
+            "**Search**: `first_name`, `last_name`, `employee_number`, `email`, `job_title`\n"
+            "**Order by**: `hire_date`, `last_name`, `employee_number`"
+        ),
+        parameters=[
+            OpenApiParameter("search", OpenApiTypes.STR, description="Search employees by name, number, email, or title"),
+            OpenApiParameter("employment_status", OpenApiTypes.STR, description="Filter by status: active, on_leave, probation, terminated, resigned"),
+            OpenApiParameter("contract_type", OpenApiTypes.STR, description="Filter by contract: permanent, fixed_term, internship, consultant, part_time"),
+            OpenApiParameter("department", OpenApiTypes.UUID, description="Filter by department UUID"),
+            OpenApiParameter("is_active", OpenApiTypes.BOOL, description="Filter active employees"),
+            OpenApiParameter("ordering", OpenApiTypes.STR, description="Sort by: hire_date, last_name, employee_number (prefix - for desc)"),
+        ],
+    ),
+    create=extend_schema(
+        tags=["employees"],
+        summary="Create an employee",
+        description=(
+            "Creates a new employee. The company is automatically set from the authenticated user.\n\n"
+            "Will reject if your subscription's employee limit is reached."
+        ),
+    ),
+    retrieve=extend_schema(
+        tags=["employees"],
+        summary="Get employee detail",
+        description="Returns full employee profile including sensitive statutory fields (RSSB, TIN).",
+    ),
+    update=extend_schema(
+        tags=["employees"],
+        summary="Update employee",
+    ),
+    partial_update=extend_schema(
+        tags=["employees"],
+        summary="Partially update employee",
+    ),
+    destroy=extend_schema(
+        tags=["employees"],
+        summary="Delete employee",
+        description="Permanently deletes the employee record and all associated documents.",
+    ),
+)
 class EmployeeViewSet(TenantQuerysetMixin, ModelViewSet):
     queryset = Employee.objects.select_related("department").all()
     permission_classes = [IsAuthenticated]
@@ -47,7 +125,6 @@ class EmployeeViewSet(TenantQuerysetMixin, ModelViewSet):
 
     def perform_create(self, serializer):
         company = self.request.user.company
-        # Check subscription employee limit
         count = Employee.objects.filter(company=company, is_active=True).count()
         if count >= company.employee_limit:
             from rest_framework.exceptions import PermissionDenied
@@ -56,6 +133,43 @@ class EmployeeViewSet(TenantQuerysetMixin, ModelViewSet):
             )
         serializer.save(company=company)
 
+    @extend_schema(
+        tags=["employees"],
+        summary="Bulk import employees from Excel/CSV",
+        description=(
+            "Upload an Excel (`.xlsx`) or CSV file to import employees in bulk.\n\n"
+            "**Required columns**: `first_name`, `last_name`, `job_title`, `hire_date`, `contract_type`\n\n"
+            "**Optional columns**: `employee_number`, `email`, `phone`\n\n"
+            "Returns a count of created records and any per-row errors."
+        ),
+        request={
+            "multipart/form-data": {
+                "type": "object",
+                "properties": {
+                    "file": {"type": "string", "format": "binary"},
+                },
+                "required": ["file"],
+            }
+        },
+        responses={
+            201: OpenApiResponse(
+                description="Import completed. Returns `created` count and `errors` list.",
+                examples=[
+                    OpenApiExample(
+                        "Success",
+                        value={"created": 42, "errors": []},
+                        response_only=True,
+                    ),
+                    OpenApiExample(
+                        "Partial failure",
+                        value={"created": 40, "errors": [{"row": 5, "error": "Invalid hire_date format"}]},
+                        response_only=True,
+                    ),
+                ],
+            ),
+            400: OpenApiResponse(description="File parse error or missing required columns"),
+        },
+    )
     @action(detail=False, methods=["post"], parser_classes=[MultiPartParser])
     def bulk_import(self, request):
         """Import employees from Excel/CSV."""
@@ -99,6 +213,21 @@ class EmployeeViewSet(TenantQuerysetMixin, ModelViewSet):
 
         return Response({"created": len(created), "errors": errors}, status=status.HTTP_201_CREATED)
 
+    @extend_schema(
+        tags=["employees"],
+        summary="Export employees to Excel",
+        description=(
+            "Downloads all employees in the company as an Excel workbook (`.xlsx`).\n\n"
+            "Includes: employee number, name, job title, status, contract type, "
+            "hire date, email, phone, RSSB number, TIN number."
+        ),
+        responses={
+            200: OpenApiResponse(
+                description="Excel file download",
+                response=bytes,
+            ),
+        },
+    )
     @action(detail=False, methods=["get"])
     def export(self, request):
         """Export all employees to Excel."""

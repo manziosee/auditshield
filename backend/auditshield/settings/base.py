@@ -293,9 +293,63 @@ LOGGING = {
 # ─── API Docs (drf-spectacular) ───────────────────────────────────────────────
 SPECTACULAR_SETTINGS = {
     "TITLE": "AuditShield API",
-    "DESCRIPTION": "SME Digital Records & Compliance System for Rwandan businesses",
+    "DESCRIPTION": (
+        "## AuditShield — SME Digital Records & Compliance System\n\n"
+        "A multi-tenant API for Rwandan businesses to manage employee records, "
+        "encrypted documents, and RRA/RSSB compliance obligations.\n\n"
+        "### Authentication\n"
+        "All endpoints (except `/auth/login/` and `/companies/onboard/`) require a "
+        "**Bearer JWT** token in the `Authorization` header.\n\n"
+        "```\nAuthorization: Bearer <access_token>\n```\n\n"
+        "Obtain tokens via `POST /api/v1/auth/login/`. "
+        "Refresh via `POST /api/v1/auth/refresh/`.\n\n"
+        "### Multi-tenancy\n"
+        "Every resource is automatically scoped to the authenticated user's company. "
+        "You cannot access another company's data.\n\n"
+        "### GraphQL\n"
+        "A GraphQL endpoint is also available at `/graphql/` (Apollo-compatible, Strawberry)."
+    ),
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
-    "CONTACT": {"name": "AuditShield Support", "email": "support@auditshield.rw"},
+    "CONTACT": {
+        "name": "AuditShield Support",
+        "email": "support@auditshield.rw",
+        "url": "https://auditshield.rw",
+    },
+    "LICENSE": {"name": "MIT", "url": "https://opensource.org/licenses/MIT"},
+    "SERVERS": [
+        {"url": "http://localhost:8000", "description": "Local Development"},
+        {"url": "https://api.auditshield.rw", "description": "Production"},
+    ],
+    # JWT Bearer security scheme
     "SECURITY": [{"jwtAuth": []}],
+    "COMPONENTS": {
+        "securitySchemes": {
+            "jwtAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT",
+                "description": "Paste your JWT access token (obtained from /api/v1/auth/login/).",
+            }
+        }
+    },
+    # Group endpoints by tag in Swagger UI
+    "TAGS": [
+        {"name": "auth", "description": "Authentication — login, refresh, logout, password change"},
+        {"name": "users", "description": "User management within a company"},
+        {"name": "companies", "description": "Company onboarding and settings"},
+        {"name": "employees", "description": "Employee profiles, bulk import, and Excel export"},
+        {"name": "departments", "description": "Departments within a company"},
+        {"name": "documents", "description": "Encrypted document vault with OCR and expiry tracking"},
+        {"name": "compliance", "description": "RRA/RSSB compliance checklists and records"},
+        {"name": "reports", "description": "Async PDF report generation and download"},
+        {"name": "notifications", "description": "In-app notification feed"},
+        {"name": "audit-logs", "description": "Immutable activity trail (read-only)"},
+    ],
+    "SCHEMA_PATH_PREFIX": r"/api/v1/",
+    "SORT_OPERATIONS": False,
+    "ENUM_GENERATE_CHOICE_DESCRIPTION": True,
+    "POSTPROCESSING_HOOKS": [
+        "drf_spectacular.hooks.postprocess_schema_enums",
+    ],
 }

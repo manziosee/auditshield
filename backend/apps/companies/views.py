@@ -2,12 +2,26 @@ from django.db import transaction
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
+from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiResponse
 
 from apps.accounts.models import User
 from .models import Company
 from .serializers import CompanySerializer, CompanyOnboardingSerializer
 
 
+@extend_schema(
+    tags=["companies"],
+    summary="Onboard a new company",
+    description=(
+        "Creates a new **Company** tenant and its first **admin user** in a single "
+        "atomic transaction. This is the public sign-up endpoint — no authentication needed.\n\n"
+        "On success, use `POST /api/v1/auth/login/` with the admin credentials to obtain tokens."
+    ),
+    responses={
+        201: OpenApiResponse(description="Company and admin user created. Returns company_id and user_id."),
+        400: OpenApiResponse(description="Validation error — check field errors in the response."),
+    },
+)
 class OnboardingView(generics.GenericAPIView):
     """
     Single endpoint to register a new company and its admin user.
@@ -51,6 +65,22 @@ class OnboardingView(generics.GenericAPIView):
         }, status=status.HTTP_201_CREATED)
 
 
+@extend_schema_view(
+    get=extend_schema(
+        tags=["companies"],
+        summary="Get company profile",
+        description="Returns the authenticated user's company details including subscription plan.",
+    ),
+    put=extend_schema(
+        tags=["companies"],
+        summary="Update company profile",
+        description="Full update of company information (admin only).",
+    ),
+    patch=extend_schema(
+        tags=["companies"],
+        summary="Partially update company profile",
+    ),
+)
 class CompanyDetailView(generics.RetrieveUpdateAPIView):
     serializer_class = CompanySerializer
     permission_classes = [IsAuthenticated]
