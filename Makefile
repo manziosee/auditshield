@@ -40,6 +40,17 @@ makemigrations: ## Make migrations
 createsuperuser: ## Create superuser
 	$(BACKEND) python manage.py createsuperuser
 
+create-admin:   ## Create superuser + demo company (dev shortcut)
+	$(BACKEND) python manage.py create_admin
+
+seed-compliance: ## Seed Rwanda compliance requirements (RRA/RSSB/Labor Law)
+	$(BACKEND) python manage.py seed_compliance
+
+setup:          ## Full dev setup: migrate + seed compliance + create admin
+	$(BACKEND) python manage.py migrate
+	$(BACKEND) python manage.py seed_compliance
+	$(BACKEND) python manage.py create_admin
+
 collectstatic:  ## Collect static files
 	$(BACKEND) python manage.py collectstatic --noinput
 
