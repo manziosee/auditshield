@@ -2,12 +2,14 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
 from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiResponse, OpenApiParameter
 from drf_spectacular.types import OpenApiTypes
 
-from .models import ComplianceRecord, ComplianceRequirement
+from .models import ComplianceRecord, ComplianceRequirement, ComplianceCategory
 from .utils import get_company_compliance_score
-from .serializers import ComplianceRecordSerializer, RequirementSerializer
+from .serializers import ComplianceRecordSerializer, RequirementSerializer, ComplianceCategorySerializer
 
 
 @extend_schema(
@@ -52,9 +54,18 @@ class ComplianceDashboardView(APIView):
 class ComplianceRecordListView(generics.ListCreateAPIView):
     serializer_class = ComplianceRecordSerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ["status", "requirement__category"]
+    search_fields = ["requirement__title", "notes"]
+    ordering_fields = ["due_date", "created_at", "status"]
+    ordering = ["due_date"]
 
     def get_queryset(self):
-        return ComplianceRecord.objects.filter(company=self.request.user.company).select_related("requirement")
+        return (
+            ComplianceRecord.objects
+            .filter(company=self.request.user.company)
+            .select_related("requirement", "requirement__category", "completed_by")
+        )
 
     def perform_create(self, serializer):
         serializer.save(company=self.request.user.company)
@@ -91,4 +102,18 @@ class ComplianceRecordDetailView(generics.RetrieveUpdateDestroyAPIView):
 class RequirementListView(generics.ListAPIView):
     queryset = ComplianceRequirement.objects.select_related("category").all()
     serializer_class = RequirementSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["category", "frequency", "is_mandatory"]
+
+
+@extend_schema(
+    tags=["compliance"],
+    summary="List compliance categories",
+    description="Returns the global list of compliance categories (RRA Tax, RSSB, Labor Law, etc.).",
+    responses={200: OpenApiResponse(description="Category list")},
+)
+class ComplianceCategoryListView(generics.ListAPIView):
+    queryset = ComplianceCategory.objects.order_by("order").all()
+    serializer_class = ComplianceCategorySerializer
     permission_classes = [IsAuthenticated]
