@@ -170,3 +170,7 @@ class UserListView(generics.ListCreateAPIView):
         if self.request.method == "POST":
             return UserCreateSerializer
         return UserMeSerializer
+
+    def perform_create(self, serializer):
+        """Auto-assign the creating admin's company to the new user."""
+        serializer.save(company=self.request.user.company)

@@ -2,11 +2,16 @@ from django.db import transaction
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.throttling import AnonRateThrottle
 from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiResponse
 
 from apps.accounts.models import User
 from .models import Company
 from .serializers import CompanySerializer, CompanyOnboardingSerializer
+
+
+class OnboardingRateThrottle(AnonRateThrottle):
+    scope = "anon"  # 20/min from base.py settings
 
 
 @extend_schema(
@@ -29,6 +34,7 @@ class OnboardingView(generics.GenericAPIView):
     """
     serializer_class = CompanyOnboardingSerializer
     permission_classes = [AllowAny]
+    throttle_classes = [OnboardingRateThrottle]
 
     @transaction.atomic
     def post(self, request):

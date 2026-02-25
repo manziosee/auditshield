@@ -11,7 +11,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 env = environ.Env(
     DEBUG=(bool, False),
-    ALLOWED_HOSTS=(list, ["localhost"]),
 )
 
 # Read .env file if present (dev convenience)
@@ -19,7 +18,7 @@ environ.Env.read_env(BASE_DIR / ".env")
 
 SECRET_KEY = env("DJANGO_SECRET_KEY")
 DEBUG = env("DEBUG")
-ALLOWED_HOSTS = env("DJANGO_ALLOWED_HOSTS")
+ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["localhost", "127.0.0.1"])
 
 # ─── Application definition ───────────────────────────────────────────────────
 DJANGO_APPS = [
@@ -80,21 +79,30 @@ WSGI_APPLICATION = "auditshield.wsgi.application"
 ASGI_APPLICATION = "auditshield.asgi.application"
 
 # ─── Database ─────────────────────────────────────────────────────────────────
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": env("POSTGRES_DB"),
-        "USER": env("POSTGRES_USER"),
-        "PASSWORD": env("POSTGRES_PASSWORD"),
-        "HOST": env("POSTGRES_HOST", default="localhost"),
-        "PORT": env("POSTGRES_PORT", default="5432"),
-        "CONN_MAX_AGE": 60,
-        "OPTIONS": {
-            "connect_timeout": 10,
-            "options": "-c default_transaction_isolation=read committed",
-        },
+# Remote Turso:  TURSO_DATABASE_URL=libsql://your-db.turso.io  (needs libsql-django)
+# Local / CI:    TURSO_DATABASE_URL=file:db.sqlite3             (uses built-in SQLite)
+_db_url = env("TURSO_DATABASE_URL", default="file:db.sqlite3")
+_auth_token = env("TURSO_AUTH_TOKEN", default="")
+
+if _db_url.startswith(("libsql://", "wss://", "ws://")):
+    # Remote Turso — requires `libsql-django` (production only)
+    DATABASES = {
+        "default": {
+            "ENGINE": "libsql_django",
+            "NAME": _db_url,
+            "OPTIONS": {"authToken": _auth_token},
+        }
     }
-}
+else:
+    # Local SQLite — built-in Django backend (CI, local dev without Turso)
+    # "file:db.sqlite3" → "db.sqlite3"  |  ":memory:" passes through unchanged
+    _sqlite_path = _db_url.removeprefix("file:") if _db_url.startswith("file:") else _db_url
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / _sqlite_path,
+        }
+    }
 
 # ─── Custom User Model ────────────────────────────────────────────────────────
 AUTH_USER_MODEL = "accounts.User"
@@ -341,7 +349,7 @@ SPECTACULAR_SETTINGS = {
         {"name": "employees", "description": "Employee profiles, bulk import, and Excel export"},
         {"name": "departments", "description": "Departments within a company"},
         {"name": "documents", "description": "Encrypted document vault with OCR and expiry tracking"},
-        {"name": "compliance", "description": "RRA/RSSB compliance checklists and records"},
+        {"name": "compliance", "description": "RRA/RSSB/Labor Law compliance records and dashboard"},
         {"name": "reports", "description": "Async PDF report generation and download"},
         {"name": "notifications", "description": "In-app notification feed"},
         {"name": "audit-logs", "description": "Immutable activity trail (read-only)"},

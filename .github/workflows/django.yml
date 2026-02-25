@@ -8,23 +8,10 @@ on:
 
 jobs:
   test:
+    name: Python ${{ matrix.python-version }} — Django tests
     runs-on: ubuntu-latest
 
     services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_DB: auditshield_test
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
-
       redis:
         image: redis:7-alpine
         options: >-
@@ -40,45 +27,46 @@ jobs:
       matrix:
         python-version: ["3.11", "3.12"]
 
-    # ── Env vars must match backend/auditshield/settings/base.py exactly ─────
     env:
+      # ── Django ────────────────────────────────────────────────────────────────
       DJANGO_SETTINGS_MODULE: auditshield.settings.development
-      DJANGO_SECRET_KEY: ci-test-secret-key-for-github-actions-only
-      DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1
+      DJANGO_SECRET_KEY: ci-only-secret-key-not-for-production
+      DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1"
       DEBUG: "True"
-      # Database — base.py reads these individually (not DATABASE_URL)
-      POSTGRES_DB: auditshield_test
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_HOST: localhost
-      POSTGRES_PORT: "5432"
-      # Redis — must use localhost in CI, not 'redis' (Docker hostname)
-      REDIS_URL: redis://localhost:6379/0
-      CELERY_BROKER_URL: redis://localhost:6379/1
-      # Encryption key (base.py: FILE_ENCRYPTION_KEY)
+      # ── Database: local SQLite in CI (no libsql-django package needed) ────────
+      TURSO_DATABASE_URL: "file:ci_test.sqlite3"
+      TURSO_AUTH_TOKEN: ""
+      # ── Redis (localhost in CI runner, not the Docker 'redis' hostname) ────────
+      REDIS_URL: "redis://localhost:6379/0"
+      CELERY_BROKER_URL: "redis://localhost:6379/1"
+      # ── Misc ──────────────────────────────────────────────────────────────────
       FILE_ENCRYPTION_KEY: ""
-      # Email — use console backend in CI
-      EMAIL_BACKEND: django.core.mail.backends.console.EmailBackend
+      EMAIL_BACKEND: "django.core.mail.backends.console.EmailBackend"
+      CORS_ALLOWED_ORIGINS: "http://localhost:4200"
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
-          cache-dependency-path: backend/requirements/base.txt
+          cache-dependency-path: |
+            backend/requirements/base.txt
+            backend/requirements/development.txt
 
       - name: Install system dependencies
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y \
+          sudo apt-get install -y --no-install-recommends \
             libmagic1 \
             tesseract-ocr \
             libpango-1.0-0 \
             libpangoft2-1.0-0 \
-            libpq-dev \
+            libffi-dev \
+            libssl-dev \
             poppler-utils
 
       - name: Install Python dependencies
@@ -87,17 +75,25 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements/base.txt -r requirements/development.txt
 
+      - name: Ensure required directories exist
+        run: mkdir -p backend/logs backend/static backend/media
+
+      - name: Django system check
+        run: |
+          cd backend
+          python manage.py check --no-color
+
       - name: Run migrations
         run: |
           cd backend
-          python manage.py migrate --no-input
+          python manage.py migrate --no-input --no-color
 
       - name: Run tests
         run: |
           cd backend
-          python manage.py test --verbosity=2
+          python manage.py test --verbosity=2 --buffer --no-color
 
-      - name: Lint (ruff)
+      - name: Lint with ruff
         run: |
           cd backend
-          ruff check .
+          ruff check . --no-cache

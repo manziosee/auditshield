@@ -1,5 +1,7 @@
 import hashlib
 import io
+from django.utils import timezone
+from datetime import timedelta
 from rest_framework import generics, status
 from rest_framework.decorators import action
 from rest_framework.parsers import MultiPartParser
@@ -7,6 +9,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from django.http import HttpResponse
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
 from drf_spectacular.utils import (
     extend_schema, extend_schema_view, OpenApiResponse, OpenApiParameter,
 )
@@ -82,9 +86,23 @@ class DocumentViewSet(ModelViewSet):
     serializer_class = DocumentSerializer
     permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ["document_type", "status", "employee"]
+    search_fields = ["title", "reference_number", "file_name"]
+    ordering_fields = ["created_at", "expiry_date", "title"]
+    ordering = ["-created_at"]
 
     def get_queryset(self):
-        return Document.objects.filter(company=self.request.user.company).select_related("employee", "uploaded_by")
+        qs = Document.objects.filter(
+            company=self.request.user.company
+        ).select_related("employee", "uploaded_by")
+
+        # Custom filter: expiring within 30 days
+        if self.request.query_params.get("expiring_soon") in ("true", "1", "True"):
+            cutoff = timezone.now().date() + timedelta(days=30)
+            qs = qs.filter(expiry_date__lte=cutoff, expiry_date__isnull=False, status="active")
+
+        return qs
 
     def perform_create(self, serializer):
         request = self.request

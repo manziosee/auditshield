@@ -1,0 +1,31 @@
+# Ruff configuration for AuditShield backend
+# https://docs.astral.sh/ruff/configuration/
+
+target-version = "py311"
+line-length = 120
+
+[lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "UP",  # pyupgrade
+]
+ignore = [
+    "E501",  # line too long — handled by formatter
+    "F401",  # imported but unused — migrations & __init__ files
+    "F403",  # star imports — used in settings files
+    "F405",  # may be from star import — settings inheritance
+    "E711",  # comparison to None (ORM idioms use ==)
+    "E712",  # comparison to True/False (DRF patterns)
+    "UP007", # Use X | Y for type hints — Django ORM compat
+]
+
+[lint.per-file-ignores]
+"*/migrations/*.py" = ["E501", "F401", "F811"]
+"*/settings/*.py"   = ["F401", "F403", "F405", "E501"]
+"conftest.py"       = ["F401"]
+
+[lint.isort]
+known-first-party = ["core", "apps", "auditshield"]
