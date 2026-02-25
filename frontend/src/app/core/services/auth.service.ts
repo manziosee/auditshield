@@ -30,16 +30,28 @@ export class AuthService {
     );
   }
 
+  /** Activate demo mode: no API call, stores fake tokens + sets the demo flag. */
+  loginDemo(user: User): void {
+    const ts = Date.now();
+    localStorage.setItem(TOKEN_KEY, `demo-access-${ts}`);
+    localStorage.setItem(REFRESH_KEY, `demo-refresh-${ts}`);
+    localStorage.setItem('as_user', JSON.stringify(user));
+    localStorage.setItem('as_demo', 'true');
+    this._user.set(user);
+  }
+
   logout(): void {
     const refresh = localStorage.getItem(REFRESH_KEY);
-    if (refresh) {
+    const isDemo = localStorage.getItem('as_demo') === 'true';
+    if (refresh && !isDemo) {
       this.api.post('auth/logout/', { refresh }).subscribe({ error: () => {} });
     }
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(REFRESH_KEY);
     localStorage.removeItem('as_user');
+    localStorage.removeItem('as_demo');
     this._user.set(null);
-    this.router.navigate(['/auth/login']);
+    this.router.navigate(['/landing']);
   }
 
   refreshToken() {

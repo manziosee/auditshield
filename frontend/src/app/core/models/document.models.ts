@@ -24,6 +24,8 @@ export interface Document {
   issue_date: string | null;
   reference_number: string;
   ocr_processed: boolean;
+  is_encrypted: boolean;
+  checksum: string;
   is_expired: boolean;
   days_until_expiry: number | null;
   period_start: string | null;
