@@ -1,25 +1,244 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
+import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
+import { ApiService } from '../../../core/services/api.service';
+import { NotificationService } from '../../../core/services/notification.service';
+import { Report } from '../../../core/models/report.models';
 
 @Component({
   selector: 'as-report-list',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatIconModule],
+  imports: [
+    CommonModule, RouterLink, FormsModule,
+    MatTableModule, MatPaginatorModule,
+    MatButtonModule, MatIconModule, MatInputModule, MatFormFieldModule,
+    MatSelectModule, MatMenuModule, MatTooltipModule,
+    MatProgressSpinnerModule, MatCardModule, MatDividerModule,
+  ],
   template: `
     <div class="page-container">
       <div class="page-header">
-        <h1>Report List</h1>
-        <p class="page-subtitle">This section is under active development.</p>
+        <div>
+          <h2>Reports</h2>
+          <p class="subtitle">{{ total() }} generated reports</p>
+        </div>
+        <button mat-raised-button color="primary" routerLink="/reports/new">
+          <mat-icon>add_chart</mat-icon> Generate Report
+        </button>
       </div>
+
+      <mat-card class="filters-card">
+        <div class="filters-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Type</mat-label>
+            <mat-select [(ngModel)]="typeFilter" (ngModelChange)="loadReports()">
+              <mat-option value="">All types</mat-option>
+              <mat-option value="audit_readiness">Audit Readiness</mat-option>
+              <mat-option value="employee_summary">Employee Summary</mat-option>
+              <mat-option value="compliance_status">Compliance Status</mat-option>
+              <mat-option value="payroll_summary">Payroll Summary</mat-option>
+              <mat-option value="document_inventory">Document Inventory</mat-option>
+              <mat-option value="rra_filing">RRA Filing</mat-option>
+              <mat-option value="rssb_filing">RSSB Filing</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Status</mat-label>
+            <mat-select [(ngModel)]="readyFilter" (ngModelChange)="loadReports()">
+              <mat-option value="">All</mat-option>
+              <mat-option value="ready">Ready</mat-option>
+              <mat-option value="generating">Generating</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </mat-card>
+
+      <mat-card class="table-card">
+        @if (loading()) {
+          <div class="loading-overlay"><mat-spinner diameter="40" /></div>
+        }
+        <div class="table-wrapper">
+          <table mat-table [dataSource]="reports()">
+            <ng-container matColumnDef="icon">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let r">
+                <mat-icon class="report-icon">assessment</mat-icon>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="title">
+              <th mat-header-cell *matHeaderCellDef>Report</th>
+              <td mat-cell *matCellDef="let r">
+                <div class="rep-name">{{ r.title }}</div>
+                <div class="rep-sub">{{ formatType(r.report_type) }}</div>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="period">
+              <th mat-header-cell *matHeaderCellDef>Period</th>
+              <td mat-cell *matCellDef="let r">
+                @if (r.period_start) {
+                  <span class="text-sm">{{ r.period_start | date:'mediumDate' }} – {{ r.period_end | date:'mediumDate' }}</span>
+                } @else {
+                  <span class="text-muted">—</span>
+                }
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="generated_by">
+              <th mat-header-cell *matHeaderCellDef>Generated By</th>
+              <td mat-cell *matCellDef="let r">{{ r.generated_by_name || '—' }}</td>
+            </ng-container>
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>Status</th>
+              <td mat-cell *matCellDef="let r">
+                @if (r.is_ready) {
+                  <span class="chip chip-success">Ready</span>
+                } @else {
+                  <span class="chip chip-warning">
+                    <mat-spinner diameter="12" style="display:inline-block;margin-right:4px" />
+                    Generating…
+                  </span>
+                }
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="created_at">
+              <th mat-header-cell *matHeaderCellDef>Created</th>
+              <td mat-cell *matCellDef="let r">{{ r.created_at | date:'mediumDate' }}</td>
+            </ng-container>
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let r" (click)="$event.stopPropagation()">
+                <button mat-icon-button [matMenuTriggerFor]="menu"><mat-icon>more_vert</mat-icon></button>
+                <mat-menu #menu="matMenu">
+                  <button mat-menu-item [disabled]="!r.is_ready" (click)="download(r)">
+                    <mat-icon>download</mat-icon> Download PDF
+                  </button>
+                  <mat-divider />
+                  <button mat-menu-item class="danger-item" (click)="confirmDelete(r)">
+                    <mat-icon>delete</mat-icon> Delete
+                  </button>
+                </mat-menu>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="columns"></tr>
+            <tr mat-row *matRowDef="let row; columns: columns;"></tr>
+          </table>
+        </div>
+        @if (!loading() && reports().length === 0) {
+          <div class="empty-state">
+            <mat-icon>assessment</mat-icon>
+            <h3>No reports yet</h3>
+            <p>{{ hasFilters() ? 'Adjust your filters.' : 'Generate your first report.' }}</p>
+            @if (!hasFilters()) {
+              <button mat-raised-button color="primary" routerLink="/reports/new">
+                <mat-icon>add_chart</mat-icon> Generate Report
+              </button>
+            }
+          </div>
+        }
+        <mat-paginator [length]="total()" [pageSize]="pageSize" [pageSizeOptions]="[10,25,50]"
+          (page)="onPageChange($event)" showFirstLastButtons />
+      </mat-card>
     </div>
   `,
   styles: [`
-    .page-container { padding: 0; }
-    .page-header { margin-bottom: 24px; }
-    .page-header h1 { font-size: 1.6rem; font-weight: 700; margin: 0 0 4px; color: #1e293b; }
-    .page-subtitle { color: #64748b; margin: 0; }
+    .page-container { display:flex; flex-direction:column; gap:20px; }
+    .page-header { display:flex; justify-content:space-between; align-items:center; }
+    .page-header h2 { margin:0 0 2px; font-size:1.5rem; font-weight:700; }
+    .subtitle { margin:0; color:#64748b; font-size:0.875rem; }
+    .filters-card { padding:16px 20px !important; }
+    .filters-row { display:flex; gap:12px; flex-wrap:wrap; }
+    .table-card { overflow:hidden; padding:0 !important; position:relative; }
+    .loading-overlay { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.8); z-index:10; }
+    .table-wrapper { overflow-x:auto; }
+    table { width:100%; }
+    .report-icon { color:#8b5cf6; font-size:1.5rem; height:1.5rem; width:1.5rem; }
+    .rep-name { font-weight:500; font-size:0.875rem; }
+    .rep-sub { font-size:0.75rem; color:#64748b; }
+    .text-sm { font-size:0.8rem; color:#64748b; }
+    .text-muted { color:#94a3b8; }
+    .chip { display:inline-flex; align-items:center; gap:4px; padding:2px 10px; border-radius:20px; font-size:0.75rem; font-weight:500; }
+    .chip-success { background:#dcfce7; color:#16a34a; }
+    .chip-warning { background:#fef9c3; color:#a16207; }
+    .danger-item { color:#dc2626; }
+    .empty-state { text-align:center; padding:48px 24px; color:#64748b; }
+    .empty-state mat-icon { font-size:3rem; height:3rem; width:3rem; opacity:0.4; display:block; margin:0 auto 12px; }
+    .empty-state h3 { margin:0 0 8px; color:#1e293b; }
+    .empty-state p { margin:0 0 20px; }
   `],
 })
-export class ReportListComponent {}
+export class ReportListComponent implements OnInit {
+  private readonly api = inject(ApiService);
+  private readonly notify = inject(NotificationService);
+
+  reports = signal<Report[]>([]);
+  total = signal(0);
+  loading = signal(false);
+
+  columns = ['icon', 'title', 'period', 'generated_by', 'status', 'created_at', 'actions'];
+  pageSize = 25;
+  currentPage = 1;
+  typeFilter = '';
+  readyFilter = '';
+
+  ngOnInit(): void { this.loadReports(); }
+
+  loadReports(): void {
+    this.loading.set(true);
+    const params: Record<string, unknown> = { page: this.currentPage, page_size: this.pageSize };
+    if (this.typeFilter) params['report_type'] = this.typeFilter;
+    if (this.readyFilter === 'ready') params['is_ready'] = true;
+    if (this.readyFilter === 'generating') params['is_ready'] = false;
+
+    this.api.getPaginated<Report>('reports/', params).subscribe({
+      next: (res) => { this.reports.set(res.results); this.total.set(res.count); this.loading.set(false); },
+      error: () => { this.loading.set(false); this.notify.error('Failed to load reports.'); },
+    });
+  }
+
+  onPageChange(e: PageEvent): void {
+    this.currentPage = e.pageIndex + 1; this.pageSize = e.pageSize; this.loadReports();
+  }
+
+  hasFilters(): boolean { return !!(this.typeFilter || this.readyFilter); }
+
+  download(report: Report): void {
+    this.api.downloadBlob(`reports/${report.id}/download/`).subscribe({
+      next: (blob) => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = `${report.title}.pdf`; a.click();
+        URL.revokeObjectURL(url);
+      },
+      error: () => this.notify.error('Download failed.'),
+    });
+  }
+
+  confirmDelete(report: Report): void {
+    if (!confirm(`Delete report "${report.title}"?`)) return;
+    this.api.delete(`reports/${report.id}/`).subscribe({
+      next: () => { this.notify.success('Report deleted.'); this.loadReports(); },
+      error: () => this.notify.error('Failed to delete report.'),
+    });
+  }
+
+  formatType(t: string): string {
+    const map: Record<string, string> = {
+      audit_readiness: 'Audit Readiness', employee_summary: 'Employee Summary',
+      compliance_status: 'Compliance Status', payroll_summary: 'Payroll Summary',
+      document_inventory: 'Document Inventory', rra_filing: 'RRA Filing', rssb_filing: 'RSSB Filing',
+    };
+    return map[t] ?? t.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+  }
+}

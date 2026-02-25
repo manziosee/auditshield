@@ -1,94 +1,329 @@
-
-// Include theming for Angular Material with `mat.theme()`.
-// This Sass mixin will define CSS variables that are used for styling Angular Material
-// components according to the Material 3 design spec.
-// Learn more about theming and how to use it for your application's
-// custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
 
+// ── Light mode design tokens ───────────────────────────────────────────────────
+:root {
+  // Brand
+  --brand:          #6366f1;
+  --brand-dark:     #4f46e5;
+  --brand-light:    #818cf8;
+  --brand-subtle:   rgba(99, 102, 241, 0.12);
+  --brand-glow:     rgba(99, 102, 241, 0.35);
+
+  // Surfaces
+  --surface-bg:     #f1f5f9;
+  --surface-card:   #ffffff;
+  --surface-hover:  #f8fafc;
+  --surface-input:  #f8fafc;
+
+  // Sidebar (always dark-ish)
+  --sidebar-bg:         #0f172a;
+  --sidebar-hover:      rgba(255, 255, 255, 0.07);
+  --sidebar-text:       rgba(255, 255, 255, 0.5);
+  --sidebar-text-active:#a5b4fc;
+  --sidebar-active-bg:  rgba(99, 102, 241, 0.2);
+
+  // Topbar
+  --topbar-bg:      #ffffff;
+  --topbar-border:  #e2e8f0;
+  --topbar-shadow:  0 1px 3px rgba(0, 0, 0, 0.04);
+
+  // Text
+  --text-primary:   #0f172a;
+  --text-secondary: #1e293b;
+  --text-muted:     #64748b;
+  --text-faint:     #94a3b8;
+
+  // Borders
+  --border-color:   #e2e8f0;
+  --border-subtle:  #f1f5f9;
+
+  // Status colors
+  --success:        #16a34a;
+  --success-bg:     #dcfce7;
+  --warning:        #d97706;
+  --warning-bg:     #fef3c7;
+  --danger:         #dc2626;
+  --danger-bg:      #fee2e2;
+  --info:           #2563eb;
+  --info-bg:        #dbeafe;
+
+  // Misc
+  --slate-mid:      #334155;
+  --slate-muted:    #64748b;
+  --slate-border:   #e2e8f0;
+  --page-bg:        #f1f5f9;
+
+  // Shadows
+  --shadow-xs:    0 1px 2px rgba(0,0,0,0.05);
+  --shadow-sm:    0 1px 4px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md:    0 4px 16px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-lg:    0 10px 30px rgba(0,0,0,0.1), 0 4px 8px rgba(0,0,0,0.05);
+  --shadow-brand: 0 4px 20px rgba(99,102,241,0.35);
+}
+
+// ── Angular Material theme (light) ────────────────────────────────────────────
 html {
   height: 100%;
+
   @include mat.theme((
     color: (
-      primary: mat.$azure-palette,
-      tertiary: mat.$blue-palette,
+      primary:   mat.$violet-palette,
+      tertiary:  mat.$cyan-palette,
     ),
     typography: Roboto,
     density: 0,
   ));
 }
 
+// ── Dark mode tokens ───────────────────────────────────────────────────────────
+html.dark-theme {
+  color-scheme: dark;
+
+  // Surfaces
+  --surface-bg:     #080e1c;
+  --surface-card:   #0d1525;
+  --surface-hover:  #131d30;
+  --surface-input:  #0a1020;
+
+  // Sidebar (stays dark, deepens)
+  --sidebar-bg:         #060c18;
+  --sidebar-hover:      rgba(255, 255, 255, 0.06);
+  --sidebar-text:       rgba(255, 255, 255, 0.42);
+  --sidebar-text-active:#a5b4fc;
+  --sidebar-active-bg:  rgba(99, 102, 241, 0.18);
+
+  // Topbar
+  --topbar-bg:      #0d1525;
+  --topbar-border:  #1e293b;
+  --topbar-shadow:  0 1px 3px rgba(0, 0, 0, 0.3);
+
+  // Text — all light so nothing disappears on dark bg
+  --text-primary:   #f1f5f9;
+  --text-secondary: #e2e8f0;
+  --text-muted:     #94a3b8;
+  --text-faint:     #64748b;
+
+  // Borders
+  --border-color:   #1e293b;
+  --border-subtle:  #0f172a;
+
+  // Status (keep hue, lighten text, darken bg for readability)
+  --success:        #4ade80;
+  --success-bg:     rgba(34, 197, 94, 0.15);
+  --warning:        #fbbf24;
+  --warning-bg:     rgba(245, 158, 11, 0.15);
+  --danger:         #f87171;
+  --danger-bg:      rgba(239, 68, 68, 0.15);
+  --info:           #60a5fa;
+  --info-bg:        rgba(59, 130, 246, 0.15);
+
+  // Misc
+  --slate-border:   #1e293b;
+  --page-bg:        #080e1c;
+
+  // Shadows (heavier for dark bg)
+  --shadow-xs:    0 1px 2px rgba(0,0,0,0.3);
+  --shadow-sm:    0 1px 4px rgba(0,0,0,0.4);
+  --shadow-md:    0 4px 16px rgba(0,0,0,0.5);
+  --shadow-lg:    0 10px 30px rgba(0,0,0,0.6);
+  --shadow-brand: 0 4px 20px rgba(99,102,241,0.3);
+
+  @include mat.theme((
+    color: (
+      primary:    mat.$violet-palette,
+      tertiary:   mat.$cyan-palette,
+      theme-type: dark,
+    ),
+  ));
+
+  // ── Material dark overrides ──────────────────────────────────────────────────
+
+  // Tables
+  .mat-mdc-table {
+    background: var(--surface-card) !important;
+    color: var(--text-primary) !important;
+  }
+  .mat-mdc-row, .mat-mdc-header-row, .mat-mdc-footer-row {
+    background: transparent !important;
+  }
+  .mat-mdc-cell, .mat-mdc-header-cell, .mat-mdc-footer-cell {
+    color: var(--text-primary) !important;
+    border-bottom-color: var(--border-color) !important;
+  }
+  .mat-mdc-header-cell {
+    color: var(--text-muted) !important;
+    background: var(--surface-hover) !important;
+  }
+  .mat-mdc-row:hover .mat-mdc-cell { background: var(--surface-hover) !important; }
+
+  // Paginator
+  .mat-mdc-paginator {
+    background: var(--surface-card) !important;
+    color: var(--text-primary) !important;
+  }
+  .mat-mdc-paginator-range-label,
+  .mat-mdc-paginator-page-size-label { color: var(--text-muted) !important; }
+
+  // Select
+  .mat-mdc-select-value-text { color: var(--text-primary) !important; }
+  .mat-mdc-select-arrow      { color: var(--text-muted)   !important; }
+  .mat-mdc-option            { color: var(--text-primary) !important; }
+  .mat-mdc-option:hover      { background: var(--surface-hover) !important; }
+  .mat-mdc-option.mdc-list-item--selected {
+    color: var(--brand) !important;
+    background: var(--brand-subtle) !important;
+  }
+
+  // Form fields
+  .mdc-text-field--outlined:not(.mdc-text-field--disabled) {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing { border-color: var(--border-color) !important; }
+    .mdc-text-field__input { color: var(--text-primary) !important; }
+  }
+  .mdc-floating-label { color: var(--text-muted) !important; }
+  .mat-mdc-form-field-subscript-wrapper { color: var(--text-muted) !important; }
+
+  // Menu
+  .mat-mdc-menu-panel {
+    background: var(--surface-card) !important;
+    border: 1px solid var(--border-color) !important;
+  }
+  .mat-mdc-menu-item { color: var(--text-primary) !important; }
+  .mat-mdc-menu-item:hover { background: var(--surface-hover) !important; }
+  .mat-mdc-menu-item .mat-icon { color: var(--text-muted) !important; }
+  .mat-mdc-menu-item:hover .mat-icon { color: var(--brand) !important; }
+
+  // Dialog
+  .mat-mdc-dialog-container .mdc-dialog__surface {
+    background: var(--surface-card) !important;
+    color: var(--text-primary) !important;
+  }
+  .mat-mdc-dialog-title   { color: var(--text-primary)   !important; }
+  .mat-mdc-dialog-content { color: var(--text-secondary) !important; }
+
+  // Chips
+  .mat-mdc-chip.mat-mdc-standard-chip {
+    background: var(--surface-hover) !important;
+    border: 1px solid var(--border-color) !important;
+  }
+  .mdc-evolution-chip__text-label { color: var(--text-primary) !important; }
+
+  // Tooltip
+  .mdc-tooltip__surface {
+    background: #1e293b !important;
+    color: #f1f5f9 !important;
+  }
+
+  // Progress bar
+  .mdc-linear-progress__track { background: var(--border-color) !important; }
+
+  // Divider
+  mat-divider, .mat-divider { border-top-color: var(--border-color) !important; }
+}
+
+// ── Base ───────────────────────────────────────────────────────────────────────
 body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
   color-scheme: light;
-
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
+  background-color: var(--surface-bg);
+  color: var(--text-primary);
   font: var(--mat-sys-body-medium);
-
-  // Reset the user agent margin.
   margin: 0;
   height: 100%;
+  font-family: 'Inter', 'Roboto', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.25s ease, color 0.2s ease;
 }
-/* ─── AuditShield Global Styles ──────────────────────────────────────────── */
 
-// ── Typography ────────────────────────────────────────────────────────────────
+html.dark-theme body { color-scheme: dark; }
+
 * { box-sizing: border-box; }
 
-a { color: #3b82f6; text-decoration: none; }
-a:hover { text-decoration: underline; }
+a { color: var(--brand); text-decoration: none; }
+a:hover { text-decoration: underline; color: var(--brand-dark); }
 
-// ── Snackbar colors ───────────────────────────────────────────────────────────
+// ── Transition for dark mode ───────────────────────────────────────────────────
+*, *::before, *::after {
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.15s ease;
+}
+
+// ── Accessible focus ring ──────────────────────────────────────────────────────
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+// ── Typography ────────────────────────────────────────────────────────────────
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Inter', 'Roboto', sans-serif;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin: 0 0 8px;
+  font-weight: 700;
+}
+p { color: var(--text-secondary); line-height: 1.65; margin: 0 0 12px; }
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--brand-light), var(--brand));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// ── Snackbar ───────────────────────────────────────────────────────────────────
 .snack-success .mdc-snackbar__surface { background: #16a34a !important; color: white !important; }
 .snack-error   .mdc-snackbar__surface { background: #dc2626 !important; color: white !important; }
 .snack-warn    .mdc-snackbar__surface { background: #d97706 !important; color: white !important; }
-.snack-info    .mdc-snackbar__surface { background: #2563eb !important; color: white !important; }
+.snack-info    .mdc-snackbar__surface { background: var(--brand) !important; color: white !important; }
 
-// ── Utility classes ───────────────────────────────────────────────────────────
-.text-muted    { color: #64748b; }
-.text-danger   { color: #ef4444; }
-.text-success  { color: #22c55e; }
-.text-warning  { color: #f59e0b; }
-.text-primary  { color: #3b82f6; }
-
+// ── Status badge utility ───────────────────────────────────────────────────────
 .badge {
   display: inline-flex;
   align-items: center;
-  padding: 2px 10px;
+  gap: 4px;
+  padding: 3px 10px;
   border-radius: 999px;
   font-size: 0.72rem;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
 
-  &.badge-success { background: #dcfce7; color: #16a34a; }
-  &.badge-danger  { background: #fee2e2; color: #dc2626; }
-  &.badge-warning { background: #fef3c7; color: #d97706; }
-  &.badge-info    { background: #dbeafe; color: #2563eb; }
-  &.badge-neutral { background: #f1f5f9; color: #475569; }
+  &.badge-success { background: var(--success-bg); color: var(--success); }
+  &.badge-danger  { background: var(--danger-bg);  color: var(--danger); }
+  &.badge-warning { background: var(--warning-bg); color: var(--warning); }
+  &.badge-info    { background: var(--info-bg);    color: var(--info); }
+  &.badge-neutral { background: var(--surface-hover); color: var(--text-muted); border: 1px solid var(--border-color); }
 }
 
-// ── Page layout helpers ───────────────────────────────────────────────────────
+// ── Text utilities ─────────────────────────────────────────────────────────────
+.text-muted    { color: var(--text-muted)   !important; }
+.text-faint    { color: var(--text-faint)   !important; }
+.text-danger   { color: var(--danger)       !important; }
+.text-success  { color: var(--success)      !important; }
+.text-warning  { color: var(--warning)      !important; }
+.text-brand    { color: var(--brand)        !important; }
+
+// ── Page layout helpers ────────────────────────────────────────────────────────
 .page-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
   flex-wrap: wrap;
   gap: 12px;
 
-  h1 {
-    font-size: 1.6rem;
-    font-weight: 700;
+  h1, h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
     margin: 0;
-    color: #1e293b;
+    color: var(--text-primary);
+    letter-spacing: -0.5px;
   }
-  p { color: #64748b; margin: 4px 0 0; font-size: 0.9rem; }
+  p, .subtitle { color: var(--text-muted); margin: 4px 0 0; font-size: 0.875rem; }
 }
 
 .card-grid {
@@ -97,25 +332,264 @@ a:hover { text-decoration: underline; }
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
 }
 
-// ── Material overrides ────────────────────────────────────────────────────────
-mat-card {
-  border-radius: 12px !important;
-  border: 1px solid #e2e8f0 !important;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.06) !important;
+// ── Global card utility ────────────────────────────────────────────────────────
+.as-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+
+  &:hover {
+    box-shadow: var(--shadow-md);
+    border-color: color-mix(in srgb, var(--brand) 20%, var(--border-color));
+  }
 }
 
-.mat-mdc-raised-button.mat-primary { font-weight: 600; }
+// ── Global button utilities ────────────────────────────────────────────────────
+.btn-brand {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+  color: white !important;
+  border: none; border-radius: 10px;
+  padding: 10px 20px; font-size: 0.875rem; font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer; text-decoration: none;
+  box-shadow: var(--shadow-brand);
+  transition: opacity 0.15s, transform 0.12s, box-shadow 0.15s;
+  letter-spacing: 0.01em;
 
+  &:hover {
+    opacity: 0.9; transform: translateY(-1px);
+    box-shadow: 0 8px 28px rgba(99,102,241,0.45);
+    text-decoration: none;
+  }
+  &:active { transform: translateY(0); }
+  &:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+}
+
+.btn-outline-brand {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: transparent; color: var(--brand) !important;
+  border: 1.5px solid var(--brand); border-radius: 10px;
+  padding: 9px 20px; font-size: 0.875rem; font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer; text-decoration: none;
+  transition: background 0.15s, transform 0.12s, box-shadow 0.15s;
+
+  &:hover {
+    background: var(--brand-subtle); transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(99,102,241,0.2);
+    text-decoration: none;
+  }
+}
+
+// ── Material overrides ─────────────────────────────────────────────────────────
+mat-card, .mat-mdc-card {
+  border-radius: 16px !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: var(--shadow-sm) !important;
+  background: var(--surface-card) !important;
+  color: var(--text-primary) !important;
+}
+.mat-mdc-card-title    { color: var(--text-primary)   !important; font-weight: 700 !important; }
+.mat-mdc-card-subtitle { color: var(--text-muted)     !important; }
+.mat-mdc-card-content  { color: var(--text-secondary) !important; }
+
+.mat-mdc-raised-button.mat-primary {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  box-shadow: var(--shadow-brand) !important;
+}
+.mat-mdc-outlined-button.mat-primary {
+  border-color: var(--brand) !important;
+  color: var(--brand) !important;
+  font-weight: 600;
+}
+.mat-mdc-button {
+  font-family: 'Inter', 'Roboto', sans-serif !important;
+  letter-spacing: 0.01em !important;
+}
+
+// Tables (light base — dark overrides above)
+.mat-mdc-table {
+  background: var(--surface-card) !important;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+}
+.mat-mdc-header-row { background: var(--surface-hover) !important; }
+.mat-mdc-header-cell {
+  color: var(--text-muted) !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--border-color) !important;
+}
+.mat-mdc-cell {
+  color: var(--text-primary) !important;
+  border-bottom-color: var(--border-subtle) !important;
+  font-size: 0.875rem !important;
+}
+.mat-mdc-row {
+  transition: background 0.12s ease !important;
+  &:hover .mat-mdc-cell { background: var(--surface-hover) !important; }
+  &:last-child .mat-mdc-cell { border-bottom: none !important; }
+}
+.mat-mdc-paginator {
+  background: var(--surface-card) !important;
+  color: var(--text-primary) !important;
+  border-top: 1px solid var(--border-color) !important;
+}
+
+// Form fields
+.mat-mdc-form-field {
+  --mdc-outlined-text-field-label-text-color:       var(--text-muted);
+  --mdc-outlined-text-field-input-text-color:       var(--text-primary);
+  --mdc-outlined-text-field-outline-color:          var(--border-color);
+  --mdc-outlined-text-field-hover-outline-color:    var(--brand);
+  --mdc-outlined-text-field-focus-outline-color:    var(--brand);
+}
 mat-form-field { margin-bottom: 8px; }
+.mdc-text-field__input { color: var(--text-primary) !important; }
+.mdc-floating-label    { color: var(--text-muted)   !important; }
 
-// ── Scrollbar ─────────────────────────────────────────────────────────────────
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: #f1f5f9; }
-::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+// Select
+.mat-mdc-select-value-text { color: var(--text-primary) !important; }
+.mat-mdc-option { color: var(--text-primary) !important; font-size: 0.875rem; }
+.mat-mdc-option:hover { background: var(--surface-hover) !important; }
+.mat-mdc-option.mdc-list-item--selected {
+  color: var(--brand) !important;
+  background: var(--brand-subtle) !important;
+}
 
-// ── Print: hide sidebar ───────────────────────────────────────────────────────
+// Dialog
+.mat-mdc-dialog-container .mdc-dialog__surface {
+  background: var(--surface-card) !important;
+  color: var(--text-primary) !important;
+  border-radius: 20px !important;
+  border: 1px solid var(--border-color) !important;
+}
+.mat-mdc-dialog-title   { color: var(--text-primary)   !important; font-weight: 700 !important; }
+.mat-mdc-dialog-content { color: var(--text-secondary) !important; }
+
+// Chips
+.mat-mdc-chip.mat-mdc-standard-chip {
+  background: var(--surface-hover) !important;
+  border: 1px solid var(--border-color) !important;
+  font-size: 0.78rem !important;
+}
+.mdc-evolution-chip__text-label { color: var(--text-secondary) !important; }
+
+// Menu
+.mat-mdc-menu-panel {
+  background: var(--surface-card) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 14px !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+.mat-mdc-menu-item { color: var(--text-primary) !important; font-size: 0.875rem !important; }
+.mat-mdc-menu-item:hover { background: var(--surface-hover) !important; }
+.mat-mdc-menu-item .mat-icon { color: var(--text-muted) !important; }
+.mat-mdc-menu-item:hover .mat-icon { color: var(--brand) !important; }
+
+// Tooltip
+.mdc-tooltip__surface {
+  background: var(--text-secondary) !important;
+  color: var(--surface-card) !important;
+  font-size: 0.75rem !important;
+  border-radius: 6px !important;
+  font-family: 'Inter', sans-serif !important;
+}
+
+// Divider
+mat-divider, .mat-divider { border-top-color: var(--border-color) !important; }
+
+// Progress spinner
+.mat-mdc-progress-spinner circle { stroke: var(--brand) !important; }
+
+// Progress bar
+.mdc-linear-progress__track   { background: var(--border-color) !important; }
+.mdc-linear-progress__bar-inner { border-color: var(--brand) !important; }
+
+// ── KPI card utility ──────────────────────────────────────────────────────────
+.kpi-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 22px 24px;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+
+  &:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--brand) 30%, var(--border-color));
+  }
+
+  .kpi-value {
+    font-size: 2rem; font-weight: 900;
+    color: var(--text-primary); line-height: 1; letter-spacing: -1px;
+  }
+  .kpi-label {
+    font-size: 0.78rem; font-weight: 600; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.06em; margin-top: 6px;
+  }
+}
+
+// ── Empty state ───────────────────────────────────────────────────────────────
+.empty-state {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; padding: 64px 32px; text-align: center;
+
+  mat-icon {
+    font-size: 3.5rem; width: 3.5rem; height: 3.5rem;
+    color: var(--text-faint); margin-bottom: 20px; opacity: 0.7;
+  }
+  h3 { font-size: 1.05rem; font-weight: 700; color: var(--text-secondary); margin: 0 0 8px; }
+  p  { font-size: 0.875rem; color: var(--text-muted); max-width: 360px; line-height: 1.6; margin: 0; }
+}
+
+// ── Skeleton shimmer ──────────────────────────────────────────────────────────
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--surface-hover) 25%,
+    var(--border-subtle) 50%,
+    var(--surface-hover) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.4s infinite;
+  border-radius: 6px;
+}
+@keyframes skeleton-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+// ── Page entry animation ──────────────────────────────────────────────────────
+.page-enter {
+  animation: pageEnter 0.22s ease-out;
+}
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ── Scrollbar ──────────────────────────────────────────────────────────────────
+::-webkit-scrollbar       { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-faint); }
+
+// ── Print ──────────────────────────────────────────────────────────────────────
 @media print {
   mat-sidenav, .topbar { display: none !important; }
   .main-content { margin: 0 !important; }
+  body { background: white !important; color: black !important; }
 }

@@ -2,6 +2,12 @@ import { Routes } from '@angular/router';
 import { authGuard, guestGuard, roleGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
+  // ── Landing (public) ────────────────────────────────────────────────────────
+  {
+    path: 'landing',
+    loadComponent: () => import('./features/landing/landing.component').then((m) => m.LandingComponent),
+  },
+
   // ── Auth (public) ───────────────────────────────────────────────────────────
   {
     path: 'auth',
@@ -54,5 +60,5 @@ export const routes: Routes = [
     ],
   },
 
-  { path: '**', redirectTo: 'dashboard' },
+  { path: '**', redirectTo: 'landing' },
 ];
