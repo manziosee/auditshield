@@ -3,9 +3,11 @@ export type ReportType =
   | 'employee_summary'
   | 'compliance_status'
   | 'payroll_summary'
+  | 'payroll_run_detail'
   | 'document_inventory'
-  | 'rra_filing'
-  | 'rssb_filing';
+  | 'tax_filing_summary'
+  | 'social_security_summary'
+  | 'financial_summary';
 
 export interface Report {
   id: string;

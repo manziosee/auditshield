@@ -146,11 +146,11 @@ export class ReportNewComponent implements OnInit {
   readonly reportTypes = [
     { value: 'audit_readiness', label: 'Audit Readiness', description: 'Full compliance & document audit summary', icon: 'verified_user', iconClass: 'icon-purple' },
     { value: 'employee_summary', label: 'Employee Summary', description: 'Headcount, contracts, salary overview', icon: 'people', iconClass: 'icon-blue' },
-    { value: 'compliance_status', label: 'Compliance Status', description: 'RRA, RSSB, Labour obligations status', icon: 'assignment_turned_in', iconClass: 'icon-green' },
-    { value: 'payroll_summary', label: 'Payroll Summary', description: 'PAYE, RSSB contributions breakdown', icon: 'payments', iconClass: 'icon-orange' },
+    { value: 'compliance_status', label: 'Compliance Status', description: 'Tax, social security & labour obligations status', icon: 'assignment_turned_in', iconClass: 'icon-green' },
+    { value: 'payroll_summary', label: 'Payroll Summary', description: 'Payroll tax & social security contributions breakdown', icon: 'payments', iconClass: 'icon-orange' },
     { value: 'document_inventory', label: 'Document Inventory', description: 'All documents with expiry status', icon: 'folder_open', iconClass: 'icon-teal' },
-    { value: 'rra_filing', label: 'RRA Filing', description: 'Tax filing data for RRA submissions', icon: 'receipt_long', iconClass: 'icon-red' },
-    { value: 'rssb_filing', label: 'RSSB Filing', description: 'Social security declaration for RSSB', icon: 'health_and_safety', iconClass: 'icon-indigo' },
+    { value: 'tax_filing_summary', label: 'Tax Filing Summary', description: 'Tax filing data for authority submissions', icon: 'receipt_long', iconClass: 'icon-red' },
+    { value: 'social_security_summary', label: 'Social Security Summary', description: 'Social security contributions & declarations', icon: 'health_and_safety', iconClass: 'icon-indigo' },
   ];
 
   ngOnInit(): void {

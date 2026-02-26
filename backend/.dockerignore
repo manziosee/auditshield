@@ -1,0 +1,66 @@
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+*.whl
+
+# ── Virtual envs ──────────────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+
+# ── Tests & coverage ──────────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+*.coveragexml
+
+# ── Type checkers & linters ───────────────────────────────────────────────────
+.mypy_cache/
+.ruff_cache/
+
+# ── Media / user uploads (mounted as Fly volume in prod) ──────────────────────
+media/
+
+# ── Dev SQLite DB (prod uses /data volume) ────────────────────────────────────
+*.sqlite3
+*.db
+
+# ── Logs ──────────────────────────────────────────────────────────────────────
+logs/
+*.log
+
+# ── Secrets & env ─────────────────────────────────────────────────────────────
+.env
+.env.*
+*.env
+
+# ── Git ───────────────────────────────────────────────────────────────────────
+.git/
+.gitignore
+
+# ── IDE ───────────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ── Static files (generated at runtime via collectstatic) ─────────────────────
+staticfiles/
+
+# ── Docker ────────────────────────────────────────────────────────────────────
+Dockerfile.dev
+docker-compose*.yml
+.dockerignore
+
+# ── CI / deploy ───────────────────────────────────────────────────────────────
+.github/

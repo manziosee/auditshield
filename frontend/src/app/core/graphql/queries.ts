@@ -82,10 +82,10 @@ export const EMPLOYEE_QUERY = gql`
       nationalId
       gender
       address
-      rssbNumber
-      tinNumber
+      socialInsuranceNumber
+      taxIdentifier
       grossSalary
-      currency
+      currencyCode
       probationEndDate
       createdAt
     }

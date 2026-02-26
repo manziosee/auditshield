@@ -240,7 +240,7 @@ class EmployeeViewSet(TenantQuerysetMixin, ModelViewSet):
         employees = self.get_queryset().values(
             "employee_number", "first_name", "last_name", "job_title",
             "employment_status", "contract_type", "hire_date", "email",
-            "phone", "rssb_number", "tin_number",
+            "phone", "social_insurance_number", "tax_identifier",
         )
         df = pd.DataFrame(list(employees))
         buf = io.BytesIO()

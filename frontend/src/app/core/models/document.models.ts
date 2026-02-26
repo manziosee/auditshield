@@ -1,8 +1,9 @@
 export type DocumentType =
   | 'employment_contract' | 'contract_amendment' | 'nda'
-  | 'rra_filing' | 'rssb_declaration' | 'paye_return' | 'vat_return'
+  | 'tax_filing' | 'social_security_declaration' | 'payroll_tax_return' | 'vat_return'
+  | 'tax_clearance' | 'operating_license' | 'insurance_certificate' | 'financial_statement'
   | 'payslip' | 'warning_letter' | 'leave_form' | 'termination_letter'
-  | 'business_registration' | 'tax_clearance' | 'audit_report' | 'other';
+  | 'business_registration' | 'audit_report' | 'other';
 
 export type DocumentStatus = 'pending' | 'active' | 'expired' | 'archived';
 

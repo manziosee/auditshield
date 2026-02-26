@@ -45,6 +45,8 @@ urlpatterns = [
     path(API_V1 + "reports/",       include("apps.reports.urls")),
     path(API_V1 + "notifications/", include("apps.notifications.urls")),
     path(API_V1 + "audit-logs/",    include("apps.audit_logs.urls")),
+    path(API_V1 + "geo/",           include("apps.geography.urls")),
+    path(API_V1 + "payroll/",       include("apps.payroll.urls")),
 
     # ── OpenAPI / Swagger (REST docs) ─────────────────────────────────────────
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),

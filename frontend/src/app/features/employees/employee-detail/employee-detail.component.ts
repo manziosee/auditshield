@@ -112,8 +112,8 @@ import { Employee } from '../../../core/models/employee.models';
                 <mat-card-header><mat-card-title>Statutory & Banking Information</mat-card-title></mat-card-header>
                 <mat-card-content>
                   <div class="info-grid">
-                    <div class="info-item"><label>RSSB Number</label><span class="mono">{{ emp.rssb_number || '—' }}</span></div>
-                    <div class="info-item"><label>TIN Number (RRA)</label><span class="mono">{{ emp.tin_number || '—' }}</span></div>
+                    <div class="info-item"><label>Social Insurance Number</label><span class="mono">{{ emp.social_insurance_number || '—' }}</span></div>
+                    <div class="info-item"><label>Tax Identifier</label><span class="mono">{{ emp.tax_identifier || '—' }}</span></div>
                   </div>
                 </mat-card-content>
               </mat-card>

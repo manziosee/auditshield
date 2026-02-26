@@ -61,7 +61,7 @@ import { Employee } from '../../../core/models/employee.models';
             <mat-card-content>
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Title *</mat-label>
-                <input matInput formControlName="title" placeholder="e.g. PAYE Return March 2025" />
+                <input matInput formControlName="title" placeholder="e.g. Payroll Tax Return March 2026" />
                 @if (form.get('title')?.invalid && form.get('title')?.touched) {
                   <mat-error>Title is required</mat-error>
                 }
@@ -71,9 +71,9 @@ import { Employee } from '../../../core/models/employee.models';
                 <mat-label>Document Type *</mat-label>
                 <mat-select formControlName="document_type">
                   <mat-option value="employment_contract">Employment Contract</mat-option>
-                  <mat-option value="paye_return">PAYE Return</mat-option>
-                  <mat-option value="rra_filing">RRA Filing</mat-option>
-                  <mat-option value="rssb_declaration">RSSB Declaration</mat-option>
+                  <mat-option value="payroll_tax_return">Payroll Tax Return</mat-option>
+                  <mat-option value="tax_filing">Tax Filing</mat-option>
+                  <mat-option value="social_security_declaration">Social Security Declaration</mat-option>
                   <mat-option value="vat_return">VAT Return</mat-option>
                   <mat-option value="payslip">Payslip</mat-option>
                   <mat-option value="tax_clearance">Tax Clearance Certificate</mat-option>

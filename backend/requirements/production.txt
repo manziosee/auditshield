@@ -2,7 +2,7 @@
 
 # ─── Production WSGI ──────────────────────────────────────────────────────────
 gunicorn==22.0.0
-whitenoise==6.7.0
+# whitenoise already included via base.txt
 
 # ─── Monitoring ───────────────────────────────────────────────────────────────
 sentry-sdk[django]==2.2.0

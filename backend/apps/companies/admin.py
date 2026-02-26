@@ -8,10 +8,10 @@ from .models import Company
 class CompanyAdmin(admin.ModelAdmin):
     list_display = (
         "name", "company_type", "subscription_plan", "is_active",
-        "employee_count", "tin_number", "district", "created_at",
+        "employee_count", "tax_identifier", "city", "country", "created_at",
     )
-    list_filter = ("company_type", "subscription_plan", "is_active", "country", "district")
-    search_fields = ("name", "tin_number", "rssb_number", "registration_number", "email")
+    list_filter = ("company_type", "subscription_plan", "is_active", "country")
+    search_fields = ("name", "tax_identifier", "social_security_identifier", "registration_number", "email")
     ordering = ("name",)
     readonly_fields = ("id", "created_at", "updated_at", "logo_preview")
 
@@ -19,10 +19,10 @@ class CompanyAdmin(admin.ModelAdmin):
         ("Basic Info", {
             "fields": (
                 "id", "name", "company_type", "registration_number",
-                "tin_number", "rssb_number", "incorporation_date",
+                "tax_identifier", "social_security_identifier", "incorporation_date",
             ),
         }),
-        ("Contact", {"fields": ("email", "phone", "website", "address", "district", "country")}),
+        ("Contact", {"fields": ("email", "phone", "website", "address", "city", "state_province", "postal_code", "country", "currency", "timezone")}),
         ("Branding", {"fields": ("logo", "logo_preview", "primary_color")}),
         ("Subscription", {
             "fields": ("subscription_plan", "subscription_expires_at", "is_active"),

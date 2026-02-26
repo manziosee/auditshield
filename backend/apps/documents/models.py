@@ -14,20 +14,23 @@ class Document(TenantModel):
         EMPLOYMENT_CONTRACT = "employment_contract", "Employment Contract"
         AMENDMENT = "contract_amendment", "Contract Amendment"
         NDA = "nda", "Non-Disclosure Agreement"
-        # Tax & Statutory
-        RRA_FILING = "rra_filing", "RRA Tax Filing"
-        RSSB_DECLARATION = "rssb_declaration", "RSSB Declaration"
-        PAYE_RETURN = "paye_return", "PAYE Return"
-        VAT_RETURN = "vat_return", "VAT Return"
+        # Tax & Statutory (generic — applies to any country's tax authority)
+        TAX_FILING = "tax_filing", "Tax Filing"
+        SOCIAL_SECURITY_DECLARATION = "social_security_declaration", "Social Security Declaration"
+        PAYROLL_TAX_RETURN = "payroll_tax_return", "Payroll Tax Return"
+        VAT_RETURN = "vat_return", "VAT / Sales Tax Return"
+        TAX_CLEARANCE = "tax_clearance", "Tax Clearance Certificate"
         # HR
         PAYSLIP = "payslip", "Payslip"
         WARNING_LETTER = "warning_letter", "Warning Letter"
         LEAVE_FORM = "leave_form", "Leave Form"
         TERMINATION_LETTER = "termination_letter", "Termination Letter"
-        # Compliance
+        # Compliance & Corporate
         BUSINESS_REGISTRATION = "business_registration", "Business Registration"
-        TAX_CLEARANCE = "tax_clearance", "Tax Clearance Certificate"
+        OPERATING_LICENSE = "operating_license", "Operating License"
         AUDIT_REPORT = "audit_report", "Audit Report"
+        FINANCIAL_STATEMENT = "financial_statement", "Financial Statement"
+        INSURANCE_CERTIFICATE = "insurance_certificate", "Insurance Certificate"
         # Other
         OTHER = "other", "Other"
 

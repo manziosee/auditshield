@@ -51,8 +51,8 @@ import { Report } from '../../../core/models/report.models';
               <mat-option value="compliance_status">Compliance Status</mat-option>
               <mat-option value="payroll_summary">Payroll Summary</mat-option>
               <mat-option value="document_inventory">Document Inventory</mat-option>
-              <mat-option value="rra_filing">RRA Filing</mat-option>
-              <mat-option value="rssb_filing">RSSB Filing</mat-option>
+              <mat-option value="tax_filing_summary">Tax Filing Summary</mat-option>
+              <mat-option value="social_security_summary">Social Security Summary</mat-option>
             </mat-select>
           </mat-form-field>
           <mat-form-field appearance="outline">
@@ -237,7 +237,7 @@ export class ReportListComponent implements OnInit {
     const map: Record<string, string> = {
       audit_readiness: 'Audit Readiness', employee_summary: 'Employee Summary',
       compliance_status: 'Compliance Status', payroll_summary: 'Payroll Summary',
-      document_inventory: 'Document Inventory', rra_filing: 'RRA Filing', rssb_filing: 'RSSB Filing',
+      document_inventory: 'Document Inventory', tax_filing_summary: 'Tax Filing Summary', social_security_summary: 'Social Security Summary',
     };
     return map[t] ?? t.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
   }

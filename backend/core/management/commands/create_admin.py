@@ -15,7 +15,7 @@ class Command(BaseCommand):
     help = "Create a Django superuser with a demo company for development"
 
     def add_arguments(self, parser):
-        parser.add_argument("--email", default="admin@auditshield.rw")
+        parser.add_argument("--email", default="admin@auditshield.io")
         parser.add_argument("--password", default="Admin@123456")
         parser.add_argument("--no-company", action="store_true", help="Skip creating a demo company")
 
@@ -37,10 +37,8 @@ class Command(BaseCommand):
                 name="Demo Company Ltd",
                 defaults={
                     "company_type": "sme",
-                    "email": "demo@company.rw",
-                    "phone": "+250788000000",
-                    "district": "Kigali",
-                    "tin_number": "000000000",
+                    "email": "demo@company.example",
+                    "phone": "+10000000000",
                     "subscription_plan": "enterprise",
                 },
             )

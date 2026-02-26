@@ -12,10 +12,33 @@ from strawberry import auto
 
 from apps.audit_logs.models import AuditLog
 from apps.companies.models import Company
-from apps.compliance.models import ComplianceCategory, ComplianceRecord, ComplianceRequirement
+from apps.compliance.models import Authority, ComplianceCategory, ComplianceRecord, ComplianceRequirement
 from apps.documents.models import Document
 from apps.employees.models import Department, Employee
+from apps.geography.models import Country
 from apps.notifications.models import Notification
+
+
+# ── Geography ─────────────────────────────────────────────────────────────────
+@strawberry_django.type(Country)
+class CountryType:
+    id: auto
+    name: auto
+    iso_code: auto
+    phone_prefix: auto
+    default_timezone: auto
+    flag_emoji: auto
+
+
+# ── Authority ─────────────────────────────────────────────────────────────────
+@strawberry_django.type(Authority)
+class AuthorityType:
+    id: auto
+    name: auto
+    short_name: auto
+    authority_type: auto
+    website: auto
+    is_active: auto
 
 
 # ── Company ───────────────────────────────────────────────────────────────────
@@ -28,8 +51,9 @@ class CompanyType:
     phone: auto
     website: auto
     address: auto
-    district: auto
-    country: auto
+    city: auto
+    state_province: auto
+    country: Optional[CountryType]
     subscription_plan: auto
     is_active: auto
     created_at: auto
@@ -105,7 +129,7 @@ class ComplianceCategoryType:
     id: auto
     name: auto
     description: auto
-    authority: auto
+    authority: Optional[AuthorityType]
 
 
 @strawberry_django.type(ComplianceRequirement)

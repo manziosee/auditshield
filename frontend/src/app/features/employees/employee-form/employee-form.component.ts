@@ -80,7 +80,7 @@ import { Employee, Department } from '../../../core/models/employee.models';
                   <input matInput type="date" formControlName="date_of_birth" />
                 </mat-form-field>
                 <mat-form-field appearance="outline">
-                  <mat-label>National ID (Rwanda)</mat-label>
+                  <mat-label>National ID / Passport</mat-label>
                   <input matInput formControlName="national_id" />
                 </mat-form-field>
                 <mat-form-field appearance="outline" class="full-col">
@@ -149,7 +149,7 @@ import { Employee, Department } from '../../../core/models/employee.models';
                   <input matInput type="date" formControlName="contract_end_date" />
                 </mat-form-field>
                 <mat-form-field appearance="outline">
-                  <mat-label>Gross Salary (RWF)</mat-label>
+                  <mat-label>Gross Salary</mat-label>
                   <input matInput type="number" formControlName="gross_salary" />
                   <mat-icon matPrefix>payments</mat-icon>
                 </mat-form-field>
@@ -163,12 +163,12 @@ import { Employee, Department } from '../../../core/models/employee.models';
             <mat-card-content>
               <div class="form-grid">
                 <mat-form-field appearance="outline">
-                  <mat-label>RSSB Number</mat-label>
-                  <input matInput formControlName="rssb_number" />
+                  <mat-label>Social Insurance Number</mat-label>
+                  <input matInput formControlName="social_insurance_number" />
                 </mat-form-field>
                 <mat-form-field appearance="outline">
-                  <mat-label>TIN Number (RRA)</mat-label>
-                  <input matInput formControlName="tin_number" />
+                  <mat-label>Tax Identifier</mat-label>
+                  <input matInput formControlName="tax_identifier" />
                 </mat-form-field>
                 <mat-form-field appearance="outline">
                   <mat-label>Bank Account</mat-label>
@@ -238,8 +238,8 @@ export class EmployeeFormComponent implements OnInit {
     hire_date: ['', Validators.required],
     contract_end_date: [''],
     gross_salary: [null as number | null],
-    rssb_number: [''],
-    tin_number: [''],
+    social_insurance_number: [''],
+    tax_identifier: [''],
     bank_account: [''],
     bank_name: [''],
   });

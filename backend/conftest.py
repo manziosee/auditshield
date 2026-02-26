@@ -16,16 +16,15 @@ def company(db):
     return Company.objects.create(
         name="Test Company Ltd",
         company_type="sme",
-        email="test@company.rw",
-        phone="+250788000000",
-        district="Kigali",
+        email="test@company.com",
+        phone="+1 555 000 0000",
     )
 
 
 @pytest.fixture
 def admin_user(db, company):
     return User.objects.create_user(
-        email="admin@company.rw",
+        email="admin@company.com",
         password="TestP@ssword123",
         first_name="Admin",
         last_name="User",
@@ -38,7 +37,7 @@ def admin_user(db, company):
 @pytest.fixture
 def hr_user(db, company):
     return User.objects.create_user(
-        email="hr@company.rw",
+        email="hr@company.com",
         password="TestP@ssword123",
         first_name="HR",
         last_name="Manager",
@@ -51,7 +50,7 @@ def hr_user(db, company):
 @pytest.fixture
 def employee_user(db, company):
     return User.objects.create_user(
-        email="employee@company.rw",
+        email="employee@company.com",
         password="TestP@ssword123",
         first_name="John",
         last_name="Doe",
@@ -78,15 +77,15 @@ def employee(db, company, department):
         company=company,
         employee_number="EMP-001",
         first_name="Alice",
-        last_name="Uwimana",
+        last_name="Johnson",
         job_title="Software Engineer",
         contract_type=Employee.ContractType.PERMANENT,
         employment_status=Employee.EmploymentStatus.ACTIVE,
         hire_date="2023-01-01",
         department=department,
-        email="alice@company.rw",
-        rssb_number="RSSB123456",
-        tin_number="TIN123456",
+        email="alice@company.com",
+        social_insurance_number="SIN123456",
+        tax_identifier="TAX123456",
     )
 
 

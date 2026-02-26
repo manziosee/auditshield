@@ -24,8 +24,8 @@ class EmployeeInput:
     email: Optional[str] = None
     phone: Optional[str] = None
     department_id: Optional[strawberry.ID] = None
-    rssb_number: Optional[str] = None
-    tin_number: Optional[str] = None
+    social_insurance_number: Optional[str] = None
+    tax_identifier: Optional[str] = None
 
 
 @strawberry.input
@@ -37,8 +37,8 @@ class UpdateEmployeeInput:
     department_id: Optional[strawberry.ID] = None
     phone: Optional[str] = None
     email: Optional[str] = None
-    rssb_number: Optional[str] = None
-    tin_number: Optional[str] = None
+    social_insurance_number: Optional[str] = None
+    tax_identifier: Optional[str] = None
 
 
 @strawberry.input
@@ -85,8 +85,8 @@ class Mutation:
             email=input.email or "",
             phone=input.phone or "",
             department_id=input.department_id,
-            rssb_number=input.rssb_number or "",
-            tin_number=input.tin_number or "",
+            social_insurance_number=input.social_insurance_number or "",
+            tax_identifier=input.tax_identifier or "",
         )
 
     @strawberry.mutation(permission_classes=[IsAuthenticated, IsHROrAdmin])

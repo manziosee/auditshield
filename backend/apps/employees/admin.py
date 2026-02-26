@@ -28,7 +28,7 @@ class EmployeeAdmin(admin.ModelAdmin):
     )
     search_fields = (
         "employee_number", "first_name", "last_name", "email",
-        "national_id", "rssb_number", "tin_number", "job_title",
+        "national_id", "social_insurance_number", "tax_identifier", "job_title",
     )
     ordering = ("-hire_date",)
     readonly_fields = ("id", "created_at", "updated_at")
@@ -50,7 +50,7 @@ class EmployeeAdmin(admin.ModelAdmin):
             ),
         }),
         ("Compensation & Statutory", {
-            "fields": ("gross_salary", "currency", "rssb_number", "tin_number", "bank_account", "bank_name"),
+            "fields": ("gross_salary", "currency", "social_insurance_number", "tax_identifier", "bank_account", "bank_name"),
             "classes": ("collapse",),
         }),
         ("Metadata", {"fields": ("created_at", "updated_at"), "classes": ("collapse",)}),

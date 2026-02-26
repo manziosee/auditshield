@@ -31,9 +31,13 @@ export interface Employee {
   contract_end_date: string | null;
   probation_end_date: string | null;
   gross_salary: string | null;
-  currency: string;
-  rssb_number: string;
-  tin_number: string;
+  currency: string | null;
+  currency_code: string;
+  social_insurance_number: string;
+  tax_identifier: string;
+  bank_account: string;
+  bank_name: string;
+  nationality: string;
   is_active: boolean;
   compliance_score: number;
   created_at: string;

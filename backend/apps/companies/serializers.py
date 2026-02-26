@@ -21,11 +21,10 @@ class CompanyOnboardingSerializer(serializers.Serializer):
     # Company fields
     company_name = serializers.CharField(max_length=200)
     company_type = serializers.ChoiceField(choices=Company.CompanyType.choices)
-    tin_number = serializers.CharField(max_length=50, required=False, allow_blank=True)
-    rssb_number = serializers.CharField(max_length=50, required=False, allow_blank=True)
+    tax_identifier = serializers.CharField(max_length=50, required=False, allow_blank=True)
     company_email = serializers.EmailField()
     company_phone = serializers.CharField(max_length=20)
-    district = serializers.CharField(max_length=50, required=False, allow_blank=True)
+    country_iso = serializers.CharField(max_length=2, required=False, allow_blank=True)
 
     # Admin user fields
     admin_first_name = serializers.CharField(max_length=100)

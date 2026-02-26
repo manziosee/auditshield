@@ -43,15 +43,20 @@ class OnboardingView(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         d = serializer.validated_data
 
+        # Resolve optional country FK
+        country = None
+        if d.get("country_iso"):
+            from apps.geography.models import Country
+            country = Country.objects.filter(iso_code=d["country_iso"].upper()).first()
+
         # Create company
         company = Company.objects.create(
             name=d["company_name"],
             company_type=d["company_type"],
-            tin_number=d.get("tin_number", ""),
-            rssb_number=d.get("rssb_number", ""),
+            tax_identifier=d.get("tax_identifier", ""),
             email=d["company_email"],
             phone=d["company_phone"],
-            district=d.get("district", ""),
+            country=country,
         )
 
         # Create admin user
