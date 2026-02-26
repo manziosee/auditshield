@@ -2,8 +2,8 @@
 .PHONY: help dev prod stop logs shell migrate makemigrations createsuperuser \
         test lint format backup restore build clean
 
-COMPOSE        = docker-compose
-COMPOSE_PROD   = docker-compose -f docker-compose.yml -f docker-compose.prod.yml
+COMPOSE        = docker compose
+COMPOSE_PROD   = docker compose -f docker-compose.yml -f docker-compose.prod.yml
 BACKEND        = $(COMPOSE) exec backend
 BACKEND_RUN    = $(COMPOSE) run --rm backend
 
