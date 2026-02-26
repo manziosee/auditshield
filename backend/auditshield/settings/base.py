@@ -79,30 +79,24 @@ WSGI_APPLICATION = "auditshield.wsgi.application"
 ASGI_APPLICATION = "auditshield.asgi.application"
 
 # ─── Database ─────────────────────────────────────────────────────────────────
-# Remote Turso:  TURSO_DATABASE_URL=libsql://your-db.turso.io  (needs libsql-django)
-# Local / CI:    TURSO_DATABASE_URL=file:db.sqlite3             (uses built-in SQLite)
+# TURSO_DATABASE_URL formats:
+#   libsql://your-db.turso.io  — remote Turso (schema applied via HTTP API / turso CLI)
+#   file:db.sqlite3            — local SQLite (dev, CI)
+#   :memory:                   — in-memory SQLite (tests)
+#
+# Django always uses SQLite backend locally. Schema is synced to Turso separately
+# via the `make turso-migrate` command (turso CLI or HTTP API).
 _db_url = env("TURSO_DATABASE_URL", default="file:db.sqlite3")
-_auth_token = env("TURSO_AUTH_TOKEN", default="")
 
-if _db_url.startswith(("libsql://", "wss://", "ws://")):
-    # Remote Turso — requires `libsql-django` (production only)
-    DATABASES = {
-        "default": {
-            "ENGINE": "libsql_django",
-            "NAME": _db_url,
-            "OPTIONS": {"authToken": _auth_token},
-        }
+# Strip the "file:" prefix for Django's SQLite backend
+_sqlite_path = _db_url.removeprefix("file:") if _db_url.startswith("file:") else "db.sqlite3"
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / _sqlite_path,
     }
-else:
-    # Local SQLite — built-in Django backend (CI, local dev without Turso)
-    # "file:db.sqlite3" → "db.sqlite3"  |  ":memory:" passes through unchanged
-    _sqlite_path = _db_url.removeprefix("file:") if _db_url.startswith("file:") else _db_url
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / _sqlite_path,
-        }
-    }
+}
 
 # ─── Custom User Model ────────────────────────────────────────────────────────
 AUTH_USER_MODEL = "accounts.User"
