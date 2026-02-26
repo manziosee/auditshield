@@ -5,6 +5,7 @@ Celery tasks for document processing:
 """
 import hashlib
 import logging
+
 from celery import shared_task
 
 logger = logging.getLogger("auditshield")
@@ -13,8 +14,9 @@ logger = logging.getLogger("auditshield")
 @shared_task(name="apps.documents.tasks.process_document_ocr", bind=True, max_retries=3)
 def process_document_ocr(self, document_id: str):
     """Extract text from uploaded document using Tesseract / PyMuPDF."""
-    from .models import Document
     from core.utils.encryption import decrypt_file
+
+    from .models import Document
 
     try:
         doc = Document.objects.get(id=document_id)
@@ -35,18 +37,20 @@ def process_document_ocr(self, document_id: str):
 
             # Fallback to OCR if text-layer is empty (scanned PDF)
             if len(text.strip()) < 50:
+                import io
+
                 import pytesseract
                 from PIL import Image
-                import io
                 for page in pdf:
                     pix = page.get_pixmap(dpi=150)
                     img = Image.open(io.BytesIO(pix.tobytes("png")))
                     text += pytesseract.image_to_string(img)
 
         elif "image" in mime:
+            import io
+
             import pytesseract
             from PIL import Image
-            import io
             img = Image.open(io.BytesIO(decrypted))
             text = pytesseract.image_to_string(img)
 
@@ -65,8 +69,10 @@ def process_document_ocr(self, document_id: str):
 def check_document_expiries():
     """Mark expired docs and send notifications for docs expiring within 30 days."""
     from django.utils import timezone
-    from .models import Document
+
     from apps.notifications.tasks import send_expiry_notification
+
+    from .models import Document
 
     today = timezone.now().date()
 

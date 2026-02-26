@@ -2,11 +2,14 @@
 GraphQL Mutations — create, update, delete operations.
 """
 from __future__ import annotations
+
+from typing import Optional
+
 import strawberry
 from strawberry.types import Info
-from typing import Optional
-from .types import EmployeeType, ComplianceRecordType, NotificationType
+
 from .permissions import IsAuthenticated, IsCompanyAdmin, IsHROrAdmin
+from .types import ComplianceRecordType, EmployeeType, NotificationType
 
 
 # ── Input types ───────────────────────────────────────────────────────────────
@@ -67,8 +70,9 @@ class Mutation:
     # ── Employee mutations ────────────────────────────────────────────────────
     @strawberry.mutation(permission_classes=[IsAuthenticated, IsHROrAdmin])
     def create_employee(self, info: Info, input: EmployeeInput) -> EmployeeType:
-        from apps.employees.models import Employee
         from datetime import date
+
+        from apps.employees.models import Employee
         company = info.context.request.user.company
         return Employee.objects.create(
             company=company,
@@ -131,8 +135,9 @@ class Mutation:
     def update_compliance_record(
         self, info: Info, id: strawberry.ID, status: str, notes: Optional[str] = None
     ) -> Optional[ComplianceRecordType]:
-        from apps.compliance.models import ComplianceRecord
         from django.utils import timezone
+
+        from apps.compliance.models import ComplianceRecord
         try:
             record = ComplianceRecord.objects.get(id=id, company=info.context.request.user.company)
             record.status = status

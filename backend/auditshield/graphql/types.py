@@ -3,16 +3,19 @@ Strawberry GraphQL types — mirrors the Django models.
 All fields are opt-in; sensitive data (salary, TIN) is permission-guarded at resolver level.
 """
 from __future__ import annotations
+
+from typing import Optional
+
 import strawberry
-from strawberry import auto
-from typing import Optional, List
 import strawberry_django
-from apps.companies.models import Company
-from apps.employees.models import Employee, Department
-from apps.documents.models import Document
-from apps.compliance.models import ComplianceRecord, ComplianceRequirement, ComplianceCategory
-from apps.notifications.models import Notification
+from strawberry import auto
+
 from apps.audit_logs.models import AuditLog
+from apps.companies.models import Company
+from apps.compliance.models import ComplianceCategory, ComplianceRecord, ComplianceRequirement
+from apps.documents.models import Document
+from apps.employees.models import Department, Employee
+from apps.notifications.models import Notification
 
 
 # ── Company ───────────────────────────────────────────────────────────────────
@@ -168,7 +171,7 @@ class ComplianceDashboard:
 # ── Paginated results ─────────────────────────────────────────────────────────
 @strawberry.type
 class EmployeePage:
-    items: List[EmployeeType]
+    items: list[EmployeeType]
     total: int
     page: int
     page_size: int
@@ -176,7 +179,7 @@ class EmployeePage:
 
 @strawberry.type
 class DocumentPage:
-    items: List[DocumentType]
+    items: list[DocumentType]
     total: int
     page: int
     page_size: int

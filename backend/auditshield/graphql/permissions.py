@@ -2,6 +2,7 @@
 Strawberry permission classes — reusable guards for GraphQL resolvers.
 """
 from typing import Any
+
 import strawberry
 from strawberry.types import Info
 

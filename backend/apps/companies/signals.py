@@ -22,7 +22,8 @@ def seed_compliance_requirements(sender, instance, created, **kwargs):
 
     try:
         from django.utils import timezone
-        from apps.compliance.models import ComplianceRequirement, ComplianceRecord
+
+        from apps.compliance.models import ComplianceRecord, ComplianceRequirement
 
         today = timezone.now().date()
         requirements = ComplianceRequirement.objects.filter(is_mandatory=True)

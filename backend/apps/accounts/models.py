@@ -4,7 +4,8 @@ Supports multi-tenant RBAC: each user belongs to one Company with one Role.
 """
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
-from core.models import UUIDModel, TimeStampedModel
+
+from core.models import TimeStampedModel, UUIDModel
 
 
 class UserManager(BaseUserManager):

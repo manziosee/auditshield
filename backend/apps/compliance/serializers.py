@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import ComplianceRecord, ComplianceRequirement, ComplianceCategory
+
+from .models import ComplianceCategory, ComplianceRecord, ComplianceRequirement
 
 
 class ComplianceCategorySerializer(serializers.ModelSerializer):

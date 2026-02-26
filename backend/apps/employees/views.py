@@ -1,23 +1,29 @@
 import io
+
 import pandas as pd
+from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import (
+    OpenApiExample,
+    OpenApiParameter,
+    OpenApiResponse,
+    extend_schema,
+    extend_schema_view,
+)
 from rest_framework import generics, status
 from rest_framework.decorators import action
+from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import SearchFilter, OrderingFilter
-from drf_spectacular.utils import (
-    extend_schema, extend_schema_view, OpenApiResponse, OpenApiParameter,
-    OpenApiExample,
-)
-from drf_spectacular.types import OpenApiTypes
 
-from .models import Employee, Department
+from .models import Department, Employee
 from .serializers import (
-    EmployeeListSerializer, EmployeeDetailSerializer,
-    DepartmentSerializer, BulkImportSerializer,
+    BulkImportSerializer,
+    DepartmentSerializer,
+    EmployeeDetailSerializer,
+    EmployeeListSerializer,
 )
 
 

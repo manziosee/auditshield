@@ -1,15 +1,15 @@
+from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import OpenApiParameter, OpenApiResponse, extend_schema, extend_schema_view
 from rest_framework import generics
+from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import SearchFilter, OrderingFilter
-from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiResponse, OpenApiParameter
-from drf_spectacular.types import OpenApiTypes
 
-from .models import ComplianceRecord, ComplianceRequirement, ComplianceCategory
+from .models import ComplianceCategory, ComplianceRecord, ComplianceRequirement
+from .serializers import ComplianceCategorySerializer, ComplianceRecordSerializer, RequirementSerializer
 from .utils import get_company_compliance_score
-from .serializers import ComplianceRecordSerializer, RequirementSerializer, ComplianceCategorySerializer
 
 
 @extend_schema(

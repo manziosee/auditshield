@@ -7,6 +7,7 @@ Usage:
     python manage.py create_admin --email admin@demo.rw --password Admin123!
 """
 import os
+
 from django.core.management.base import BaseCommand
 
 

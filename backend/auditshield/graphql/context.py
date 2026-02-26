@@ -2,9 +2,9 @@
 Custom GraphQL context — attaches the Django request so JWT auth works
 transparently with Strawberry resolvers.
 """
-from strawberry.django.views import AsyncGraphQLView
-from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.contrib.auth.models import AnonymousUser
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from strawberry.django.views import AsyncGraphQLView
 
 
 class AuthenticatedGraphQLView(AsyncGraphQLView):

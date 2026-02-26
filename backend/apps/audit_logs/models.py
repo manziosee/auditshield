@@ -1,5 +1,6 @@
 from django.db import models
-from core.models import UUIDModel, TimeStampedModel
+
+from core.models import TimeStampedModel, UUIDModel
 
 
 class AuditLog(UUIDModel, TimeStampedModel):

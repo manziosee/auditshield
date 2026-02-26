@@ -2,9 +2,10 @@
 Celery tasks for sending notifications via email and in-app.
 """
 import logging
+
 from celery import shared_task
-from django.core.mail import send_mail
 from django.conf import settings
+from django.core.mail import send_mail
 from django.utils import timezone
 
 logger = logging.getLogger("auditshield")
@@ -12,8 +13,9 @@ logger = logging.getLogger("auditshield")
 
 @shared_task(name="apps.notifications.tasks.send_expiry_notification")
 def send_expiry_notification(document_id: str, days_left: int):
-    from apps.documents.models import Document
     from apps.accounts.models import User
+    from apps.documents.models import Document
+
     from .models import Notification
 
     try:
@@ -54,11 +56,14 @@ def send_expiry_notification(document_id: str, days_left: int):
 
 @shared_task(name="apps.notifications.tasks.send_compliance_reminders")
 def send_compliance_reminders():
-    from apps.compliance.models import ComplianceRecord
-    from apps.accounts.models import User
-    from .models import Notification
-    from django.utils import timezone
     from datetime import timedelta
+
+    from django.utils import timezone
+
+    from apps.accounts.models import User
+    from apps.compliance.models import ComplianceRecord
+
+    from .models import Notification
 
     today = timezone.now().date()
     upcoming = ComplianceRecord.objects.filter(

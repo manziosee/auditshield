@@ -2,16 +2,17 @@
 PDF report generation using WeasyPrint + Django templates.
 """
 import io
-from django.template.loader import render_to_string
+
 from django.core.files.base import ContentFile
+from django.template.loader import render_to_string
 from weasyprint import HTML
 
 
 def build_report_pdf(report):
     """Render HTML template and save as PDF to the report.file field."""
     from apps.compliance.utils import get_company_compliance_score
-    from apps.employees.models import Employee
     from apps.documents.models import Document
+    from apps.employees.models import Employee
 
     company = report.company
     context = {

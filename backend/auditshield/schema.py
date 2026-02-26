@@ -2,8 +2,9 @@
 Root GraphQL schema — wires together all queries and mutations.
 """
 import strawberry
-from auditshield.graphql.queries import Query
+
 from auditshield.graphql.mutations import Mutation
+from auditshield.graphql.queries import Query
 
 schema = strawberry.Schema(
     query=Query,

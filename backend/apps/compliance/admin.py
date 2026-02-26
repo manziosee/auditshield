@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.html import format_html
 
-from .models import ComplianceCategory, ComplianceRequirement, ComplianceRecord
+from .models import ComplianceCategory, ComplianceRecord, ComplianceRequirement
 
 
 @admin.register(ComplianceCategory)

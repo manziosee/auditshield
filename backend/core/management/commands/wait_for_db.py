@@ -2,8 +2,9 @@
 Management command used in docker-compose to wait until PostgreSQL is ready
 before running migrations.
 """
-import time
 import logging
+import time
+
 from django.core.management.base import BaseCommand
 from django.db import connections
 from django.db.utils import OperationalError

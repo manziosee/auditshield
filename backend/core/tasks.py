@@ -1,6 +1,7 @@
 """Celery task: trigger the backup scripts from Django."""
-import subprocess
 import logging
+import subprocess
+
 from celery import shared_task
 
 logger = logging.getLogger("auditshield")

@@ -2,6 +2,7 @@
 Celery task: generate PDF audit report using WeasyPrint.
 """
 import logging
+
 from celery import shared_task
 
 logger = logging.getLogger("auditshield")
@@ -9,8 +10,8 @@ logger = logging.getLogger("auditshield")
 
 @shared_task(name="apps.reports.tasks.generate_report", bind=True, max_retries=2)
 def generate_report(self, report_id: str):
-    from .models import Report
     from .generators import build_report_pdf
+    from .models import Report
 
     try:
         report = Report.objects.select_related("company", "generated_by").get(id=report_id)

@@ -2,16 +2,25 @@
 GraphQL Queries — all resolvers require authentication and are tenant-scoped.
 """
 from __future__ import annotations
+
+from typing import Optional
+
 import strawberry
 from strawberry.types import Info
-from typing import Optional, List
-from .types import (
-    CompanyType, EmployeeType, EmployeePage,
-    DocumentType, DocumentPage, DepartmentType,
-    ComplianceRecordType, ComplianceDashboard,
-    NotificationType, AuditLogType,
-)
+
 from .permissions import IsAuthenticated, IsCompanyAdmin
+from .types import (
+    AuditLogType,
+    CompanyType,
+    ComplianceDashboard,
+    ComplianceRecordType,
+    DepartmentType,
+    DocumentPage,
+    DocumentType,
+    EmployeePage,
+    EmployeeType,
+    NotificationType,
+)
 
 
 def _company(info: Info):
@@ -67,7 +76,7 @@ class Query:
             return None
 
     @strawberry.field(permission_classes=[IsAuthenticated])
-    def departments(self, info: Info) -> List[DepartmentType]:
+    def departments(self, info: Info) -> list[DepartmentType]:
         from apps.employees.models import Department
         return list(Department.objects.filter(company=_company(info)))
 
@@ -83,9 +92,11 @@ class Query:
         employee_id: Optional[strawberry.ID] = None,
         expiring_soon: bool = False,
     ) -> DocumentPage:
-        from apps.documents.models import Document
-        from django.utils import timezone
         from datetime import timedelta
+
+        from django.utils import timezone
+
+        from apps.documents.models import Document
 
         qs = Document.objects.filter(company=_company(info)).select_related("employee")
         if document_type:
@@ -123,7 +134,7 @@ class Query:
         self,
         info: Info,
         status: Optional[str] = None,
-    ) -> List[ComplianceRecordType]:
+    ) -> list[ComplianceRecordType]:
         from apps.compliance.models import ComplianceRecord
         qs = ComplianceRecord.objects.filter(
             company=_company(info)
@@ -134,7 +145,7 @@ class Query:
 
     # ── Notifications ─────────────────────────────────────────────────────────
     @strawberry.field(permission_classes=[IsAuthenticated])
-    def my_notifications(self, info: Info, unread_only: bool = False) -> List[NotificationType]:
+    def my_notifications(self, info: Info, unread_only: bool = False) -> list[NotificationType]:
         from apps.notifications.models import Notification
         qs = Notification.objects.filter(recipient=info.context.request.user)
         if unread_only:
@@ -153,7 +164,7 @@ class Query:
         info: Info,
         page: int = 1,
         page_size: int = 50,
-    ) -> List[AuditLogType]:
+    ) -> list[AuditLogType]:
         from apps.audit_logs.models import AuditLog
         user = info.context.request.user
         qs = AuditLog.objects.order_by("-created_at")

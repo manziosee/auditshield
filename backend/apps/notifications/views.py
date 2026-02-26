@@ -1,9 +1,9 @@
+from drf_spectacular.utils import OpenApiResponse, extend_schema, extend_schema_view
 from rest_framework import generics, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiResponse
 
 from .models import Notification
 from .serializers import NotificationSerializer

@@ -1,13 +1,14 @@
 from django.db import transaction
+from drf_spectacular.utils import OpenApiResponse, extend_schema, extend_schema_view
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.throttling import AnonRateThrottle
-from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiResponse
 
 from apps.accounts.models import User
+
 from .models import Company
-from .serializers import CompanySerializer, CompanyOnboardingSerializer
+from .serializers import CompanyOnboardingSerializer, CompanySerializer
 
 
 class OnboardingRateThrottle(AnonRateThrottle):
