@@ -26,9 +26,14 @@ RUN pip install --no-cache /wheels/*
 
 COPY --chown=appuser:appgroup . .
 
+RUN chmod +x entrypoint.sh
+
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    DJANGO_SETTINGS_MODULE=auditshield.settings.production
+    DJANGO_SETTINGS_MODULE=auditshield.settings.production \
+    PORT=8080
 
 USER appuser
-EXPOSE 8000
+EXPOSE 8080
+
+CMD ["./entrypoint.sh"]

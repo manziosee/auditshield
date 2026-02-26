@@ -1,22 +1,35 @@
+import time
+
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.http import JsonResponse
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
-from strawberry.django.views import GraphQLView
 
 from auditshield.graphql.context import AuthenticatedGraphQLView
 from auditshield.schema import schema
 
 API_V1 = "api/v1/"
 
+
+def health_check(request):
+    """Liveness/readiness probe for Fly.io, k8s, Docker health checks."""
+    return JsonResponse({
+        "status": "ok",
+        "service": "auditshield-api",
+        "timestamp": int(time.time()),
+    })
+
+
 urlpatterns = [
+    # ── Health check (no auth — required by Fly.io/load balancers) ────────────
+    path("health/", health_check, name="health"),
+
     # Admin
     path("admin/", admin.site.urls),
 
     # ── GraphQL (Apollo-compatible) ────────────────────────────────────────────
-    # Single endpoint — supports queries, mutations, and introspection.
-    # Use with Apollo Client on the frontend: http://localhost:8000/graphql/
     path(
         "graphql/",
         AuthenticatedGraphQLView.as_view(schema=schema),
