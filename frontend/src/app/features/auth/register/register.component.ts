@@ -15,6 +15,34 @@ const COMPANY_TYPES = [
   { value: 'other',         label: 'Other' },
 ];
 
+const COUNTRIES = [
+  { code: 'US', name: 'United States' },
+  { code: 'GB', name: 'United Kingdom' },
+  { code: 'CA', name: 'Canada' },
+  { code: 'AU', name: 'Australia' },
+  { code: 'DE', name: 'Germany' },
+  { code: 'FR', name: 'France' },
+  { code: 'AE', name: 'United Arab Emirates' },
+  { code: 'SG', name: 'Singapore' },
+  { code: 'IN', name: 'India' },
+  { code: 'NG', name: 'Nigeria' },
+  { code: 'ZA', name: 'South Africa' },
+  { code: 'KE', name: 'Kenya' },
+  { code: 'GH', name: 'Ghana' },
+  { code: 'RW', name: 'Rwanda' },
+  { code: 'UG', name: 'Uganda' },
+  { code: 'TZ', name: 'Tanzania' },
+  { code: 'EG', name: 'Egypt' },
+  { code: 'MA', name: 'Morocco' },
+  { code: 'BR', name: 'Brazil' },
+  { code: 'MX', name: 'Mexico' },
+  { code: 'JP', name: 'Japan' },
+  { code: 'KR', name: 'South Korea' },
+  { code: 'NL', name: 'Netherlands' },
+  { code: 'SE', name: 'Sweden' },
+  { code: 'CH', name: 'Switzerland' },
+];
+
 @Component({
   selector: 'as-register',
   standalone: true,
@@ -129,16 +157,33 @@ const COMPANY_TYPES = [
                   <label class="field-label">Phone Number <span class="req">*</span></label>
                   <div class="input-wrap" [class.input-error]="companyForm.get('company_phone')?.invalid && companyForm.get('company_phone')?.touched">
                     <mat-icon class="input-icon">phone</mat-icon>
-                    <input type="tel" formControlName="company_phone" placeholder="+250 7XX XXX XXX" />
+                    <input type="tel" formControlName="company_phone" placeholder="+1 555 000 0000" />
                   </div>
                 </div>
               </div>
 
               <div class="field-group">
-                <label class="field-label">TIN / Tax Number <span class="optional">(optional)</span></label>
+                <label class="field-label">Country <span class="req">*</span></label>
+                <div class="select-wrap" [class.input-error]="companyForm.get('country')?.invalid && companyForm.get('country')?.touched">
+                  <mat-icon class="input-icon">public</mat-icon>
+                  <select formControlName="country">
+                    <option value="" disabled>Select your country</option>
+                    @for (c of countries; track c.code) {
+                      <option [value]="c.code">{{ c.name }}</option>
+                    }
+                  </select>
+                  <mat-icon class="select-chevron">expand_more</mat-icon>
+                </div>
+                @if (companyForm.get('country')?.invalid && companyForm.get('country')?.touched) {
+                  <span class="field-error"><mat-icon>error_outline</mat-icon> Country is required</span>
+                }
+              </div>
+
+              <div class="field-group">
+                <label class="field-label">Tax Identifier <span class="optional">(optional)</span></label>
                 <div class="input-wrap">
                   <mat-icon class="input-icon">receipt_long</mat-icon>
-                  <input type="text" formControlName="tin_number" placeholder="e.g. 102345678" />
+                  <input type="text" formControlName="tax_identifier" placeholder="e.g. TIN / EIN / VAT number" />
                 </div>
               </div>
 
@@ -157,14 +202,14 @@ const COMPANY_TYPES = [
                   <label class="field-label">First Name <span class="req">*</span></label>
                   <div class="input-wrap" [class.input-error]="adminForm.get('admin_first_name')?.invalid && adminForm.get('admin_first_name')?.touched">
                     <mat-icon class="input-icon">person</mat-icon>
-                    <input type="text" formControlName="admin_first_name" placeholder="Jean-Pierre" />
+                    <input type="text" formControlName="admin_first_name" placeholder="Alex" />
                   </div>
                 </div>
                 <div class="field-group">
                   <label class="field-label">Last Name <span class="req">*</span></label>
                   <div class="input-wrap" [class.input-error]="adminForm.get('admin_last_name')?.invalid && adminForm.get('admin_last_name')?.touched">
                     <mat-icon class="input-icon">person</mat-icon>
-                    <input type="text" formControlName="admin_last_name" placeholder="Uwimana" />
+                    <input type="text" formControlName="admin_last_name" placeholder="Johnson" />
                   </div>
                 </div>
               </div>
@@ -457,6 +502,139 @@ const COMPANY_TYPES = [
     .signin-link a { color: var(--brand); font-weight: 700; text-decoration: none; }
     .signin-link a:hover { text-decoration: underline; }
 
+    /* ══════════════════════════════════════════════════════════════════════════
+       ANIMATIONS & INTERACTIONS
+    ══════════════════════════════════════════════════════════════════════════ */
+
+    @keyframes slideUpFade {
+      from { opacity: 0; transform: translateY(24px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0)    scale(1);    }
+    }
+    @keyframes shimmer {
+      0%   { left: -100%; }
+      60%  { left: 160%;  }
+      100% { left: 160%;  }
+    }
+    @keyframes benefitIn {
+      from { opacity: 0; transform: translateX(-20px); }
+      to   { opacity: 1; transform: translateX(0);     }
+    }
+    @keyframes orbDrift {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      40%       { transform: translate(-55px, 65px) scale(1.15); }
+      70%       { transform: translate(45px, -25px) scale(0.88); }
+    }
+    @keyframes logoPulse {
+      0%, 100% { box-shadow: 0 0 0 0   rgba(99,102,241,0);    }
+      50%       { box-shadow: 0 0 0 10px rgba(99,102,241,0.12); }
+    }
+    @keyframes stepPop {
+      0%   { transform: scale(1);    }
+      50%  { transform: scale(1.22); }
+      100% { transform: scale(1);    }
+    }
+
+    /* ── Animated orb in left panel ──────────────────────────────────────── */
+    .panel-left::after {
+      content: ''; position: absolute;
+      width: 340px; height: 340px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(99,102,241,0.13), transparent 70%);
+      bottom: -80px; right: -100px;
+      animation: orbDrift 12s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    /* ── Form card ───────────────────────────────────────────────────────── */
+    .form-card {
+      animation: slideUpFade 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+      transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.45s ease;
+    }
+    .form-card:hover {
+      transform: translateY(-9px) scale(1.01);
+      box-shadow: 0 28px 72px rgba(0,0,0,0.12), 0 0 0 1.5px color-mix(in srgb, var(--brand) 28%, transparent);
+    }
+
+    /* ── Brand logo ──────────────────────────────────────────────────────── */
+    .brand-logo {
+      animation: logoPulse 3.5s ease-in-out infinite;
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.3s;
+    }
+    .brand-logo:hover {
+      transform: scale(1.12) rotate(8deg);
+      border-color: rgba(165,180,252,0.5);
+      animation-play-state: paused;
+    }
+
+    /* ── Benefits: staggered slide-in ────────────────────────────────────── */
+    .benefit-item:nth-child(1) { animation: benefitIn 0.4s ease-out 0.15s both; }
+    .benefit-item:nth-child(2) { animation: benefitIn 0.4s ease-out 0.28s both; }
+    .benefit-item:nth-child(3) { animation: benefitIn 0.4s ease-out 0.41s both; }
+    .benefit-item:nth-child(4) { animation: benefitIn 0.4s ease-out 0.54s both; }
+    .benefit-item { transition: transform 0.25s ease; }
+    .benefit-item:hover { transform: translateX(6px); }
+    .benefit-icon { transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .benefit-item:hover .benefit-icon { transform: scale(1.18) rotate(-8deg); }
+    .benefit-title { transition: color 0.2s; }
+    .benefit-item:hover .benefit-title { color: rgba(255,255,255,0.98); }
+
+    /* ── Trust items ─────────────────────────────────────────────────────── */
+    .trust-item { transition: all 0.22s ease; }
+    .trust-item:hover {
+      background: rgba(255,255,255,0.09) !important;
+      border-color: rgba(165,180,252,0.22) !important;
+      color: rgba(255,255,255,0.72) !important;
+      transform: translateY(-3px) scale(1.04);
+    }
+
+    /* ── Step dots: pop on active ────────────────────────────────────────── */
+    .step-dot { transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .step-dot.active { animation: stepPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .step-line { transition: background 0.4s ease; }
+
+    /* ── Input / select: hover glow ──────────────────────────────────────── */
+    .input-wrap, .select-wrap { transition: border-color 0.2s, box-shadow 0.2s, background 0.2s; }
+    .input-wrap:hover:not(.input-error):not(:focus-within),
+    .select-wrap:hover:not(.input-error):not(:focus-within) {
+      border-color: color-mix(in srgb, var(--brand) 55%, var(--border-color));
+      background: var(--surface-card);
+    }
+    .input-icon { transition: color 0.2s, transform 0.2s; }
+    .input-wrap:focus-within .input-icon,
+    .select-wrap:focus-within .input-icon {
+      color: var(--brand) !important;
+      transform: scale(1.12) rotate(-5deg);
+    }
+
+    /* ── Submit button: shimmer sweep ────────────────────────────────────── */
+    .submit-btn { position: relative; overflow: hidden; }
+    .submit-btn::before {
+      content: ''; position: absolute; top: 0; left: -100%;
+      width: 55%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.28), transparent);
+      animation: shimmer 2.8s ease-in-out infinite;
+    }
+    .submit-btn:hover:not(:disabled) {
+      transform: translateY(-2px) scale(1.015) !important;
+      box-shadow: 0 14px 36px var(--brand-glow) !important;
+    }
+    .submit-btn:active:not(:disabled) {
+      transform: translateY(0) scale(0.98) !important;
+      transition: transform 0.1s;
+    }
+
+    /* ── Back button ─────────────────────────────────────────────────────── */
+    .back-btn { transition: all 0.22s ease !important; }
+    .back-btn:hover {
+      transform: translateX(-4px) !important;
+      border-color: var(--brand) !important;
+      color: var(--brand) !important;
+      background: var(--brand-subtle) !important;
+    }
+
+    /* ── Sign-in link ─────────────────────────────────────────────────────── */
+    .signin-link a { transition: letter-spacing 0.2s; }
+    .signin-link a:hover { letter-spacing: 0.01em; text-decoration: none !important; }
+
     /* ── Responsive ─────────────────────────────────────────────────────────── */
     @media (max-width: 900px) {
       .page { grid-template-columns: 1fr; }
@@ -477,11 +655,12 @@ export class RegisterComponent {
   readonly currentStep = signal(1);
 
   readonly companyForm = this.fb.group({
-    company_name:  ['', Validators.required],
-    company_type:  ['sme', Validators.required],
-    company_email: ['', [Validators.required, Validators.email]],
-    company_phone: ['', Validators.required],
-    tin_number:    [''],
+    company_name:   ['', Validators.required],
+    company_type:   ['sme', Validators.required],
+    company_email:  ['', [Validators.required, Validators.email]],
+    company_phone:  ['', Validators.required],
+    country:        ['', Validators.required],
+    tax_identifier: [''],
   });
 
   readonly adminForm = this.fb.group({
@@ -496,6 +675,7 @@ export class RegisterComponent {
   errorMessage = '';
 
   readonly companyTypes = COMPANY_TYPES;
+  readonly countries    = COUNTRIES;
 
   readonly benefits = [
     { icon: 'folder_special',    title: 'Secure Document Vault',    desc: 'AES-256 encrypted storage for all HR and compliance documents.', bg: 'rgba(99,102,241,0.15)',  color: '#818cf8' },

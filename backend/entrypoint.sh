@@ -2,6 +2,9 @@
 # Fly.io production entrypoint — runs on every machine start
 set -e
 
+echo "==> Ensuring data directories exist..."
+mkdir -p /data/media
+
 echo "==> Running database migrations..."
 python manage.py migrate --noinput
 

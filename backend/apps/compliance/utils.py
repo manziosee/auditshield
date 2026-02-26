@@ -1,13 +1,13 @@
 def get_employee_compliance_score(employee) -> int:
     """
     Returns 0-100 compliance score for an employee based on required documents present.
-    Required: Employment Contract, RSSB number, TIN number, Payslip (latest).
+    Required: Employment Contract, Social Insurance Number, Tax Identifier, Payslip (latest).
     """
     score = 0
     weights = {
         "has_contract": 40,
-        "has_rssb": 20,
-        "has_tin": 20,
+        "has_social_insurance": 20,
+        "has_tax_id": 20,
         "has_payslip": 20,
     }
     from apps.documents.models import Document
@@ -15,10 +15,10 @@ def get_employee_compliance_score(employee) -> int:
 
     if Document.DocumentType.EMPLOYMENT_CONTRACT in docs:
         score += weights["has_contract"]
-    if employee.rssb_number:
-        score += weights["has_rssb"]
-    if employee.tin_number:
-        score += weights["has_tin"]
+    if employee.social_insurance_number:
+        score += weights["has_social_insurance"]
+    if employee.tax_identifier:
+        score += weights["has_tax_id"]
     if Document.DocumentType.PAYSLIP in docs:
         score += weights["has_payslip"]
 

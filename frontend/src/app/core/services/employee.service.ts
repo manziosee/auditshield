@@ -46,4 +46,12 @@ export class EmployeeService {
   createDepartment(data: Partial<Department>): Observable<Department> {
     return this.api.post<Department>('employees/departments/', data);
   }
+
+  updateDepartment(id: string, data: Partial<Department>): Observable<Department> {
+    return this.api.patch<Department>(`employees/departments/${id}/`, data);
+  }
+
+  deleteDepartment(id: string): Observable<void> {
+    return this.api.delete<void>(`employees/departments/${id}/`);
+  }
 }

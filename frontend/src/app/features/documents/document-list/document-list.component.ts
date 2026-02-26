@@ -57,9 +57,9 @@ import { Document as Doc } from '../../../core/models/document.models';
             <mat-select [(ngModel)]="typeFilter" (ngModelChange)="loadDocuments()">
               <mat-option value="">All types</mat-option>
               <mat-option value="employment_contract">Employment Contract</mat-option>
-              <mat-option value="paye_return">PAYE Return</mat-option>
-              <mat-option value="rra_filing">RRA Filing</mat-option>
-              <mat-option value="rssb_declaration">RSSB Declaration</mat-option>
+              <mat-option value="payroll_tax_return">Payroll Tax Return</mat-option>
+              <mat-option value="tax_filing">Tax Filing</mat-option>
+              <mat-option value="social_security_declaration">Social Security Declaration</mat-option>
               <mat-option value="vat_return">VAT Return</mat-option>
               <mat-option value="payslip">Payslip</mat-option>
               <mat-option value="tax_clearance">Tax Clearance</mat-option>

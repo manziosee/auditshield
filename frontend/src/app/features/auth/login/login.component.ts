@@ -11,21 +11,45 @@ import { User } from '../../../core/models/auth.models';
 // ── Demo accounts ─────────────────────────────────────────────────────────────
 const DEMO_ADMIN: User = {
   id: 'demo-user-001', email: 'admin@demo.com',
-  first_name: 'Jean-Pierre', last_name: 'Uwimana',
-  full_name: 'Jean-Pierre Uwimana', phone: '+250 789 123 456',
-  role: 'admin', company: 'company-001', company_name: 'Rwanda Trade Solutions Ltd',
+  first_name: 'James', last_name: 'Okafor',
+  full_name: 'James Okafor', phone: '+1 415 100 0001',
+  role: 'admin', company: 'company-001', company_name: 'GlobalCo International Ltd',
   avatar: null, two_factor_enabled: false, created_at: '2024-01-15T08:00:00Z',
 };
 const DEMO_HR: User = {
   id: 'demo-user-002', email: 'hr@demo.com',
-  first_name: 'Marie', last_name: 'Mukamurenzi',
-  full_name: 'Marie Mukamurenzi', phone: '+250 788 234 567',
-  role: 'hr', company: 'company-001', company_name: 'Rwanda Trade Solutions Ltd',
+  first_name: 'Sarah', last_name: 'Chen',
+  full_name: 'Sarah Chen', phone: '+1 415 100 0002',
+  role: 'hr', company: 'company-001', company_name: 'GlobalCo International Ltd',
   avatar: null, two_factor_enabled: false, created_at: '2024-02-01T09:00:00Z',
 };
+const DEMO_ACCOUNTANT: User = {
+  id: 'demo-user-003', email: 'accountant@demo.com',
+  first_name: 'David', last_name: 'Mensah',
+  full_name: 'David Mensah', phone: '+1 415 100 0003',
+  role: 'accountant', company: 'company-001', company_name: 'GlobalCo International Ltd',
+  avatar: null, two_factor_enabled: false, created_at: '2024-03-01T08:00:00Z',
+};
+const DEMO_AUDITOR: User = {
+  id: 'demo-user-004', email: 'auditor@demo.com',
+  first_name: 'Amina', last_name: 'Hassan',
+  full_name: 'Amina Hassan', phone: '+1 415 100 0004',
+  role: 'auditor', company: 'company-001', company_name: 'GlobalCo International Ltd',
+  avatar: null, two_factor_enabled: false, created_at: '2024-04-01T08:00:00Z',
+};
+const DEMO_EMPLOYEE: User = {
+  id: 'demo-user-005', email: 'employee@demo.com',
+  first_name: 'Lucas', last_name: 'Ferreira',
+  full_name: 'Lucas Ferreira', phone: '+1 415 100 0007',
+  role: 'employee', company: 'company-001', company_name: 'GlobalCo International Ltd',
+  avatar: null, two_factor_enabled: false, created_at: '2026-01-15T08:00:00Z',
+};
 const DEMO_ACCOUNTS: Record<string, { password: string; user: User }> = {
-  'admin@demo.com': { password: 'Demo@1234', user: DEMO_ADMIN },
-  'hr@demo.com':   { password: 'Demo@1234', user: DEMO_HR },
+  'admin@demo.com':      { password: 'Demo@1234', user: DEMO_ADMIN },
+  'hr@demo.com':         { password: 'Demo@1234', user: DEMO_HR },
+  'accountant@demo.com': { password: 'Demo@1234', user: DEMO_ACCOUNTANT },
+  'auditor@demo.com':    { password: 'Demo@1234', user: DEMO_AUDITOR },
+  'employee@demo.com':   { password: 'Demo@1234', user: DEMO_EMPLOYEE },
 };
 
 @Component({
@@ -73,14 +97,14 @@ const DEMO_ACCOUNTS: Record<string, { password: string; user: User }> = {
 
         <div class="testimonial">
           <blockquote>
-            "AuditShield turned a 3-day RRA audit into a 2-hour walkthrough.
+            "AuditShield turned a 3-day regulatory audit into a 2-hour walkthrough.
             Every document was exactly where it should be."
           </blockquote>
           <div class="testimonial-author">
-            <div class="ta-avatar">MK</div>
+            <div class="ta-avatar">RT</div>
             <div>
-              <div class="ta-name">Mutoni Kaveh</div>
-              <div class="ta-title">CFO · Kigali Fresh Foods Ltd</div>
+              <div class="ta-name">Rachel Torres</div>
+              <div class="ta-title">CFO · Pacific Fresh Foods Ltd</div>
             </div>
           </div>
         </div>
@@ -111,18 +135,21 @@ const DEMO_ACCOUNTS: Record<string, { password: string; user: User }> = {
               <mat-icon>science</mat-icon>
               <span>Try the live demo — no sign-up required</span>
             </div>
-            <div class="demo-accounts">
+            <div class="demo-grid">
               @for (acc of demoAccounts; track acc.email) {
-                <button type="button" class="demo-pill" (click)="fillDemo(acc.email, acc.password)">
-                  <span class="demo-role-badge">{{ acc.role }}</span>
-                  <div class="demo-creds">
-                    <span class="demo-email">{{ acc.email }}</span>
-                    <span class="demo-pass">{{ acc.password }}</span>
+                <button type="button" class="demo-card" (click)="fillDemo(acc.email, acc.password)" [style.--demo-color]="acc.color">
+                  <div class="demo-card-icon">
+                    <mat-icon>{{ acc.icon }}</mat-icon>
                   </div>
-                  <mat-icon class="demo-arrow">arrow_forward</mat-icon>
+                  <div class="demo-card-body">
+                    <span class="demo-card-role">{{ acc.role }}</span>
+                    <span class="demo-card-email">{{ acc.email }}</span>
+                  </div>
+                  <mat-icon class="demo-card-arrow">arrow_forward</mat-icon>
                 </button>
               }
             </div>
+            <div class="demo-pw-hint"><mat-icon>key</mat-icon>All accounts use password: <strong>Demo@1234</strong></div>
           </div>
 
           <div class="divider"><span>or sign in with your account</span></div>
@@ -361,31 +388,48 @@ const DEMO_ACCOUNTS: Record<string, { password: string; user: User }> = {
       margin-bottom: 10px;
     }
     .demo-banner-title mat-icon { font-size: 1rem; width: 1rem; height: 1rem; }
-    .demo-accounts { display: flex; flex-direction: column; gap: 7px; }
-    .demo-pill {
+
+    /* 5-account vertical list */
+    .demo-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-bottom: 10px;
+    }
+    .demo-card {
       display: flex; align-items: center; gap: 10px;
-      background: var(--surface-card);
+      background: transparent;
       border: 1px solid var(--border-color);
       border-radius: 10px;
-      padding: 9px 12px;
+      padding: 7px 10px;
       cursor: pointer; text-align: left;
       transition: all 0.15s; width: 100%;
     }
-    .demo-pill:hover {
-      background: var(--brand-subtle);
-      border-color: var(--brand);
-      transform: translateX(2px);
+    .demo-card:hover {
+      border-color: var(--demo-color);
+      background: color-mix(in srgb, var(--demo-color) 7%, transparent);
+      transform: translateX(3px);
     }
-    .demo-role-badge {
-      background: var(--brand); color: white;
-      font-size: 0.65rem; font-weight: 700;
-      padding: 2px 8px; border-radius: 4px;
-      text-transform: uppercase; flex-shrink: 0;
+    .demo-card-icon {
+      width: 28px; height: 28px; border-radius: 7px;
+      background: color-mix(in srgb, var(--demo-color) 15%, transparent);
+      color: var(--demo-color);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
     }
-    .demo-creds { display: flex; flex-direction: column; flex: 1; min-width: 0; }
-    .demo-email { font-size: 0.78rem; font-weight: 600; color: var(--text-primary); font-family: monospace; }
-    .demo-pass  { font-size: 0.72rem; color: var(--text-muted); font-family: monospace; }
-    .demo-arrow { color: var(--brand) !important; font-size: 1rem !important; width: 1rem !important; height: 1rem !important; }
+    .demo-card-icon mat-icon { font-size: 0.95rem; width: 0.95rem; height: 0.95rem; }
+    .demo-card-body { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
+    .demo-card-role  { font-size: 0.68rem; font-weight: 700; color: var(--demo-color); text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; min-width: 68px; }
+    .demo-card-email { font-size: 0.72rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .demo-card-arrow { color: var(--text-faint) !important; font-size: 0.85rem !important; width: 0.85rem !important; height: 0.85rem !important; flex-shrink: 0; }
+    .demo-card:hover .demo-card-arrow { color: var(--demo-color) !important; }
+
+    .demo-pw-hint {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;
+    }
+    .demo-pw-hint mat-icon { font-size: 0.85rem; width: 0.85rem; height: 0.85rem; color: var(--brand); }
+    .demo-pw-hint strong { color: var(--text-secondary); font-family: monospace; }
 
     /* Divider */
     .divider {
@@ -492,6 +536,160 @@ const DEMO_ACCOUNTS: Record<string, { password: string; user: User }> = {
     .register-link a { color: var(--brand); font-weight: 700; text-decoration: none; }
     .register-link a:hover { text-decoration: underline; }
 
+    /* ══════════════════════════════════════════════════════════════════════════
+       ANIMATIONS & INTERACTIONS
+    ══════════════════════════════════════════════════════════════════════════ */
+
+    /* Keyframes */
+    @keyframes slideUpFade {
+      from { opacity: 0; transform: translateY(28px) scale(0.96); }
+      to   { opacity: 1; transform: translateY(0)    scale(1);    }
+    }
+    @keyframes shimmer {
+      0%   { left: -100%; }
+      60%  { left: 160%;  }
+      100% { left: 160%;  }
+    }
+    @keyframes statFloat {
+      0%, 100% { transform: translateY(0px); }
+      50%       { transform: translateY(-7px); }
+    }
+    @keyframes logoPulse {
+      0%, 100% { box-shadow: 0 0 0 0   rgba(99,102,241,0);    }
+      50%       { box-shadow: 0 0 0 10px rgba(99,102,241,0.12); }
+    }
+    @keyframes orbA {
+      0%, 100% { transform: translate(0,   0  ) scale(1);    opacity: 0.6; }
+      33%       { transform: translate(70px,-50px) scale(1.15); opacity: 0.8; }
+      66%       { transform: translate(-30px,40px) scale(0.88); opacity: 0.5; }
+    }
+    @keyframes orbB {
+      0%, 100% { transform: translate(0,   0  ) scale(1);    }
+      40%       { transform: translate(-60px,70px) scale(1.2); }
+      70%       { transform: translate(50px,-30px) scale(0.9); }
+    }
+
+    /* Animated background orbs inside left panel */
+    .panel-left::after {
+      content: ''; position: absolute;
+      width: 380px; height: 380px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(99,102,241,0.13), transparent 70%);
+      bottom: -100px; right: -120px;
+      animation: orbA 11s ease-in-out infinite;
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ── Form card: entrance + hover lift ─────────────────────────────────── */
+    .form-card {
+      animation: slideUpFade 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+      transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.45s ease;
+    }
+    .form-card:hover {
+      transform: translateY(-10px) scale(1.012);
+      box-shadow: 0 32px 80px rgba(0,0,0,0.13), 0 0 0 1.5px color-mix(in srgb, var(--brand) 30%, transparent);
+    }
+
+    /* ── Brand logo: pulse + hover spin ──────────────────────────────────── */
+    .brand-logo {
+      animation: logoPulse 3.5s ease-in-out infinite;
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.3s;
+    }
+    .brand-logo:hover {
+      transform: scale(1.12) rotate(8deg);
+      border-color: rgba(165,180,252,0.5);
+      animation-play-state: paused;
+    }
+
+    /* ── Stat cards: staggered float ─────────────────────────────────────── */
+    .stat-card { transition: all 0.3s ease; }
+    .stat-card:nth-child(1) { animation: statFloat 4.5s ease-in-out infinite; }
+    .stat-card:nth-child(2) { animation: statFloat 4.5s ease-in-out 1.2s infinite; }
+    .stat-card:hover {
+      background: rgba(255,255,255,0.09) !important;
+      border-color: rgba(165,180,252,0.25) !important;
+      transform: translateY(-5px) scale(1.03);
+      animation-play-state: paused;
+    }
+    .stat-card:hover .stat-icon { transform: scale(1.15) rotate(-5deg); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+    /* ── Testimonial card ────────────────────────────────────────────────── */
+    .testimonial { transition: all 0.3s ease; }
+    .testimonial:hover {
+      background: rgba(255,255,255,0.07) !important;
+      border-color: rgba(165,180,252,0.18) !important;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    }
+
+    /* ── Trust chips ─────────────────────────────────────────────────────── */
+    .lchip {
+      transition: all 0.22s ease;
+      cursor: default;
+    }
+    .lchip:hover {
+      background: rgba(165,180,252,0.12) !important;
+      border-color: rgba(165,180,252,0.25) !important;
+      color: rgba(255,255,255,0.75) !important;
+      transform: translateY(-3px) scale(1.04);
+    }
+
+    /* ── Input fields: hover glow ────────────────────────────────────────── */
+    .input-wrap {
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    .input-wrap:hover:not(.input-error):not(.input-focused) {
+      border-color: color-mix(in srgb, var(--brand) 55%, var(--border-color));
+      background: var(--surface-card);
+    }
+    .input-icon { transition: color 0.2s, transform 0.2s; }
+    .input-wrap.input-focused .input-icon {
+      color: var(--brand) !important;
+      transform: scale(1.12) rotate(-5deg);
+    }
+
+    /* ── Submit button: shimmer sweep ────────────────────────────────────── */
+    .submit-btn { position: relative; overflow: hidden; }
+    .submit-btn::before {
+      content: ''; position: absolute; top: 0; left: -100%;
+      width: 55%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.28), transparent);
+      animation: shimmer 2.8s ease-in-out infinite;
+    }
+    .submit-btn:hover:not(:disabled) {
+      transform: translateY(-2px) scale(1.015) !important;
+      box-shadow: 0 14px 36px var(--brand-glow) !important;
+    }
+    .submit-btn:active:not(:disabled) {
+      transform: translateY(0) scale(0.98) !important;
+      transition: transform 0.1s;
+    }
+
+    /* ── Demo banner: hover glow ─────────────────────────────────────────── */
+    .demo-banner { transition: all 0.28s ease; }
+    .demo-banner:hover {
+      border-color: color-mix(in srgb, var(--brand) 45%, transparent);
+      box-shadow: 0 6px 24px color-mix(in srgb, var(--brand) 10%, rgba(0,0,0,0.04));
+    }
+
+    /* ── Demo cards: slide + icon bounce ─────────────────────────────────── */
+    .demo-card { transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .demo-card:hover {
+      transform: translateX(6px) scale(1.015) !important;
+      box-shadow: 3px 3px 14px color-mix(in srgb, var(--demo-color) 14%, rgba(0,0,0,0.04));
+    }
+    .demo-card-icon { transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .demo-card:hover .demo-card-icon {
+      transform: scale(1.2) rotate(-8deg);
+    }
+
+    /* ── Forgot link hover ───────────────────────────────────────────────── */
+    .forgot-link { transition: color 0.15s, transform 0.15s; display: inline-block; }
+    .forgot-link:hover { transform: translateX(3px); text-decoration: none !important; }
+
+    /* ── Register link hover ─────────────────────────────────────────────── */
+    .register-link a { transition: letter-spacing 0.2s; }
+    .register-link a:hover { letter-spacing: 0.01em; text-decoration: none !important; }
+
     /* ── Responsive ─────────────────────────────────────────────────────────── */
     @media (max-width: 900px) {
       .page { grid-template-columns: 1fr; }
@@ -518,8 +716,11 @@ export class LoginComponent {
   pwFocused     = false;
 
   readonly demoAccounts = [
-    { email: 'admin@demo.com', password: 'Demo@1234', role: 'Admin' },
-    { email: 'hr@demo.com',    password: 'Demo@1234', role: 'HR' },
+    { email: 'admin@demo.com',      password: 'Demo@1234', role: 'Admin',      icon: 'admin_panel_settings', color: '#6366f1' },
+    { email: 'hr@demo.com',         password: 'Demo@1234', role: 'HR',         icon: 'badge',               color: '#22c55e' },
+    { email: 'accountant@demo.com', password: 'Demo@1234', role: 'Accountant', icon: 'calculate',           color: '#3b82f6' },
+    { email: 'auditor@demo.com',    password: 'Demo@1234', role: 'Auditor',    icon: 'fact_check',          color: '#f59e0b' },
+    { email: 'employee@demo.com',   password: 'Demo@1234', role: 'Employee',   icon: 'person',              color: '#8b5cf6' },
   ];
 
   fillDemo(email: string, password: string): void {

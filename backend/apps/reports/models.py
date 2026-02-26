@@ -9,9 +9,11 @@ class Report(TenantModel):
         EMPLOYEE_SUMMARY = "employee_summary", "Employee Summary"
         COMPLIANCE_STATUS = "compliance_status", "Compliance Status"
         PAYROLL_SUMMARY = "payroll_summary", "Payroll Summary"
+        PAYROLL_RUN_DETAIL = "payroll_run_detail", "Payroll Run Detail"
         DOCUMENT_INVENTORY = "document_inventory", "Document Inventory"
-        RRA_FILING_SUMMARY = "rra_filing", "RRA Filing Summary"
-        RSSB_FILING_SUMMARY = "rssb_filing", "RSSB Filing Summary"
+        TAX_FILING_SUMMARY = "tax_filing_summary", "Tax Filing Summary"
+        SOCIAL_SECURITY_SUMMARY = "social_security_summary", "Social Security Summary"
+        FINANCIAL_SUMMARY = "financial_summary", "Financial Summary"
 
     title = models.CharField(max_length=200)
     report_type = models.CharField(max_length=30, choices=ReportType.choices)

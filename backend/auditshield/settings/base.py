@@ -47,6 +47,7 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "core",
+    "apps.geography",
     "apps.accounts",
     "apps.companies",
     "apps.employees",
@@ -55,6 +56,7 @@ LOCAL_APPS = [
     "apps.reports",
     "apps.notifications",
     "apps.audit_logs",
+    "apps.payroll",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -62,6 +64,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 # ─── Middleware ───────────────────────────────────────────────────────────────
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -116,7 +119,7 @@ PASSWORD_HASHERS = [
 
 # ─── Internationalization ─────────────────────────────────────────────────────
 LANGUAGE_CODE = "en-us"
-TIME_ZONE = "Africa/Kigali"
+TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
@@ -232,7 +235,7 @@ EMAIL_PORT = env.int("EMAIL_PORT", default=587)
 EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=True)
 EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="")
-DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="AuditShield <noreply@auditshield.rw>")
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="AuditShield <noreply@auditshield.io>")
 
 # ─── File Upload ──────────────────────────────────────────────────────────────
 MAX_UPLOAD_SIZE_MB = env.int("MAX_UPLOAD_SIZE_MB", default=50)
@@ -296,9 +299,9 @@ LOGGING = {
 SPECTACULAR_SETTINGS = {
     "TITLE": "AuditShield API",
     "DESCRIPTION": (
-        "## AuditShield — SME Digital Records & Compliance System\n\n"
-        "A multi-tenant API for Rwandan businesses to manage employee records, "
-        "encrypted documents, and RRA/RSSB compliance obligations.\n\n"
+        "## AuditShield — Global SME Compliance Platform\n\n"
+        "A multi-tenant API for businesses worldwide to manage employee records, "
+        "encrypted documents, payroll, and regulatory compliance obligations.\n\n"
         "### Authentication\n"
         "All endpoints (except `/auth/login/` and `/companies/onboard/`) require a "
         "**Bearer JWT** token in the `Authorization` header.\n\n"
@@ -308,6 +311,10 @@ SPECTACULAR_SETTINGS = {
         "### Multi-tenancy\n"
         "Every resource is automatically scoped to the authenticated user's company. "
         "You cannot access another company's data.\n\n"
+        "### Multi-country\n"
+        "Compliance requirements, tax rules, and currencies are all country-aware. "
+        "Each company is linked to a Country which drives its authority tree, tax brackets, "
+        "and default currency.\n\n"
         "### GraphQL\n"
         "A GraphQL endpoint is also available at `/graphql/` (Apollo-compatible, Strawberry)."
     ),
@@ -315,13 +322,13 @@ SPECTACULAR_SETTINGS = {
     "SERVE_INCLUDE_SCHEMA": False,
     "CONTACT": {
         "name": "AuditShield Support",
-        "email": "support@auditshield.rw",
-        "url": "https://auditshield.rw",
+        "email": "support@auditshield.io",
+        "url": "https://auditshield.io",
     },
     "LICENSE": {"name": "MIT", "url": "https://opensource.org/licenses/MIT"},
     "SERVERS": [
+        {"url": "https://auditshield-backend.fly.dev", "description": "Production"},
         {"url": "http://localhost:8000", "description": "Local Development"},
-        {"url": "https://api.auditshield.rw", "description": "Production"},
     ],
     # JWT Bearer security scheme
     "SECURITY": [{"jwtAuth": []}],
@@ -343,7 +350,7 @@ SPECTACULAR_SETTINGS = {
         {"name": "employees", "description": "Employee profiles, bulk import, and Excel export"},
         {"name": "departments", "description": "Departments within a company"},
         {"name": "documents", "description": "Encrypted document vault with OCR and expiry tracking"},
-        {"name": "compliance", "description": "RRA/RSSB/Labor Law compliance records and dashboard"},
+        {"name": "compliance", "description": "Regulatory compliance records, authority tracking, and audit readiness dashboard"},
         {"name": "reports", "description": "Async PDF report generation and download"},
         {"name": "notifications", "description": "In-app notification feed"},
         {"name": "audit-logs", "description": "Immutable activity trail (read-only)"},

@@ -53,7 +53,7 @@ import { AuditLog } from '../../../core/models/audit-log.models';
           <mat-form-field appearance="outline">
             <mat-label>Method</mat-label>
             <mat-select [(ngModel)]="methodFilter" (ngModelChange)="loadLogs()">
-              <mat-option value="">All</mat-option>
+              <mat-option value="">All Methods</mat-option>
               <mat-option value="POST">POST</mat-option>
               <mat-option value="PUT">PUT</mat-option>
               <mat-option value="PATCH">PATCH</mat-option>
@@ -64,7 +64,7 @@ import { AuditLog } from '../../../core/models/audit-log.models';
           <mat-form-field appearance="outline">
             <mat-label>Status</mat-label>
             <mat-select [(ngModel)]="statusFilter" (ngModelChange)="loadLogs()">
-              <mat-option value="">All</mat-option>
+              <mat-option value="">All Statuses</mat-option>
               <mat-option value="2xx">Success (2xx)</mat-option>
               <mat-option value="4xx">Client Error (4xx)</mat-option>
               <mat-option value="5xx">Server Error (5xx)</mat-option>
@@ -82,7 +82,7 @@ import { AuditLog } from '../../../core/models/audit-log.models';
             <ng-container matColumnDef="timestamp">
               <th mat-header-cell *matHeaderCellDef>Timestamp</th>
               <td mat-cell *matCellDef="let log">
-                <span class="mono text-sm">{{ log.created_at | date:'medium' }}</span>
+                <span class="mono ts-text">{{ log.created_at | date:'medium' }}</span>
               </td>
             </ng-container>
             <ng-container matColumnDef="user">
@@ -90,7 +90,7 @@ import { AuditLog } from '../../../core/models/audit-log.models';
               <td mat-cell *matCellDef="let log">
                 <div class="user-cell">
                   <span class="user-email">{{ log.user_email || 'Anonymous' }}</span>
-                  <span class="ip-text">{{ log.ip_address || '' }}</span>
+                  <span class="ip-text mono">{{ log.ip_address || '' }}</span>
                 </div>
               </td>
             </ng-container>
@@ -115,7 +115,7 @@ import { AuditLog } from '../../../core/models/audit-log.models';
             <ng-container matColumnDef="duration">
               <th mat-header-cell *matHeaderCellDef>Duration</th>
               <td mat-cell *matCellDef="let log">
-                <span class="text-sm text-muted">{{ log.duration_ms }}ms</span>
+                <span class="duration-text" [class.duration-slow]="log.duration_ms > 500">{{ log.duration_ms }}ms</span>
               </td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="columns"></tr>
@@ -136,39 +136,82 @@ import { AuditLog } from '../../../core/models/audit-log.models';
   `,
   styles: [`
     .page-container { display:flex; flex-direction:column; gap:20px; }
-    .page-header { display:flex; justify-content:space-between; align-items:center; }
-    .page-header h2 { margin:0 0 2px; font-size:1.5rem; font-weight:700; }
-    .subtitle { margin:0; color:#64748b; font-size:0.875rem; }
-    .header-note { display:flex; align-items:center; gap:6px; font-size:0.8rem; color:#64748b; background:#f8fafc; padding:8px 14px; border-radius:8px; border:1px solid #e2e8f0; }
+
+    /* ── Header ─────────────────────────────────────────────────────────────── */
+    .page-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+    .page-header h2 { margin:0 0 2px; font-size:1.5rem; font-weight:700; color:var(--text-primary); }
+    .subtitle { margin:0; color:var(--text-muted); font-size:0.875rem; }
+    .header-note {
+      display:flex; align-items:center; gap:6px;
+      font-size:0.8rem; color:var(--text-muted);
+      background:var(--surface-hover);
+      padding:8px 14px; border-radius:8px;
+      border:1px solid var(--border-color);
+      flex-shrink:0;
+    }
     .header-note mat-icon { font-size:16px; height:16px; width:16px; }
+
+    /* ── Filters ─────────────────────────────────────────────────────────────── */
     .filters-card { padding:16px 20px !important; }
     .filters-row { display:flex; gap:12px; flex-wrap:wrap; }
     .search-field { flex:1; min-width:220px; }
+
+    /* ── Table ───────────────────────────────────────────────────────────────── */
     .table-card { overflow:hidden; padding:0 !important; position:relative; }
-    .loading-overlay { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.8); z-index:10; }
+    .loading-overlay {
+      position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+      background:color-mix(in srgb, var(--surface-card) 88%, transparent);
+      backdrop-filter:blur(2px); z-index:10;
+    }
     .table-wrapper { overflow-x:auto; }
     table { width:100%; }
+
     .mono { font-family:monospace; }
-    .text-sm { font-size:0.8rem; }
-    .text-muted { color:#64748b; }
-    .user-email { font-size:0.875rem; font-weight:500; display:block; }
-    .ip-text { font-size:0.7rem; color:#94a3b8; font-family:monospace; }
-    .method-badge { display:inline-block; padding:2px 7px; border-radius:4px; font-size:0.7rem; font-weight:700; font-family:monospace; letter-spacing:0.03em; }
-    .method-get { background:#dbeafe; color:#1e40af; }
-    .method-post { background:#dcfce7; color:#14532d; }
-    .method-put, .method-patch { background:#fef9c3; color:#854d0e; }
-    .method-delete { background:#fee2e2; color:#7f1d1d; }
-    .method-default { background:#f1f5f9; color:#475569; }
-    .path-text { font-size:0.8rem; color:#1e293b; max-width:280px; display:inline-block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .status-code { display:inline-block; padding:2px 8px; border-radius:4px; font-size:0.8rem; font-weight:700; font-family:monospace; }
-    .status-2xx { background:#dcfce7; color:#14532d; }
-    .status-3xx { background:#dbeafe; color:#1e40af; }
-    .status-4xx { background:#fef9c3; color:#854d0e; }
-    .status-5xx { background:#fee2e2; color:#7f1d1d; }
-    .status-other { background:#f1f5f9; color:#475569; }
-    .empty-state { text-align:center; padding:48px 24px; color:#64748b; }
-    .empty-state mat-icon { font-size:3rem; height:3rem; width:3rem; opacity:0.4; display:block; margin:0 auto 12px; }
-    .empty-state h3 { margin:0 0 8px; color:#1e293b; }
+    .ts-text { font-size:0.8rem; color:var(--text-secondary); }
+
+    .user-cell { display:flex; flex-direction:column; }
+    .user-email { font-size:0.875rem; font-weight:500; color:var(--text-primary); }
+    .ip-text { font-size:0.7rem; color:var(--text-faint); margin-top:2px; }
+
+    /* Method badges — all use CSS variables for dark mode compat */
+    .method-badge {
+      display:inline-block; padding:3px 8px; border-radius:5px;
+      font-size:0.7rem; font-weight:700; font-family:monospace; letter-spacing:0.03em;
+    }
+    .method-get     { background:var(--info-bg);    color:var(--info);    }
+    .method-post    { background:var(--success-bg); color:var(--success); }
+    .method-put,
+    .method-patch   { background:var(--warning-bg); color:var(--warning); }
+    .method-delete  { background:var(--danger-bg);  color:var(--danger);  }
+    .method-default { background:var(--surface-hover); color:var(--text-muted); }
+
+    /* Path */
+    .path-text {
+      font-size:0.8rem; color:var(--text-secondary);
+      max-width:280px; display:inline-block;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+      vertical-align:middle;
+    }
+
+    /* Status code badges */
+    .status-code {
+      display:inline-block; padding:3px 8px; border-radius:5px;
+      font-size:0.8rem; font-weight:700; font-family:monospace;
+    }
+    .status-2xx   { background:var(--success-bg); color:var(--success); }
+    .status-3xx   { background:var(--info-bg);    color:var(--info);    }
+    .status-4xx   { background:var(--warning-bg); color:var(--warning); }
+    .status-5xx   { background:var(--danger-bg);  color:var(--danger);  }
+    .status-other { background:var(--surface-hover); color:var(--text-muted); }
+
+    /* Duration */
+    .duration-text { font-size:0.8rem; color:var(--text-muted); }
+    .duration-slow { color:var(--warning); font-weight:600; }
+
+    /* Empty state */
+    .empty-state { text-align:center; padding:48px 24px; color:var(--text-muted); }
+    .empty-state mat-icon { font-size:3rem; height:3rem; width:3rem; opacity:0.3; display:block; margin:0 auto 12px; }
+    .empty-state h3 { margin:0 0 8px; color:var(--text-primary); font-size:1rem; }
     .empty-state p { margin:0; }
   `],
 })
@@ -231,6 +274,6 @@ export class AuditLogsListComponent implements OnInit {
   }
 
   truncatePath(path: string): string {
-    return path.length > 50 ? path.slice(0, 47) + '…' : path;
+    return path?.length > 50 ? path.slice(0, 47) + '…' : path;
   }
 }

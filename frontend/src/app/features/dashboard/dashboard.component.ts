@@ -23,6 +23,7 @@ interface DashboardStats {
   pending_compliance: number;
   overdue_compliance: number;
   total_compliance_items: number;
+  department_count: number;
 }
 
 interface Deadline {
@@ -80,22 +81,30 @@ interface ActivityItem {
       <!-- ── KPI Cards ────────────────────────────────────────────────────────── -->
       <div class="kpi-grid">
         @for (kpi of kpiCards(); track kpi.label) {
-          <div class="kpi-card" [class.kpi-danger]="kpi.danger" [class.kpi-warning]="kpi.warning">
-            <div class="kpi-icon-wrap" [style.background]="kpi.gradientBg">
-              <mat-icon [style.color]="kpi.iconColor">{{ kpi.icon }}</mat-icon>
+          <div class="kpi-card" [class.kpi-danger]="kpi.danger" [class.kpi-warning]="kpi.warning" [style.--qc]="kpi.iconColor">
+            <!-- Decorative icon watermark -->
+            <div class="kpi-watermark" [style.color]="kpi.iconColor">
+              <mat-icon>{{ kpi.icon }}</mat-icon>
             </div>
-            <div class="kpi-body">
-              <div class="kpi-value">{{ kpi.value }}</div>
-              <div class="kpi-label">{{ kpi.label }}</div>
-              @if (kpi.sub) {
-                <div class="kpi-sub" [style.color]="kpi.subColor">
-                  <mat-icon style="font-size:0.8rem;width:0.8rem;height:0.8rem">{{ kpi.subIcon }}</mat-icon>
-                  {{ kpi.sub }}
-                </div>
+            <!-- Top row: icon + alert dot -->
+            <div class="kpi-head">
+              <div class="kpi-icon-wrap">
+                <mat-icon [style.color]="kpi.iconColor">{{ kpi.icon }}</mat-icon>
+              </div>
+              @if (kpi.danger || kpi.warning) {
+                <span class="kpi-alert-dot" [class.kpi-alert-warning]="kpi.warning && !kpi.danger"
+                  [matTooltip]="kpi.danger ? 'Needs attention' : 'Action required'"></span>
               }
             </div>
-            @if (kpi.danger || kpi.warning) {
-              <div class="kpi-alert-dot"></div>
+            <!-- Value -->
+            <div class="kpi-value">{{ kpi.value }}</div>
+            <!-- Label -->
+            <div class="kpi-label">{{ kpi.label }}</div>
+            <!-- Trend pill -->
+            @if (kpi.sub) {
+              <div class="kpi-trend" [style.color]="kpi.subColor">
+                <mat-icon>{{ kpi.subIcon }}</mat-icon>{{ kpi.sub }}
+              </div>
             }
           </div>
         }
@@ -241,6 +250,81 @@ interface ActivityItem {
         </div>
       </div>
 
+      <!-- ── Analytics row: 3 charts ────────────────────────────────────────── -->
+      <div class="analytics-grid">
+
+        <!-- Department headcount -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <div>
+              <div class="chart-card-title">Department Headcount</div>
+              <div class="chart-card-sub">Employees per department</div>
+            </div>
+            <div class="chart-badge" style="background:rgba(236,72,153,0.12);color:#ec4899">
+              <mat-icon>account_tree</mat-icon> 5 teams
+            </div>
+          </div>
+          <div class="chart-wrap chart-wrap--md">
+            <canvas baseChart
+              [type]="'bar'"
+              [data]="deptHeadcountData"
+              [options]="hBarChartOptions">
+            </canvas>
+          </div>
+        </div>
+
+        <!-- Compliance by authority stacked -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <div>
+              <div class="chart-card-title">Compliance by Authority</div>
+              <div class="chart-card-sub">Status breakdown per regulatory body</div>
+            </div>
+          </div>
+          <div class="chart-wrap chart-wrap--md">
+            <canvas baseChart
+              [type]="'bar'"
+              [data]="authorityComplianceData"
+              [options]="stackedBarOptions">
+            </canvas>
+          </div>
+        </div>
+
+        <!-- Employee split: contract + status -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <div>
+              <div class="chart-card-title">Workforce Overview</div>
+              <div class="chart-card-sub">Contract types &amp; employment status</div>
+            </div>
+          </div>
+          <div class="dual-donut">
+            <div class="donut-block">
+              <div class="donut-label">By Contract</div>
+              <div class="chart-wrap chart-wrap--donut">
+                <canvas baseChart
+                  [type]="'doughnut'"
+                  [data]="contractTypeData"
+                  [options]="doughnutChartOptions">
+                </canvas>
+              </div>
+            </div>
+            <div class="donut-divider"></div>
+            <div class="donut-block">
+              <div class="donut-label">By Status</div>
+              <div class="chart-wrap chart-wrap--donut">
+                <canvas baseChart
+                  [type]="'doughnut'"
+                  [data]="empStatusData"
+                  [options]="doughnutChartOptions">
+                </canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
       <!-- ── Bottom grid: Deadlines + Activity ──────────────────────────────── -->
       <div class="bottom-grid">
 
@@ -360,61 +444,92 @@ interface ActivityItem {
     /* ── KPI Grid ────────────────────────────────────────────────────────────── */
     .kpi-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 14px;
+      grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+      gap: 16px;
     }
     .kpi-card {
       background: var(--surface-card);
       border: 1px solid var(--border-color);
-      border-radius: 14px;
-      padding: 18px;
+      border-top: 3px solid var(--qc, var(--brand));
+      border-radius: 16px;
+      padding: 20px;
       display: flex;
-      align-items: flex-start;
-      gap: 14px;
+      flex-direction: column;
+      gap: 4px;
       position: relative;
-      transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
       overflow: hidden;
+      cursor: default;
+      transition: box-shadow 0.25s, transform 0.25s, border-color 0.25s;
+    }
+    /* Radial glow in top-right corner */
+    .kpi-card::after {
+      content: '';
+      position: absolute; top: -24px; right: -24px;
+      width: 110px; height: 110px; border-radius: 50%;
+      background: radial-gradient(ellipse, color-mix(in srgb, var(--qc, var(--brand)) 10%, transparent), transparent 70%);
+      pointer-events: none;
     }
     .kpi-card:hover {
-      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-      transform: translateY(-2px);
+      box-shadow: 0 12px 32px -6px color-mix(in srgb, var(--qc, var(--brand)) 18%, rgba(0,0,0,0.1));
+      transform: translateY(-3px);
+      border-color: color-mix(in srgb, var(--qc, var(--brand)) 50%, var(--border-color));
     }
-    .kpi-card.kpi-danger  { border-left: 3px solid #ef4444; }
-    .kpi-card.kpi-warning { border-left: 3px solid #f59e0b; }
+    .kpi-card.kpi-danger  { border-top-color: var(--danger);  --qc: #ef4444; }
+    .kpi-card.kpi-warning { border-top-color: var(--warning); --qc: #f59e0b; }
 
+    /* Large watermark icon (decorative, behind content) */
+    .kpi-watermark {
+      position: absolute; bottom: -12px; right: -10px;
+      opacity: 0.05;
+      pointer-events: none;
+    }
+    .kpi-watermark mat-icon { font-size: 5.5rem; width: 5.5rem; height: 5.5rem; }
+
+    .kpi-head {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      margin-bottom: 12px;
+    }
     .kpi-icon-wrap {
-      width: 46px; height: 46px;
-      border-radius: 12px;
+      width: 50px; height: 50px;
+      border-radius: 14px;
       display: flex; align-items: center; justify-content: center;
+      background: color-mix(in srgb, var(--qc, var(--brand)) 12%, transparent);
       flex-shrink: 0;
     }
-    .kpi-icon-wrap mat-icon { font-size: 1.4rem; width: 1.4rem; height: 1.4rem; }
+    .kpi-icon-wrap mat-icon { font-size: 1.5rem; width: 1.5rem; height: 1.5rem; }
 
-    .kpi-body { flex: 1; min-width: 0; }
     .kpi-value {
-      font-size: 1.75rem; font-weight: 800;
+      font-size: 2.25rem; font-weight: 800;
       color: var(--text-primary);
-      line-height: 1; margin-bottom: 4px;
+      line-height: 1; letter-spacing: -0.03em;
     }
     .kpi-label {
-      font-size: 0.75rem; color: var(--text-muted);
-      font-weight: 500;
+      font-size: 0.67rem; color: var(--text-muted);
+      font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em;
+      margin-top: 4px;
     }
-    .kpi-sub {
-      display: flex; align-items: center; gap: 3px;
-      font-size: 0.7rem; font-weight: 600;
-      margin-top: 5px;
+    .kpi-trend {
+      display: inline-flex; align-items: center; gap: 3px;
+      font-size: 0.7rem; font-weight: 700;
+      margin-top: 12px; padding: 4px 9px; border-radius: 999px;
+      background: color-mix(in srgb, currentColor 10%, transparent);
+      width: fit-content;
     }
+    .kpi-trend mat-icon { font-size: 0.8rem; width: 0.8rem; height: 0.8rem; }
+
     .kpi-alert-dot {
-      position: absolute; top: 12px; right: 12px;
-      width: 8px; height: 8px; border-radius: 50%;
-      background: #ef4444;
-      box-shadow: 0 0 6px rgba(239,68,68,0.6);
-      animation: pulse 2s infinite;
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--danger);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--danger) 20%, transparent);
+      animation: pulse 2s infinite; flex-shrink: 0;
+    }
+    .kpi-alert-dot.kpi-alert-warning {
+      background: var(--warning);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--warning) 20%, transparent);
     }
     @keyframes pulse {
       0%,100% { transform: scale(1); opacity: 1; }
-      50%      { transform: scale(1.3); opacity: 0.7; }
+      50%      { transform: scale(1.35); opacity: 0.65; }
     }
 
     /* ── Main grid ─────────────────────────────────────────────────────────── */
@@ -549,6 +664,22 @@ interface ActivityItem {
     }
     .quick-btn-icon mat-icon { font-size: 1.2rem; }
 
+    /* ── Analytics row ─────────────────────────────────────────────────────── */
+    .analytics-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 22px;
+    }
+    .chart-wrap--md  { height: 220px; position: relative; }
+    .chart-wrap--donut { height: 150px; position: relative; }
+    .dual-donut {
+      display: flex; align-items: stretch; gap: 0;
+      padding: 8px 0 0;
+    }
+    .donut-block { flex: 1; display: flex; flex-direction: column; }
+    .donut-label { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-align: center; margin-bottom: 4px; }
+    .donut-divider { width: 1px; background: var(--border-color); margin: 0 10px; }
+
     /* ── Bottom grid ───────────────────────────────────────────────────────── */
     .bottom-grid {
       display: grid;
@@ -648,14 +779,19 @@ interface ActivityItem {
 
     /* ── Responsive ─────────────────────────────────────────────────────────── */
     @media (max-width: 1280px) {
-      .main-grid { grid-template-columns: 1fr; }
-      .side-col  { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+      .main-grid      { grid-template-columns: 1fr; }
+      .side-col       { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+      .analytics-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 900px) {
+      .analytics-grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 768px) {
       .kpi-grid     { grid-template-columns: repeat(2, 1fr); }
       .main-grid    { grid-template-columns: 1fr; }
       .side-col     { grid-template-columns: 1fr; }
       .bottom-grid  { grid-template-columns: 1fr; }
+      .analytics-grid { grid-template-columns: 1fr; }
       .welcome-banner { flex-direction: column; align-items: flex-start; }
       .welcome-actions { width: 100%; }
     }
@@ -677,22 +813,23 @@ export class DashboardComponent implements OnInit {
     expiring_soon_docs: 0, compliance_score: 0,
     compliant_items: 0, pending_compliance: 0,
     overdue_compliance: 0, total_compliance_items: 0,
+    department_count: 5,
   });
 
   readonly upcomingDeadlines = signal<Deadline[]>([
-    { title: 'PAYE Filing — March',       date: new Date('2026-03-07'), type: 'tax',    daysLeft: 10 },
-    { title: 'RSSB Contribution — March', date: new Date('2026-03-10'), type: 'social', daysLeft: 13 },
-    { title: 'VAT Return Q1',             date: new Date('2026-03-31'), type: 'tax',    daysLeft: 34 },
-    { title: 'Contract Review — Batch A', date: new Date('2026-04-01'), type: 'hr',     daysLeft: 35 },
-    { title: 'Labour Compliance Audit',   date: new Date('2026-04-15'), type: 'legal',  daysLeft: 49 },
+    { title: 'Payroll Tax Filing — March',        date: new Date('2026-03-07'), type: 'tax',    daysLeft: 10 },
+    { title: 'Social Security — March',           date: new Date('2026-03-10'), type: 'social', daysLeft: 13 },
+    { title: 'VAT Return Q1',                     date: new Date('2026-03-31'), type: 'tax',    daysLeft: 34 },
+    { title: 'Contract Review — Batch A',         date: new Date('2026-04-01'), type: 'hr',     daysLeft: 35 },
+    { title: 'Labour Compliance Audit',           date: new Date('2026-04-15'), type: 'legal',  daysLeft: 49 },
   ]);
 
   readonly recentActivity = signal<ActivityItem[]>([
-    { action: 'Document uploaded',         detail: 'Employment Contract — Jean-Pierre K.',  time: '2h ago',   icon: 'upload_file', color: '#6366f1' },
-    { action: 'Compliance item resolved',  detail: 'PAYE February filing marked complete',  time: '5h ago',   icon: 'check_circle', color: '#22c55e' },
-    { action: 'New employee onboarded',    detail: 'Alice Mukamana — Accountant',           time: 'Yesterday', icon: 'person_add',  color: '#3b82f6' },
-    { action: 'Document expiring soon',    detail: 'Work Permit — Bruno N. (7 days left)',  time: 'Yesterday', icon: 'warning',     color: '#f59e0b' },
-    { action: 'Audit report generated',    detail: 'RSSB Q4 2025 Compliance Report (PDF)', time: '2d ago',   icon: 'description', color: '#8b5cf6' },
+    { action: 'Document uploaded',         detail: 'Employment Contract — James O.',              time: '2h ago',    icon: 'upload_file',  color: '#6366f1' },
+    { action: 'Compliance item resolved',  detail: 'Payroll Tax February filing marked complete', time: '5h ago',    icon: 'check_circle', color: '#22c55e' },
+    { action: 'New employee onboarded',    detail: 'Amina Hassan — IT Specialist',               time: 'Yesterday', icon: 'person_add',   color: '#3b82f6' },
+    { action: 'Document expiring soon',    detail: 'Work Permit — Marcus T. (7 days left)',      time: 'Yesterday', icon: 'warning',      color: '#f59e0b' },
+    { action: 'Audit report generated',    detail: 'Social Security Q4 2025 Compliance (PDF)',   time: '2d ago',    icon: 'description',  color: '#8b5cf6' },
   ]);
 
   // ── Chart data ─────────────────────────────────────────────────────────────
@@ -720,9 +857,56 @@ export class DashboardComponent implements OnInit {
     ],
   };
 
+  readonly deptHeadcountData: ChartData<'bar'> = {
+    labels: ['Administration', 'IT', 'HR', 'Finance', 'Marketing & Sales'],
+    datasets: [{
+      label: 'Employees',
+      data: [1, 1, 1, 2, 2],
+      backgroundColor: [
+        'rgba(245,158,11,0.8)', 'rgba(59,130,246,0.8)',
+        'rgba(34,197,94,0.8)',  'rgba(99,102,241,0.8)',
+        'rgba(236,72,153,0.8)',
+      ],
+      borderRadius: 6,
+      borderSkipped: false,
+    }],
+  };
+
+  readonly contractTypeData: ChartData<'doughnut'> = {
+    labels: ['Permanent', 'Fixed-Term', 'Internship', 'Consultant', 'Part-Time'],
+    datasets: [{
+      data: [5, 2, 0, 0, 0],
+      backgroundColor: ['#6366f1', '#3b82f6', '#22c55e', '#f59e0b', '#8b5cf6'],
+      borderColor: 'transparent',
+      hoverOffset: 8,
+    }],
+  };
+
+  readonly authorityComplianceData: ChartData<'bar'> = {
+    labels: ['Tax Authority', 'Social Security', 'Labour Dept', 'Business Registry'],
+    datasets: [
+      { label: 'Compliant', data: [2, 1, 1, 0], backgroundColor: 'rgba(34,197,94,0.85)',  borderRadius: 4, borderSkipped: false },
+      { label: 'Pending',   data: [2, 0, 0, 1], backgroundColor: 'rgba(245,158,11,0.85)', borderRadius: 4, borderSkipped: false },
+      { label: 'Overdue',   data: [0, 1, 0, 0], backgroundColor: 'rgba(239,68,68,0.85)',  borderRadius: 4, borderSkipped: false },
+    ],
+  };
+
+  readonly empStatusData: ChartData<'doughnut'> = {
+    labels: ['Active', 'Probation', 'On Leave', 'Terminated'],
+    datasets: [{
+      data: [5, 1, 0, 0],
+      backgroundColor: ['#22c55e', '#f59e0b', '#3b82f6', '#ef4444'],
+      borderColor: 'transparent',
+      hoverOffset: 8,
+    }],
+  };
+
   // ── Chart options (updated on theme change) ────────────────────────────────
-  lineChartOptions: ChartConfiguration['options'] = this.buildLineOptions();
-  barChartOptions:  ChartConfiguration['options'] = this.buildBarOptions();
+  lineChartOptions:        ChartConfiguration['options'] = this.buildLineOptions();
+  barChartOptions:         ChartConfiguration['options'] = this.buildBarOptions();
+  hBarChartOptions:        ChartConfiguration['options'] = this.buildHBarOptions();
+  stackedBarOptions:       ChartConfiguration['options'] = this.buildStackedBarOptions();
+  doughnutChartOptions:    ChartConfiguration['options'] = this.buildDoughnutOptions();
 
   // ── Chart ring ─────────────────────────────────────────────────────────────
   readonly ringCircumference = 2 * Math.PI * 52; // r=52
@@ -760,8 +944,11 @@ export class DashboardComponent implements OnInit {
   constructor() {
     // Update chart options when theme changes
     effect(() => {
-      this.lineChartOptions = this.buildLineOptions();
-      this.barChartOptions  = this.buildBarOptions();
+      this.lineChartOptions     = this.buildLineOptions();
+      this.barChartOptions      = this.buildBarOptions();
+      this.hBarChartOptions     = this.buildHBarOptions();
+      this.stackedBarOptions    = this.buildStackedBarOptions();
+      this.doughnutChartOptions = this.buildDoughnutOptions();
     });
   }
 
@@ -807,6 +994,12 @@ export class DashboardComponent implements OnInit {
         ...s, document_count: 183, expired_docs: 2, expiring_soon_docs: 5,
       })),
     });
+
+    // Load department count
+    this.api.get<{ count: number }>('employees/departments/?page_size=1').subscribe({
+      next: (res) => this.stats.update(s => ({ ...s, department_count: res.count ?? 5 })),
+      error: () => this.stats.update(s => ({ ...s, department_count: 5 })),
+    });
   }
 
   kpiCards() {
@@ -841,6 +1034,11 @@ export class DashboardComponent implements OnInit {
         danger: s.overdue_compliance > 0,
         sub: s.overdue_compliance > 0 ? 'Needs attention' : 'All clear',
         subIcon: s.overdue_compliance > 0 ? 'priority_high' : 'check_circle', subColor: s.overdue_compliance > 0 ? '#ef4444' : '#22c55e',
+      },
+      {
+        label: 'Departments', value: s.department_count, icon: 'account_tree',
+        gradientBg: 'rgba(236,72,153,0.12)', iconColor: '#ec4899',
+        sub: '5 active teams', subIcon: 'groups', subColor: '#ec4899',
       },
     ];
   }
@@ -904,28 +1102,87 @@ export class DashboardComponent implements OnInit {
       plugins: {
         legend: { display: false },
         tooltip: {
-          backgroundColor: c.tooltipBg,
-          titleColor: c.tooltipTitle,
-          bodyColor: c.tooltipBody,
-          borderColor: c.tooltipBorder,
-          borderWidth: 1,
-          cornerRadius: 10,
-          padding: 10,
+          backgroundColor: c.tooltipBg, titleColor: c.tooltipTitle,
+          bodyColor: c.tooltipBody, borderColor: c.tooltipBorder,
+          borderWidth: 1, cornerRadius: 10, padding: 10,
         },
       },
       scales: {
-        x: {
-          grid:  { display: false },
-          ticks: { color: c.tickColor, font: { family: 'Inter', size: 11 } },
-          border: { display: false },
-        },
-        y: {
-          grid:  { color: c.gridColor, drawTicks: false },
-          ticks: { color: c.tickColor, font: { family: 'Inter', size: 11 }, stepSize: 5 },
-          border: { display: false },
-        },
+        x: { grid: { display: false }, ticks: { color: c.tickColor, font: { family: 'Inter', size: 11 } }, border: { display: false } },
+        y: { grid: { color: c.gridColor, drawTicks: false }, ticks: { color: c.tickColor, font: { family: 'Inter', size: 11 }, stepSize: 5 }, border: { display: false } },
       },
       animation: { duration: 700, easing: 'easeInOutQuart' },
     };
+  }
+
+  private buildHBarOptions(): ChartConfiguration['options'] {
+    const c = this.theme.chartColors();
+    return {
+      indexAxis: 'y' as const,
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: c.tooltipBg, titleColor: c.tooltipTitle,
+          bodyColor: c.tooltipBody, borderColor: c.tooltipBorder,
+          borderWidth: 1, cornerRadius: 10, padding: 10,
+        },
+      },
+      scales: {
+        x: { grid: { color: c.gridColor, drawTicks: false }, ticks: { color: c.tickColor, font: { family: 'Inter', size: 11 }, stepSize: 1 }, border: { display: false } },
+        y: { grid: { display: false }, ticks: { color: c.tickColor, font: { family: 'Inter', size: 11 } }, border: { display: false } },
+      },
+      animation: { duration: 700, easing: 'easeInOutQuart' },
+    };
+  }
+
+  private buildStackedBarOptions(): ChartConfiguration['options'] {
+    const c = this.theme.chartColors();
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: true,
+          position: 'bottom',
+          labels: { color: c.tickColor, font: { family: 'Inter', size: 11 }, boxWidth: 12, padding: 16 },
+        },
+        tooltip: {
+          backgroundColor: c.tooltipBg, titleColor: c.tooltipTitle,
+          bodyColor: c.tooltipBody, borderColor: c.tooltipBorder,
+          borderWidth: 1, cornerRadius: 10, padding: 10,
+        },
+      },
+      scales: {
+        x: { stacked: false, grid: { display: false }, ticks: { color: c.tickColor, font: { family: 'Inter', size: 10 } }, border: { display: false } },
+        y: { stacked: false, grid: { color: c.gridColor, drawTicks: false }, ticks: { color: c.tickColor, font: { family: 'Inter', size: 11 }, stepSize: 1 }, border: { display: false } },
+      },
+      animation: { duration: 700, easing: 'easeInOutQuart' },
+    };
+  }
+
+  private buildDoughnutOptions(): ChartConfiguration['options'] {
+    const c = this.theme.chartColors();
+    // Use unknown cast to include doughnut-specific 'cutout' option
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: true,
+          position: 'right',
+          labels: { color: c.tickColor, font: { family: 'Inter', size: 11 }, boxWidth: 12, padding: 12 },
+        },
+        tooltip: {
+          backgroundColor: c.tooltipBg, titleColor: c.tooltipTitle,
+          bodyColor: c.tooltipBody, borderColor: c.tooltipBorder,
+          borderWidth: 1, cornerRadius: 10, padding: 10,
+        },
+      },
+      animation: { duration: 700, easing: 'easeInOutQuart' },
+      // @ts-ignore — cutout is a valid doughnut option not in the generic type
+      cutout: '72%',
+    } as ChartConfiguration['options'];
   }
 }

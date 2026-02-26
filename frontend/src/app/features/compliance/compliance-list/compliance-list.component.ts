@@ -34,7 +34,7 @@ import { PaginatedResponse } from '../../../core/models/api.models';
       <div class="page-header">
         <div>
           <h2>Compliance Tracker</h2>
-          <p class="subtitle">RRA, RSSB &amp; Labour law obligations</p>
+          <p class="subtitle">Tax, social security &amp; labour law obligations</p>
         </div>
       </div>
 
@@ -106,10 +106,10 @@ import { PaginatedResponse } from '../../../core/models/api.models';
             <mat-label>Authority</mat-label>
             <mat-select [(ngModel)]="authorityFilter" (ngModelChange)="loadRecords()">
               <mat-option value="">All</mat-option>
-              <mat-option value="RRA">RRA</mat-option>
-              <mat-option value="RSSB">RSSB</mat-option>
-              <mat-option value="Labour">Labour</mat-option>
-              <mat-option value="RDB">RDB</mat-option>
+              <mat-option value="Tax Authority">Tax Authority</mat-option>
+              <mat-option value="Social Security Agency">Social Security Agency</mat-option>
+              <mat-option value="Labour Department">Labour Department</mat-option>
+              <mat-option value="Business Registry">Business Registry</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
@@ -234,10 +234,10 @@ import { PaginatedResponse } from '../../../core/models/api.models';
     .req-sub { font-size:0.75rem; color:#64748b; }
     .text-sm { font-size:0.8rem; color:#64748b; }
     .authority-badge { display:inline-block; padding:2px 8px; border-radius:4px; font-size:0.7rem; font-weight:700; letter-spacing:0.05em; }
-    .auth-rra { background:#fef9c3; color:#854d0e; }
-    .auth-rssb { background:#dbeafe; color:#1e40af; }
+    .auth-tax { background:#fef9c3; color:#854d0e; }
+    .auth-social { background:#dbeafe; color:#1e40af; }
     .auth-labour { background:#dcfce7; color:#14532d; }
-    .auth-rdb { background:#f3e8ff; color:#6b21a8; }
+    .auth-registry { background:#f3e8ff; color:#6b21a8; }
     .auth-other { background:#f1f5f9; color:#475569; }
     .chip { display:inline-block; padding:2px 10px; border-radius:20px; font-size:0.75rem; font-weight:500; }
     .chip-success { background:#dcfce7; color:#16a34a; }
@@ -331,7 +331,7 @@ export class ComplianceListComponent implements OnInit {
   }
 
   authorityClass(auth: string): string {
-    const map: Record<string, string> = { RRA: 'auth-rra', RSSB: 'auth-rssb', Labour: 'auth-labour', RDB: 'auth-rdb' };
+    const map: Record<string, string> = { 'Tax Authority': 'auth-tax', 'Social Security Agency': 'auth-social', 'Labour Department': 'auth-labour', 'Business Registry': 'auth-registry' };
     return map[auth] ?? 'auth-other';
   }
 

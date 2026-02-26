@@ -35,7 +35,7 @@ class Employee(TenantModel):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     date_of_birth = models.DateField(null=True, blank=True)
-    national_id = models.CharField(max_length=50, blank=True)    # Rwanda ID
+    national_id = models.CharField(max_length=50, blank=True, help_text="National ID / passport number")
     gender = models.CharField(max_length=10, choices=[("M", "Male"), ("F", "Female"), ("O", "Other")], blank=True)
     phone = models.CharField(max_length=20, blank=True)
     email = models.EmailField(blank=True)
@@ -43,6 +43,7 @@ class Employee(TenantModel):
     emergency_contact_name = models.CharField(max_length=100, blank=True)
     emergency_contact_phone = models.CharField(max_length=20, blank=True)
     photo = models.ImageField(upload_to="employee_photos/", null=True, blank=True)
+    nationality = models.CharField(max_length=100, blank=True)
 
     # Employment
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True)
@@ -54,15 +55,29 @@ class Employee(TenantModel):
     termination_date = models.DateField(null=True, blank=True)
     probation_end_date = models.DateField(null=True, blank=True)
 
-    # Compensation (encrypted fields would go here for sensitive data)
+    # Compensation
     gross_salary = models.DecimalField(max_digits=14, decimal_places=2, null=True, blank=True)
-    currency = models.CharField(max_length=5, default="RWF")
+    currency = models.ForeignKey(
+        "geography.Currency",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="employees",
+        help_text="Salary currency (defaults to company currency)",
+    )
 
-    # Statutory compliance
-    rssb_number = models.CharField(max_length=50, blank=True)
-    tin_number = models.CharField(max_length=50, blank=True)
+    # Statutory / compliance identifiers (generic — applies to any country)
+    social_insurance_number = models.CharField(
+        max_length=50, blank=True,
+        help_text="National pension / social security number",
+    )
+    tax_identifier = models.CharField(
+        max_length=50, blank=True,
+        help_text="Employee tax identification number",
+    )
     bank_account = models.CharField(max_length=50, blank=True)
     bank_name = models.CharField(max_length=100, blank=True)
+    bank_branch_code = models.CharField(max_length=20, blank=True)
     is_active = models.BooleanField(default=True)
 
     class Meta:
