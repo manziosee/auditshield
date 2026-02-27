@@ -73,6 +73,16 @@ class Company(UUIDModel, TimeStampedModel):
     state_province = models.CharField(max_length=100, blank=True)
     postal_code = models.CharField(max_length=20, blank=True)
 
+    # Business classification
+    industry = models.CharField(
+        max_length=50, blank=True,
+        help_text="Business sector (e.g. technology, healthcare, retail, ngo)",
+    )
+    fiscal_year_start = models.PositiveSmallIntegerField(
+        default=1,
+        help_text="Month the fiscal year starts (1=January … 12=December)",
+    )
+
     # Branding
     logo = models.ImageField(upload_to="company_logos/", null=True, blank=True)
     primary_color = models.CharField(max_length=7, default="#1a56db")

@@ -13,11 +13,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { ApiService } from '../../../core/services/api.service';
 import { NotificationService } from '../../../core/services/notification.service';
-import { ComplianceRecord, ComplianceDashboard, ComplianceStatus } from '../../../core/models/compliance.models';
-import { PaginatedResponse } from '../../../core/models/api.models';
+import {
+  ComplianceRecord, ComplianceDashboard, ComplianceStatus, ComplianceRequirement,
+} from '../../../core/models/compliance.models';
 
 @Component({
   selector: 'as-compliance-list',
@@ -27,7 +27,7 @@ import { PaginatedResponse } from '../../../core/models/api.models';
     MatTableModule, MatPaginatorModule,
     MatButtonModule, MatIconModule, MatInputModule, MatFormFieldModule,
     MatSelectModule, MatMenuModule, MatTooltipModule,
-    MatProgressSpinnerModule, MatCardModule, MatDividerModule, MatDialogModule,
+    MatProgressSpinnerModule, MatCardModule, MatDividerModule,
   ],
   template: `
     <div class="page-container">
@@ -36,7 +36,64 @@ import { PaginatedResponse } from '../../../core/models/api.models';
           <h2>Compliance Tracker</h2>
           <p class="subtitle">Tax, social security &amp; labour law obligations</p>
         </div>
+        <button mat-raised-button color="primary" (click)="toggleAddPanel()">
+          <mat-icon>{{ showAddPanel ? 'close' : 'add' }}</mat-icon>
+          {{ showAddPanel ? 'Cancel' : 'Add Record' }}
+        </button>
       </div>
+
+      <!-- ── Add Record Panel ──────────────────────────────────────────────── -->
+      @if (showAddPanel) {
+        <mat-card class="add-panel">
+          <div class="add-panel-title"><mat-icon>assignment_add</mat-icon> New Compliance Record</div>
+          <div class="add-form-grid">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Requirement</mat-label>
+              <mat-select [(ngModel)]="newForm.requirement" required>
+                @if (reqLoading()) { <mat-option disabled>Loading…</mat-option> }
+                @for (r of requirements(); track r.id) {
+                  <mat-option [value]="r.id">{{ r.title }} ({{ r.category_name }})</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+            <div class="form-row">
+              <mat-form-field appearance="outline">
+                <mat-label>Period Start</mat-label>
+                <input matInput type="date" [(ngModel)]="newForm.period_start" required />
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Period End</mat-label>
+                <input matInput type="date" [(ngModel)]="newForm.period_end" required />
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Due Date</mat-label>
+                <input matInput type="date" [(ngModel)]="newForm.due_date" required />
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Status</mat-label>
+                <mat-select [(ngModel)]="newForm.status">
+                  <mat-option value="pending">Pending</mat-option>
+                  <mat-option value="compliant">Compliant</mat-option>
+                  <mat-option value="exempt">Exempt</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Notes (optional)</mat-label>
+              <textarea matInput [(ngModel)]="newForm.notes" rows="2" placeholder="Reference number, remarks…"></textarea>
+            </mat-form-field>
+          </div>
+          <div class="add-form-actions">
+            <button mat-raised-button color="primary" (click)="createRecord()"
+              [disabled]="addSaving() || !newForm.requirement || !newForm.period_start || !newForm.period_end || !newForm.due_date">
+              @if (addSaving()) { <mat-spinner diameter="18" style="display:inline-block;margin-right:6px" /> }
+              @else { <mat-icon>check</mat-icon> }
+              Save Record
+            </button>
+            <button mat-stroked-button (click)="toggleAddPanel()">Cancel</button>
+          </div>
+        </mat-card>
+      }
 
       <!-- Score cards -->
       @if (dashboard()) {
@@ -50,31 +107,19 @@ import { PaginatedResponse } from '../../../core/models/api.models';
           </mat-card>
           <mat-card class="score-card">
             <mat-icon class="sc-icon icon-success">check_circle</mat-icon>
-            <div class="sc-body">
-              <span class="sc-num">{{ dashboard()!.compliant }}</span>
-              <span class="sc-label">Compliant</span>
-            </div>
+            <div class="sc-body"><span class="sc-num">{{ dashboard()!.compliant }}</span><span class="sc-label">Compliant</span></div>
           </mat-card>
           <mat-card class="score-card">
             <mat-icon class="sc-icon icon-warning">schedule</mat-icon>
-            <div class="sc-body">
-              <span class="sc-num">{{ dashboard()!.pending }}</span>
-              <span class="sc-label">Pending</span>
-            </div>
+            <div class="sc-body"><span class="sc-num">{{ dashboard()!.pending }}</span><span class="sc-label">Pending</span></div>
           </mat-card>
           <mat-card class="score-card">
             <mat-icon class="sc-icon icon-danger">error</mat-icon>
-            <div class="sc-body">
-              <span class="sc-num">{{ dashboard()!.overdue }}</span>
-              <span class="sc-label">Overdue</span>
-            </div>
+            <div class="sc-body"><span class="sc-num">{{ dashboard()!.overdue }}</span><span class="sc-label">Overdue</span></div>
           </mat-card>
           <mat-card class="score-card">
             <mat-icon class="sc-icon icon-neutral">list_alt</mat-icon>
-            <div class="sc-body">
-              <span class="sc-num">{{ dashboard()!.total }}</span>
-              <span class="sc-label">Total</span>
-            </div>
+            <div class="sc-body"><span class="sc-num">{{ dashboard()!.total }}</span><span class="sc-label">Total</span></div>
           </mat-card>
         </div>
       }
@@ -158,9 +203,7 @@ import { PaginatedResponse } from '../../../core/models/api.models';
             </ng-container>
             <ng-container matColumnDef="completed_date">
               <th mat-header-cell *matHeaderCellDef>Completed</th>
-              <td mat-cell *matCellDef="let r">
-                {{ r.completed_date ? (r.completed_date | date:'mediumDate') : '—' }}
-              </td>
+              <td mat-cell *matCellDef="let r">{{ r.completed_date ? (r.completed_date | date:'mediumDate') : '—' }}</td>
             </ng-container>
             <ng-container matColumnDef="actions">
               <th mat-header-cell *matHeaderCellDef></th>
@@ -178,6 +221,10 @@ import { PaginatedResponse } from '../../../core/models/api.models';
                   <button mat-menu-item (click)="markStatus(r, 'exempt')">
                     <mat-icon>block</mat-icon> Mark Exempt
                   </button>
+                  <mat-divider />
+                  <button mat-menu-item class="danger-item" (click)="confirmDelete(r)">
+                    <mat-icon>delete</mat-icon> Delete
+                  </button>
                 </mat-menu>
               </td>
             </ng-container>
@@ -189,7 +236,12 @@ import { PaginatedResponse } from '../../../core/models/api.models';
           <div class="empty-state">
             <mat-icon>assignment_turned_in</mat-icon>
             <h3>No compliance records found</h3>
-            <p>{{ hasFilters() ? 'Adjust your filters.' : 'Records will appear once requirements are configured.' }}</p>
+            <p>{{ hasFilters() ? 'Adjust your filters.' : 'Click "Add Record" to track your first obligation.' }}</p>
+            @if (!hasFilters()) {
+              <button mat-raised-button color="primary" (click)="toggleAddPanel()">
+                <mat-icon>add</mat-icon> Add Record
+              </button>
+            }
           </div>
         }
         <mat-paginator [length]="total()" [pageSize]="pageSize" [pageSizeOptions]="[10,25,50]"
@@ -202,6 +254,14 @@ import { PaginatedResponse } from '../../../core/models/api.models';
     .page-header { display:flex; justify-content:space-between; align-items:center; }
     .page-header h2 { margin:0 0 2px; font-size:1.5rem; font-weight:700; }
     .subtitle { margin:0; color:#64748b; font-size:0.875rem; }
+    /* Add panel */
+    .add-panel { padding:20px !important; }
+    .add-panel-title { display:flex; align-items:center; gap:8px; font-size:1rem; font-weight:600; color:#1e293b; margin-bottom:16px; }
+    .add-form-grid { display:flex; flex-direction:column; gap:8px; }
+    .form-row { display:flex; gap:12px; flex-wrap:wrap; }
+    .form-row mat-form-field { flex:1; min-width:150px; }
+    .full-width { width:100%; }
+    .add-form-actions { display:flex; gap:12px; margin-top:8px; align-items:center; }
     /* Score row */
     .score-row { display:grid; grid-template-columns:auto 1fr 1fr 1fr 1fr; gap:16px; }
     .score-card { padding:20px !important; display:flex; align-items:center; gap:16px; }
@@ -248,34 +308,51 @@ import { PaginatedResponse } from '../../../core/models/api.models';
     .text-danger { color:#dc2626; }
     .text-warn { color:#f59e0b; }
     .days-tag { font-size:0.75rem; }
+    .danger-item { color:#dc2626; }
     .empty-state { text-align:center; padding:48px 24px; color:#64748b; }
     .empty-state mat-icon { font-size:3rem; height:3rem; width:3rem; opacity:0.4; display:block; margin:0 auto 12px; }
     .empty-state h3 { margin:0 0 8px; color:#1e293b; }
-    .empty-state p { margin:0; }
+    .empty-state p { margin:0 0 20px; }
     @media(max-width:900px){ .score-row{grid-template-columns:1fr 1fr;} }
-    @media(max-width:600px){ .score-row{grid-template-columns:1fr 1fr;} }
+    @media(max-width:600px){ .score-row{grid-template-columns:1fr 1fr;} .form-row{flex-direction:column;} }
   `],
 })
 export class ComplianceListComponent implements OnInit {
-  private readonly api = inject(ApiService);
+  private readonly api    = inject(ApiService);
   private readonly notify = inject(NotificationService);
 
-  records = signal<ComplianceRecord[]>([]);
-  dashboard = signal<ComplianceDashboard | null>(null);
-  total = signal(0);
-  loading = signal(false);
+  records      = signal<ComplianceRecord[]>([]);
+  dashboard    = signal<ComplianceDashboard | null>(null);
+  requirements = signal<ComplianceRequirement[]>([]);
+  total        = signal(0);
+  loading      = signal(false);
+  addSaving    = signal(false);
+  reqLoading   = signal(false);
 
-  columns = ['authority', 'requirement', 'period', 'due_date', 'status', 'completed_date', 'actions'];
-  pageSize = 25;
-  currentPage = 1;
-  searchQuery = '';
+  showAddPanel = false;
+  columns      = ['authority', 'requirement', 'period', 'due_date', 'status', 'completed_date', 'actions'];
+  pageSize     = 25;
+  currentPage  = 1;
+  searchQuery  = '';
   statusFilter = '';
   authorityFilter = '';
   private searchTimer: ReturnType<typeof setTimeout> | null = null;
 
+  newForm = this.blankForm();
+
   ngOnInit(): void {
     this.loadDashboard();
     this.loadRecords();
+  }
+
+  private blankForm() {
+    return { requirement: '', period_start: '', period_end: '', due_date: '', status: 'pending', notes: '' };
+  }
+
+  toggleAddPanel(): void {
+    this.showAddPanel = !this.showAddPanel;
+    if (this.showAddPanel) this.loadRequirements();
+    else this.newForm = this.blankForm();
   }
 
   loadDashboard(): void {
@@ -284,11 +361,24 @@ export class ComplianceListComponent implements OnInit {
     });
   }
 
+  loadRequirements(): void {
+    if (this.requirements().length || this.reqLoading()) return;
+    this.reqLoading.set(true);
+    this.api.get<{ results: ComplianceRequirement[] } | ComplianceRequirement[]>('compliance/requirements/').subscribe({
+      next: (res) => {
+        const list = Array.isArray(res) ? res : (res as { results: ComplianceRequirement[] }).results ?? [];
+        this.requirements.set(list);
+        this.reqLoading.set(false);
+      },
+      error: () => this.reqLoading.set(false),
+    });
+  }
+
   loadRecords(): void {
     this.loading.set(true);
     const params: Record<string, unknown> = { page: this.currentPage, page_size: this.pageSize };
-    if (this.searchQuery) params['search'] = this.searchQuery;
-    if (this.statusFilter) params['status'] = this.statusFilter;
+    if (this.searchQuery)     params['search']    = this.searchQuery;
+    if (this.statusFilter)    params['status']    = this.statusFilter;
     if (this.authorityFilter) params['authority'] = this.authorityFilter;
 
     this.api.getPaginated<ComplianceRecord>('compliance/records/', params).subscribe({
@@ -308,6 +398,22 @@ export class ComplianceListComponent implements OnInit {
 
   hasFilters(): boolean { return !!(this.searchQuery || this.statusFilter || this.authorityFilter); }
 
+  createRecord(): void {
+    if (!this.newForm.requirement || !this.newForm.period_start || !this.newForm.period_end || !this.newForm.due_date) return;
+    this.addSaving.set(true);
+    this.api.post<ComplianceRecord>('compliance/records/', this.newForm).subscribe({
+      next: () => {
+        this.notify.success('Compliance record created.');
+        this.showAddPanel = false;
+        this.newForm = this.blankForm();
+        this.addSaving.set(false);
+        this.loadRecords();
+        this.loadDashboard();
+      },
+      error: () => { this.addSaving.set(false); this.notify.error('Failed to create record.'); },
+    });
+  }
+
   markStatus(record: ComplianceRecord, status: ComplianceStatus): void {
     this.api.patch<ComplianceRecord>(`compliance/records/${record.id}/`, { status }).subscribe({
       next: () => {
@@ -316,6 +422,18 @@ export class ComplianceListComponent implements OnInit {
         this.loadDashboard();
       },
       error: () => this.notify.error('Failed to update status.'),
+    });
+  }
+
+  confirmDelete(record: ComplianceRecord): void {
+    if (!confirm(`Delete compliance record for "${record.requirement_title}"?`)) return;
+    this.api.delete(`compliance/records/${record.id}/`).subscribe({
+      next: () => {
+        this.notify.success('Record deleted.');
+        this.loadRecords();
+        this.loadDashboard();
+      },
+      error: () => this.notify.error('Failed to delete record.'),
     });
   }
 
@@ -331,7 +449,10 @@ export class ComplianceListComponent implements OnInit {
   }
 
   authorityClass(auth: string): string {
-    const map: Record<string, string> = { 'Tax Authority': 'auth-tax', 'Social Security Agency': 'auth-social', 'Labour Department': 'auth-labour', 'Business Registry': 'auth-registry' };
+    const map: Record<string, string> = {
+      'Tax Authority': 'auth-tax', 'Social Security Agency': 'auth-social',
+      'Labour Department': 'auth-labour', 'Business Registry': 'auth-registry',
+    };
     return map[auth] ?? 'auth-other';
   }
 
@@ -345,16 +466,14 @@ export class ComplianceListComponent implements OnInit {
 
   statusLabel(s: ComplianceStatus): string {
     const map: Record<ComplianceStatus, string> = {
-      compliant: 'Compliant', pending: 'Pending', overdue: 'Overdue',
-      exempt: 'Exempt', not_applicable: 'N/A',
+      compliant: 'Compliant', pending: 'Pending', overdue: 'Overdue', exempt: 'Exempt', not_applicable: 'N/A',
     };
     return map[s] ?? s;
   }
 
   formatFreq(f: string): string {
     const map: Record<string, string> = {
-      one_time: 'One-time', monthly: 'Monthly', quarterly: 'Quarterly',
-      annually: 'Annual', as_needed: 'As needed',
+      one_time: 'One-time', monthly: 'Monthly', quarterly: 'Quarterly', annually: 'Annual', as_needed: 'As needed',
     };
     return map[f] ?? f;
   }

@@ -3,10 +3,13 @@
 set -e
 
 echo "==> Ensuring data directories exist..."
-mkdir -p /data/media
+mkdir -p /data/media /data/staticfiles
 
 echo "==> Running database migrations..."
 python manage.py migrate --noinput
+
+echo "==> Seeding global reference data (countries, currencies, authorities)..."
+python manage.py seed_global_data --noinput 2>/dev/null || true
 
 echo "==> Collecting static files..."
 python manage.py collectstatic --noinput --clear

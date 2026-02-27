@@ -109,6 +109,26 @@ class DocumentViewSet(ModelViewSet):
 
         return qs
 
+    def list(self, request, *args, **kwargs):
+        """Override list to inject aggregate stats into the paginated response."""
+        response = super().list(request, *args, **kwargs)
+
+        company = request.user.company
+        today = timezone.now().date()
+        cutoff_30 = today + timedelta(days=30)
+
+        base_qs = Document.objects.filter(company=company)
+        expired_count = base_qs.filter(status="expired").count()
+        expiring_soon = base_qs.filter(
+            expiry_date__lte=cutoff_30,
+            expiry_date__isnull=False,
+            status="active",
+        ).count()
+
+        response.data["expired_count"] = expired_count
+        response.data["expiring_soon"] = expiring_soon
+        return response
+
     def perform_create(self, serializer):
         request = self.request
         file = request.FILES.get("file")

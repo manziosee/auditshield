@@ -1,0 +1,738 @@
+{
+  "info": {
+    "name": "AuditShield API",
+    "description": "Complete REST API collection for AuditShield — Global SME Compliance Platform.\n\n## Setup\n1. Set the `base_url` variable to your server (default: `http://localhost:8000`).\n2. Run **Auth / Login** — the `access_token` and `refresh_token` variables are set automatically.\n3. All other requests use `{{access_token}}` in the Authorization header.\n\n## Variables\n- `base_url` — API base URL\n- `access_token` — JWT access token (auto-set on login)\n- `refresh_token` — JWT refresh token (auto-set on login)\n- `company_id` — set after fetching company profile\n- `employee_id` — set after creating/listing employees\n- `document_id` — set after uploading a document\n- `compliance_id` — set after creating a compliance record\n- `report_id` — set after creating a report",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": { "major": 1, "minor": 0, "patch": 0 }
+  },
+  "variable": [
+    { "key": "base_url",       "value": "http://localhost:8000", "type": "string" },
+    { "key": "access_token",   "value": "", "type": "string" },
+    { "key": "refresh_token",  "value": "", "type": "string" },
+    { "key": "company_id",     "value": "", "type": "string" },
+    { "key": "employee_id",    "value": "", "type": "string" },
+    { "key": "department_id",  "value": "", "type": "string" },
+    { "key": "document_id",    "value": "", "type": "string" },
+    { "key": "compliance_id",  "value": "", "type": "string" },
+    { "key": "requirement_id", "value": "", "type": "string" },
+    { "key": "report_id",      "value": "", "type": "string" },
+    { "key": "notification_id","value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/health/",
+            "description": "Liveness probe — no authentication required."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register Company",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/auth/register/",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"company_name\": \"Acme Corp\",\n  \"country\": \"RW\",\n  \"tax_identifier\": \"100123456B\",\n  \"email\": \"admin@acme.com\",\n  \"password\": \"StrongP@ssw0rd!\",\n  \"first_name\": \"Alice\",\n  \"last_name\": \"Smith\"\n}"
+            },
+            "description": "Creates a new company tenant and the first admin user."
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "if (data.access) {",
+                  "  pm.collectionVariables.set('access_token', data.access);",
+                  "  pm.collectionVariables.set('refresh_token', data.refresh);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/auth/login/",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@acme.com\",\n  \"password\": \"StrongP@ssw0rd!\"\n}"
+            },
+            "description": "Returns access + refresh JWT tokens. Tokens are auto-saved to collection variables."
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "if (data.access) pm.collectionVariables.set('access_token', data.access);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/auth/token/refresh/",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"refresh\": \"{{refresh_token}}\" }"
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/auth/logout/",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"refresh\": \"{{refresh_token}}\" }"
+            },
+            "description": "Blacklists the refresh token."
+          }
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/auth/me/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/auth/change-password/",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"old_password\": \"StrongP@ssw0rd!\",\n  \"new_password\": \"NewStrongP@ss2!\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Company",
+      "item": [
+        {
+          "name": "Get Company Profile",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "if (data.id) pm.collectionVariables.set('company_id', data.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/companies/me/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+          }
+        },
+        {
+          "name": "Update Company Profile",
+          "request": {
+            "method": "PATCH",
+            "url": "{{base_url}}/api/v1/companies/me/",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Acme Corp Ltd\",\n  \"industry\": \"Technology\",\n  \"preferred_currency\": \"USD\",\n  \"fiscal_year_start\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Export Company Data",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/companies/export/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "description": "Downloads a full JSON export of all company data (employees, documents, compliance, audit logs)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Employees",
+      "item": [
+        {
+          "name": "List Employees",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/employees/?page=1&page_size=25",
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "page_size", "value": "25" },
+                { "key": "search", "value": "", "disabled": true },
+                { "key": "department", "value": "", "disabled": true },
+                { "key": "status", "value": "", "disabled": true }
+              ]
+            },
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+          }
+        },
+        {
+          "name": "Create Employee",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "if (data.id) pm.collectionVariables.set('employee_id', data.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/employees/",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"email\": \"john.doe@acme.com\",\n  \"phone\": \"+250700000001\",\n  \"employee_id\": \"EMP001\",\n  \"job_title\": \"Software Engineer\",\n  \"employment_type\": \"full_time\",\n  \"start_date\": \"2024-01-15\",\n  \"gross_salary\": \"2500.00\",\n  \"department\": null\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Employee",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/employees/{{employee_id}}/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+          }
+        },
+        {
+          "name": "Update Employee",
+          "request": {
+            "method": "PATCH",
+            "url": "{{base_url}}/api/v1/employees/{{employee_id}}/",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"job_title\": \"Senior Software Engineer\",\n  \"gross_salary\": \"3000.00\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Employee",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/api/v1/employees/{{employee_id}}/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+          }
+        },
+        {
+          "name": "Bulk Import (Excel/CSV)",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/employees/bulk-import/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "body": {
+              "mode": "formdata",
+              "formdata": [{ "key": "file", "type": "file", "src": "/path/to/employees.xlsx" }]
+            }
+          }
+        },
+        {
+          "name": "Export Employees (Excel)",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/employees/export/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+          }
+        },
+        {
+          "name": "List Departments",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/employees/departments/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+          }
+        },
+        {
+          "name": "Create Department",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "if (data.id) pm.collectionVariables.set('department_id', data.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/employees/departments/",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"name\": \"Engineering\", \"description\": \"Software development\" }"
+            }
+          }
+        },
+        {
+          "name": "Update Department",
+          "request": {
+            "method": "PATCH",
+            "url": "{{base_url}}/api/v1/employees/departments/{{department_id}}/",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"name\": \"Product Engineering\" }"
+            }
+          }
+        },
+        {
+          "name": "Delete Department",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/api/v1/employees/departments/{{department_id}}/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Documents",
+      "item": [
+        {
+          "name": "List Documents",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/documents/?page=1&page_size=25",
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "page_size", "value": "25" },
+                { "key": "document_type", "value": "", "disabled": true },
+                { "key": "status", "value": "", "disabled": true },
+                { "key": "search", "value": "", "disabled": true },
+                { "key": "expiring_soon", "value": "true", "disabled": true }
+              ]
+            },
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+          }
+        },
+        {
+          "name": "Upload Document",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "if (data.id) pm.collectionVariables.set('document_id', data.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/documents/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "title",          "value": "Employment Contract — John Doe", "type": "text" },
+                { "key": "document_type",  "value": "employment_contract",           "type": "text" },
+                { "key": "employee",       "value": "{{employee_id}}",               "type": "text" },
+                { "key": "description",    "value": "Signed employment contract",    "type": "text" },
+                { "key": "status",         "value": "active",                         "type": "text" },
+                { "key": "issue_date",     "value": "2024-01-15",                     "type": "text" },
+                { "key": "expiry_date",    "value": "2027-01-14",                     "type": "text" },
+                { "key": "file",           "src":   "/path/to/contract.pdf",          "type": "file" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Document",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/documents/{{document_id}}/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+          }
+        },
+        {
+          "name": "Download Document",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/documents/{{document_id}}/download/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "description": "Returns the decrypted file as an octet-stream."
+          }
+        },
+        {
+          "name": "Update Document Metadata",
+          "request": {
+            "method": "PATCH",
+            "url": "{{base_url}}/api/v1/documents/{{document_id}}/",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"status\": \"active\", \"expiry_date\": \"2028-01-14\" }"
+            }
+          }
+        },
+        {
+          "name": "Delete Document",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/api/v1/documents/{{document_id}}/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Compliance",
+      "item": [
+        {
+          "name": "Compliance Dashboard",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/compliance/dashboard/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+          }
+        },
+        {
+          "name": "List Requirements",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/compliance/requirements/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+          }
+        },
+        {
+          "name": "List Categories",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/compliance/categories/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+          }
+        },
+        {
+          "name": "List Compliance Records",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/compliance/records/?page=1&page_size=25",
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "page_size", "value": "25" },
+                { "key": "status", "value": "", "disabled": true },
+                { "key": "authority", "value": "Tax Authority", "disabled": true },
+                { "key": "search", "value": "", "disabled": true }
+              ]
+            },
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+          }
+        },
+        {
+          "name": "Create Compliance Record",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "if (data.id) pm.collectionVariables.set('compliance_id', data.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/compliance/records/",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"requirement\": \"{{requirement_id}}\",\n  \"period_start\": \"2024-01-01\",\n  \"period_end\": \"2024-03-31\",\n  \"due_date\": \"2024-04-30\",\n  \"status\": \"pending\",\n  \"notes\": \"Q1 payroll tax return\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Compliance Record",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/compliance/records/{{compliance_id}}/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+          }
+        },
+        {
+          "name": "Update Compliance Record",
+          "request": {
+            "method": "PATCH",
+            "url": "{{base_url}}/api/v1/compliance/records/{{compliance_id}}/",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"compliant\",\n  \"completed_date\": \"2024-04-25\",\n  \"notes\": \"Filed and confirmed by tax authority\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Compliance Record",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/api/v1/compliance/records/{{compliance_id}}/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "item": [
+        {
+          "name": "List Reports",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/reports/?page=1&page_size=25",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+          }
+        },
+        {
+          "name": "Generate Report",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "if (data.id) pm.collectionVariables.set('report_id', data.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/reports/",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"report_type\": \"tax_filing_summary\",\n  \"period_start\": \"2024-01-01\",\n  \"period_end\": \"2024-03-31\",\n  \"title\": \"Q1 2024 Tax Filing Summary\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Report",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/reports/{{report_id}}/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+          }
+        },
+        {
+          "name": "Download Report PDF",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/reports/{{report_id}}/download/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Notifications",
+      "item": [
+        {
+          "name": "List Notifications",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/notifications/?page=1&page_size=25",
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "page_size", "value": "25" },
+                { "key": "is_read", "value": "false", "disabled": true },
+                { "key": "notification_type", "value": "", "disabled": true }
+              ]
+            },
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+          }
+        },
+        {
+          "name": "Unread Count",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/notifications/unread-count/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+          }
+        },
+        {
+          "name": "Mark All Read",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/notifications/mark-all-read/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+          }
+        },
+        {
+          "name": "Mark Single Read",
+          "request": {
+            "method": "PATCH",
+            "url": "{{base_url}}/api/v1/notifications/{{notification_id}}/",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"is_read\": true }"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Audit Logs",
+      "item": [
+        {
+          "name": "List Audit Logs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/audit-logs/?page=1&page_size=25",
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "page_size", "value": "25" },
+                { "key": "search", "value": "", "disabled": true },
+                { "key": "method", "value": "POST", "disabled": true },
+                { "key": "status_range", "value": "2xx", "disabled": true }
+              ]
+            },
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Geography",
+      "item": [
+        {
+          "name": "List Countries",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/geo/countries/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+          }
+        },
+        {
+          "name": "List Currencies",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/geo/currencies/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+          }
+        },
+        {
+          "name": "List Exchange Rates",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/geo/exchange-rates/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "GraphQL",
+      "item": [
+        {
+          "name": "GraphQL — Company + Employees Query",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/graphql/",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"query {\\n  company {\\n    id\\n    name\\n    employeeCount\\n  }\\n  employees {\\n    id\\n    firstName\\n    lastName\\n    email\\n    jobTitle\\n    status\\n  }\\n}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "GraphQL — Compliance Dashboard",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/graphql/",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"query {\\n  complianceDashboard {\\n    score\\n    compliant\\n    pending\\n    overdue\\n    total\\n  }\\n}\"\n}"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

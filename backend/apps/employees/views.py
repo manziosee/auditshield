@@ -116,7 +116,7 @@ class DepartmentViewSet(TenantQuerysetMixin, ModelViewSet):
     ),
 )
 class EmployeeViewSet(TenantQuerysetMixin, ModelViewSet):
-    queryset = Employee.objects.select_related("department").all()
+    queryset = Employee.objects.select_related("department", "currency").all()
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ["employment_status", "contract_type", "department", "is_active"]
