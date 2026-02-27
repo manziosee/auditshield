@@ -26,8 +26,10 @@ RUN pip install --no-cache /wheels/*
 
 COPY --chown=appuser:appgroup . .
 
-# Create log directory while still root, then hand ownership to appuser
-RUN mkdir -p /app/logs && chown appuser:appgroup /app/logs && chmod +x entrypoint.sh
+# Create writable directories while still root, then hand ownership to appuser
+RUN mkdir -p /app/logs /app/staticfiles /app/media \
+    && chown -R appuser:appgroup /app/logs /app/staticfiles /app/media \
+    && chmod +x entrypoint.sh
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
