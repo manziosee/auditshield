@@ -1,16 +1,21 @@
-version: "3.9"
-
 # ─── Production overrides ─────────────────────────────────────────────────────
-# Usage: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+# Usage: docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 
 services:
+  db:
+    restart: always
+    ports: []  # never expose DB in production
+
+  redis:
+    restart: always
+
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile.prod
     command: >
-      sh -c "python manage.py wait_for_db &&
-             python manage.py migrate --noinput &&
+      sh -c "python manage.py migrate --noinput &&
+             python manage.py seed_global_data --noinput 2>/dev/null || true &&
              python manage.py collectstatic --noinput &&
              gunicorn auditshield.wsgi:application
                --bind 0.0.0.0:8000
@@ -25,6 +30,17 @@ services:
                --error-logfile -"
     restart: always
     ports: []  # not exposed directly — go through nginx
+    environment:
+      DJANGO_SETTINGS_MODULE: auditshield.settings.production
+
+  celery_worker:
+    restart: always
+
+  celery_beat:
+    restart: always
+
+  flower:
+    restart: always
 
   frontend:
     build:
@@ -42,16 +58,4 @@ services:
     ports:
       - "80:80"
       - "443:443"
-
-  db:
-    restart: always
-    ports: []  # never expose DB in production
-
-  redis:
-    restart: always
-
-  celery_worker:
-    restart: always
-
-  celery_beat:
     restart: always

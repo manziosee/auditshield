@@ -1,426 +1,469 @@
 <div align="center">
-  <img src="frontend/public/logo.svg" width="80" height="80" alt="AuditShield Logo">
-  <h1>AuditShield</h1>
-  <p><strong>SME Digital Records &amp; Compliance Platform</strong></p>
-  <p>Keep your business audit-ready. Manage employees, encrypted documents,<br>and statutory compliance obligations — all in one secure multi-tenant SaaS.</p>
 
-  <!-- CI badges -->
-  <a href="https://github.com/manziosee/auditshield/actions/workflows/django.yml">
-    <img src="https://github.com/manziosee/auditshield/actions/workflows/django.yml/badge.svg" alt="Backend CI">
-  </a>&nbsp;
-  <a href="https://github.com/manziosee/auditshield/actions/workflows/frontend.yml">
-    <img src="https://github.com/manziosee/auditshield/actions/workflows/frontend.yml/badge.svg" alt="Frontend CI">
-  </a>&nbsp;
-  <a href="https://github.com/manziosee/auditshield/blob/main/LICENSE">
-    <img src="https://img.shields.io/badge/License-MIT-22c55e?style=flat-square" alt="License MIT">
-  </a>
+<br/>
 
-  <br><br>
+<img src="frontend/public/logo.svg" width="110" height="110" alt="AuditShield Logo">
 
-  <!-- Stack badges -->
-  <img src="https://img.shields.io/badge/Python-3.11%2B-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python">
-  <img src="https://img.shields.io/badge/Django-5.0-092E20?style=for-the-badge&logo=django&logoColor=white" alt="Django">
-  <img src="https://img.shields.io/badge/Angular-18-DD0031?style=for-the-badge&logo=angular&logoColor=white" alt="Angular">
-  <img src="https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript">
-  <br>
-  <img src="https://img.shields.io/badge/Turso-libSQL-4FF8D2?style=for-the-badge&logo=sqlite&logoColor=black" alt="Turso">
-  <img src="https://img.shields.io/badge/Redis-7-DC382D?style=for-the-badge&logo=redis&logoColor=white" alt="Redis">
-  <img src="https://img.shields.io/badge/Celery-5.x-37814A?style=for-the-badge&logo=celery&logoColor=white" alt="Celery">
-  <img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker">
-  <img src="https://img.shields.io/badge/GraphQL-Strawberry-E10098?style=for-the-badge&logo=graphql&logoColor=white" alt="GraphQL">
+<br/>
+<br/>
+
+# 🛡️ AuditShield
+
+### **The Global SME Compliance Platform**
+
+> _Keep your business audit-ready — anywhere in the world._
+> Manage employees, encrypted documents, payroll, and regulatory obligations in one secure multi-tenant SaaS.
+
+<br/>
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Deployed on Fly.io](https://img.shields.io/badge/Deployed%20on-Fly.io-8b5cf6?logo=flydotio&logoColor=white)](https://fly.io)
+
+<br/>
+
+---
+
+### 🔧 Built With
+
+<br/>
+
+**Backend**
+
+![Python](https://img.shields.io/badge/Python_3.12-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Django](https://img.shields.io/badge/Django_5-092E20?style=for-the-badge&logo=django&logoColor=white)
+![DRF](https://img.shields.io/badge/Django_REST_Framework-a30000?style=for-the-badge&logo=django&logoColor=white)
+![GraphQL](https://img.shields.io/badge/Strawberry_GraphQL-E10098?style=for-the-badge&logo=graphql&logoColor=white)
+
+**Database & Cache**
+
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL_16-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis_7-DC382D?style=for-the-badge&logo=redis&logoColor=white)
+![Celery](https://img.shields.io/badge/Celery-37814A?style=for-the-badge&logo=celery&logoColor=white)
+
+**Frontend**
+
+![Angular](https://img.shields.io/badge/Angular_18-DD0031?style=for-the-badge&logo=angular&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript_5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Angular Material](https://img.shields.io/badge/Angular_Material-757575?style=for-the-badge&logo=materialdesign&logoColor=white)
+![Apollo](https://img.shields.io/badge/Apollo_Client-311C87?style=for-the-badge&logo=apollographql&logoColor=white)
+
+**Infrastructure**
+
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Nginx](https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)
+![Fly.io](https://img.shields.io/badge/Fly.io-8b5cf6?style=for-the-badge&logo=flydotio&logoColor=white)
+
+<br/>
+
+---
+
 </div>
 
----
+## What is AuditShield?
 
-## 📋 Table of Contents
+**AuditShield** is a **multi-tenant SaaS compliance platform** built for small and medium enterprises (SMEs) operating across multiple countries. It centralises everything an SME needs to stay audit-ready:
 
-- [The Problem](#-the-problem)
-- [Features](#-features)
-- [Tech Stack](#-tech-stack)
-- [Architecture](#-architecture)
-- [Getting Started](#-getting-started)
-- [API Reference](#-api-reference)
-- [Security](#-security-architecture)
-- [Scheduled Tasks](#-scheduled-tasks)
-- [Deployment](#-deployment)
-- [Makefile](#%EF%B8%8F-makefile-commands)
-- [Roadmap](#%EF%B8%8F-roadmap)
-- [License](#-license)
+- 📋 **Employee records** — full lifecycle management with department hierarchy
+- 🔒 **Encrypted document vault** — AES-128 Fernet encryption at rest, OCR text extraction, expiry alerts
+- ✅ **Compliance tracker** — tax, social security, and labour law obligations mapped to global authorities
+- 💰 **Payroll engine** — country-specific tax rules, payroll runs, and payslip generation
+- 📄 **PDF report generation** — async via Celery + WeasyPrint, download when ready
+- 🌍 **Multi-country** — 16+ countries, 17+ currencies, global authority mapping
+- 🔍 **Immutable audit trail** — every write recorded automatically by middleware
+- 🔔 **Notifications** — in-app + email with unread badge and mark-all-read
+- 🔗 **Dual API** — REST (DRF + Swagger) **and** GraphQL (Strawberry + Apollo)
 
----
-
-## 🔥 The Problem
-
-Many small and medium businesses still:
-
-- 📁 Store employee contracts in physical files that get lost
-- 🧮 Track PAYE, RSSB and VAT manually in spreadsheets
-- 😰 Panic and scramble when tax or social security audits arrive
-- ⚠️ Miss compliance deadlines and face avoidable penalties
-
-**AuditShield eliminates all of this** — giving every company a fully encrypted, audit-ready digital records system from day one.
+Every company is a **fully isolated tenant** with UUID-keyed records and scoped row-level queries. No data leaks across tenants — ever.
 
 ---
 
-## ✨ Features
+## Table of Contents
 
-| Feature | Description |
-|---------|-------------|
-| 🏢 **Multi-tenant** | Fully isolated data environment per company |
-| 👥 **Employee Management** | Complete profiles — contracts, salary, statutory numbers, bulk Excel import |
-| 🔒 **Encrypted Document Vault** | Fernet AES-128 at rest — PDF, Excel, images; decrypt only on download |
-| 🔍 **OCR Extraction** | Tesseract + PyMuPDF auto-extract text from scanned documents |
-| 📊 **Compliance Dashboard** | Real-time RRA / RSSB / Labor Law checklist with scoring |
-| 📄 **Async PDF Reports** | Audit-readiness, payroll summaries — generated in background |
-| 🔔 **Smart Notifications** | Alerts for expiring documents, overdue compliance, contract renewals |
-| 🛡️ **Role-Based Access** | super\_admin → admin → hr → accountant → auditor → employee |
-| 📜 **Immutable Audit Trail** | Every mutation logged — tamper-proof evidence for inspectors |
-| 🌐 **REST + GraphQL** | Full DRF REST (Swagger) and Strawberry GraphQL (Apollo-compatible) |
-| ⚡ **Async Task Queue** | Celery workers for OCR, PDF generation, email notifications |
-| 🌍 **Global-Ready** | Works for any company worldwide — not only Rwanda |
-
----
-
-## 🛠️ Tech Stack
-
-### Backend
-
-| Layer | Technology | Badge |
-|-------|-----------|-------|
-| Framework | Django 5 + DRF | ![Django](https://img.shields.io/badge/Django-5-092E20?style=flat-square&logo=django) |
-| GraphQL | Strawberry (Apollo-compatible) | ![GraphQL](https://img.shields.io/badge/Strawberry-GraphQL-E10098?style=flat-square&logo=graphql) |
-| Database | Turso (distributed libSQL / SQLite) | ![Turso](https://img.shields.io/badge/Turso-libSQL-4FF8D2?style=flat-square) |
-| Cache & Broker | Redis 7 | ![Redis](https://img.shields.io/badge/Redis-7-DC382D?style=flat-square&logo=redis) |
-| Async Tasks | Celery 5 + Beat | ![Celery](https://img.shields.io/badge/Celery-5-37814A?style=flat-square) |
-| Auth | JWT rotate-on-refresh + blacklist | ![JWT](https://img.shields.io/badge/JWT-simplejwt-black?style=flat-square) |
-| File Encryption | Fernet AES-128-CBC + HMAC-SHA256 | ![Crypto](https://img.shields.io/badge/Fernet-AES128-6B40B0?style=flat-square) |
-| OCR | Tesseract + PyMuPDF | ![OCR](https://img.shields.io/badge/Tesseract-OCR-4A90D9?style=flat-square) |
-| PDF Reports | WeasyPrint + ReportLab | ![PDF](https://img.shields.io/badge/WeasyPrint-PDF-FF6B6B?style=flat-square) |
-| API Docs | drf-spectacular (Swagger + ReDoc) | ![Swagger](https://img.shields.io/badge/Swagger-OpenAPI-85EA2D?style=flat-square&logo=swagger) |
-| Password Hashing | Argon2 (GPU-resistant) | ![Argon2](https://img.shields.io/badge/Argon2-Hashing-FF8C00?style=flat-square) |
-| Brute Force | django-axes (5 failures → 15 min lockout) | ![Axes](https://img.shields.io/badge/django--axes-Security-red?style=flat-square) |
-
-### Frontend
-
-| Layer | Technology | Badge |
-|-------|-----------|-------|
-| Framework | Angular 18 (standalone + signals) | ![Angular](https://img.shields.io/badge/Angular-18-DD0031?style=flat-square&logo=angular) |
-| Language | TypeScript 5 strict | ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript) |
-| UI Library | Angular Material 3 | ![Material](https://img.shields.io/badge/Material-3-757575?style=flat-square&logo=materialdesign) |
-| GraphQL Client | Apollo Angular | ![Apollo](https://img.shields.io/badge/Apollo-Angular-311C87?style=flat-square&logo=apollographql) |
-| Charts | ng2-charts + Chart.js | ![Charts](https://img.shields.io/badge/Chart.js-FF6384?style=flat-square&logo=chartdotjs) |
-| Deployment | Vercel | ![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat-square&logo=vercel) |
-
-### Infrastructure
-
-| Component | Technology | Badge |
-|-----------|-----------|-------|
-| Containers | Docker + Compose | ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=flat-square&logo=docker) |
-| Reverse Proxy | Nginx 1.25 | ![Nginx](https://img.shields.io/badge/Nginx-1.25-009639?style=flat-square&logo=nginx) |
-| CI / CD | GitHub Actions | ![GHA](https://img.shields.io/badge/GitHub%20Actions-2088FF?style=flat-square&logo=githubactions) |
-| Task Monitor | Flower | ![Flower](https://img.shields.io/badge/Flower-Celery%20UI-37814A?style=flat-square) |
-| Object Storage | MinIO (optional S3-compatible) | ![MinIO](https://img.shields.io/badge/MinIO-S3-C72E49?style=flat-square) |
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Architecture](#architecture)
+- [Quick Start (Docker)](#quick-start-docker)
+- [Local Development (without Docker)](#local-development-without-docker)
+- [Environment Variables](#environment-variables)
+- [API Documentation](#api-documentation)
+- [Deployment — Fly.io](#deployment--flyio)
+- [Deployment — Docker Compose Production](#deployment--docker-compose-production)
+- [User Roles](#user-roles)
+- [Project Structure](#project-structure)
+- [Makefile Commands](#makefile-commands)
+- [License](#license)
 
 ---
 
-## 🏗️ Architecture
+## Features
+
+| 🏷️ Area | ✨ Capabilities |
+|---------|----------------|
+| 🏢 **Multi-tenancy** | Each company is a fully isolated tenant — UUID PKs, cascading row-level scoping |
+| 👥 **Employees** | Full CRUD, department management, bulk Excel/CSV import, one-click export |
+| 🔒 **Documents** | Fernet AES-128 encryption at rest, OCR extraction, expiry tracking & email alerts |
+| ✅ **Compliance** | Tax, social security & labour law tracker; authority dashboards; full CRUD |
+| 📊 **Reports** | Async PDF generation (WeasyPrint + Celery), download when ready |
+| 💰 **Payroll** | Country-specific tax rule engine, payroll runs, payslip generation |
+| 🌍 **Geography** | 16+ countries, 17+ currencies, live exchange rate support |
+| 🔑 **Auth** | JWT rotate-on-refresh, Argon2 hashing, brute-force lockout (django-axes) |
+| 📜 **Audit Trail** | Immutable middleware log of every POST/PUT/PATCH/DELETE |
+| 🔔 **Notifications** | In-app + email alerts, unread badge, mark-all-read |
+| 🔗 **GraphQL** | Strawberry endpoint — Apollo-compatible at `/graphql/` with GraphiQL playground |
+| 📖 **REST API** | Full DRF REST API with auto OpenAPI/Swagger docs at `/api/docs/` |
+
+---
+
+## Tech Stack
+
+### 🐍 Backend
+
+| Technology | Version | Purpose |
+|-----------|:-------:|---------|
+| ![Python](https://img.shields.io/badge/-Python-3776AB?logo=python&logoColor=white) **Python** | 3.12 | Runtime |
+| ![Django](https://img.shields.io/badge/-Django-092E20?logo=django&logoColor=white) **Django** | 5.0 | Web framework |
+| ![DRF](https://img.shields.io/badge/-DRF-a30000?logo=django&logoColor=white) **Django REST Framework** | 3.15 | REST API |
+| ![Strawberry](https://img.shields.io/badge/-Strawberry_GraphQL-E10098?logo=graphql&logoColor=white) **Strawberry GraphQL** | 0.236 | GraphQL (Apollo-compatible) |
+| ![PostgreSQL](https://img.shields.io/badge/-PostgreSQL-4169E1?logo=postgresql&logoColor=white) **PostgreSQL** | 16 | Primary database (Docker / self-hosted) |
+| ![SQLite](https://img.shields.io/badge/-SQLite-003B57?logo=sqlite&logoColor=white) **SQLite** | 3 | Lightweight DB (Fly.io / CI) |
+| ![Redis](https://img.shields.io/badge/-Redis-DC382D?logo=redis&logoColor=white) **Redis** | 7 | Celery message broker + cache |
+| ![Celery](https://img.shields.io/badge/-Celery-37814A?logo=celery&logoColor=white) **Celery** + Beat | 5.3 | Async task queue + scheduler |
+| **Gunicorn** gthread | — | Production WSGI server |
+| **drf-spectacular** | 0.27 | Auto OpenAPI / Swagger docs |
+| **WeasyPrint** | 61 | PDF report generation |
+| **pytesseract** | 0.3 | OCR text extraction from documents |
+| **cryptography** (Fernet) | 42 | AES-128 file encryption at rest |
+| **django-axes** | 6.4 | Brute-force login protection |
+| **Argon2** | — | Strongest password hashing |
+
+### 🅰️ Frontend
+
+| Technology | Version | Purpose |
+|-----------|:-------:|---------|
+| ![Angular](https://img.shields.io/badge/-Angular-DD0031?logo=angular&logoColor=white) **Angular** | 18 | SPA framework — standalone components + signals |
+| ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?logo=typescript&logoColor=white) **TypeScript** | 5 | Strict type-safe development |
+| ![Material](https://img.shields.io/badge/-Angular_Material-757575?logo=materialdesign&logoColor=white) **Angular Material** | 18 | UI component library |
+| ![Apollo](https://img.shields.io/badge/-Apollo_Angular-311C87?logo=apollographql&logoColor=white) **Apollo Angular** | 7 | GraphQL client |
+| **RxJS** | 7 | Reactive streams & observables |
+
+### 🏗️ Infrastructure
+
+| Technology | Purpose |
+|-----------|---------|
+| ![Docker](https://img.shields.io/badge/-Docker-2496ED?logo=docker&logoColor=white) **Docker Compose** | Dev (7 services) + Production stacks |
+| ![Nginx](https://img.shields.io/badge/-Nginx-009639?logo=nginx&logoColor=white) **Nginx** | Reverse proxy, SSL termination, static serving |
+| ![Fly.io](https://img.shields.io/badge/-Fly.io-8b5cf6?logo=flydotio&logoColor=white) **Fly.io** | Backend cloud deployment with persistent volume |
+| ![GitHub Actions](https://img.shields.io/badge/-GitHub_Actions-2088FF?logo=githubactions&logoColor=white) **GitHub Actions** | CI/CD — lint, test, coverage, auto-deploy |
+
+---
+
+## Architecture
 
 ```
-                    ┌─────────────────────────────────────────┐
-                    │         Nginx  (Port 80 / 443)          │
-                    │  Rate-limit · CSP · HTTPS redirect      │
-                    └────────┬───────────────────┬────────────┘
-                             │                   │
-          ┌──────────────────▼──┐      ┌─────────▼───────────────────┐
-          │   Angular Frontend  │      │  Django API  (Port 8000)    │
-          │   Vercel / Port 4200│      │  REST  /api/v1/             │
-          │   Apollo · Signals  │      │  GraphQL  /graphql/         │
-          └─────────────────────┘      │  Swagger  /api/docs/        │
-                                       └──────┬──────────────────────┘
-                                              │
-              ┌───────────────────────────────┼──────────────────────┐
-              │                               │                      │
-    ┌─────────▼──────────┐       ┌────────────▼──────┐   ┌──────────▼──────┐
-    │  Turso (libSQL)    │       │  Redis 7           │   │  Celery Workers │
-    │  Distributed SQLite│       │  Cache · Sessions  │   │  OCR · PDF      │
-    │  ← file: for CI    │       │  Celery Broker     │   │  Emails         │
-    └────────────────────┘       └───────────────────┘   └──────────┬──────┘
-                                                                     │
-                                                          ┌──────────▼──────┐
-                                                          │  Celery Beat    │
-                                                          │  · Backup 2 AM  │
-                                                          │  · Reminders    │
-                                                          │  · Expiry check │
-                                                          └─────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│                        User's Browser                           │
+│               Angular 18 SPA  (TypeScript + Signals)           │
+└────────────────────────────┬────────────────────────────────────┘
+                             │  HTTPS
+                ┌────────────▼────────────┐
+                │      Nginx :80/:443     │
+                │  /api/v1/* → Django     │
+                │  /graphql/ → Django     │
+                │  /*        → Angular    │
+                └────────────┬────────────┘
+                             │
+          ┌──────────────────▼────────────────────────┐
+          │    Django 5  +  DRF  +  Strawberry GQL   │
+          │  ┌────────────────────────────────────┐   │
+          │  │  JWT Auth │  Tenant  │  AuditLog  │   │
+          │  │ middleware│  scoping │  middleware │   │
+          │  └────────────────────────────────────┘   │
+          │          REST API ──── GraphQL API         │
+          └──────────┬───────────────────────────────┘
+                     │
+        ┌────────────┴─────────────┐
+        │                          │
+┌───────▼────────┐       ┌─────────▼───────┐
+│  PostgreSQL 16 │       │    Redis 7       │
+│  (app data)    │       │  broker + cache  │
+└────────────────┘       └─────────┬───────┘
+                                   │
+                    ┌──────────────▼─────────────┐
+                    │     Celery Workers + Beat   │
+                    │  📄 OCR · 📊 PDF reports    │
+                    │  📧 Emails · 💾 Backups     │
+                    │  🔔 Reminders · 🧹 Cleanup  │
+                    └────────────────────────────┘
 ```
-
-### Multi-tenant Isolation
-
-Every model extends `TenantModel` which enforces a `company` FK. `TenantMiddleware` attaches `request.company` on every request. All querysets are automatically scoped — no cross-tenant data leakage is possible at the ORM level.
 
 ---
 
-## 🚀 Getting Started
+## Quick Start (Docker)
 
-### Prerequisites
-
-- [Docker](https://docs.docker.com/get-docker/) & Docker Compose v2
-- [Node.js 20+](https://nodejs.org/) (frontend dev only)
-
-### 1. Clone and configure
+> **Prerequisites**: Docker Desktop ≥ 24 with the Compose v2 plugin
 
 ```bash
+# 1. Clone
 git clone https://github.com/manziosee/auditshield.git
 cd auditshield
+
+# 2. Environment file
 cp .env.example .env
+
+# 3. Generate required secret keys
+make gen-secret    # → paste as DJANGO_SECRET_KEY in .env
+make gen-fernet    # → paste as FILE_ENCRYPTION_KEY in .env
+
+# Also set DATABASE_URL in .env:
+# DATABASE_URL=postgresql://auditshield:auditshield@db:5432/auditshield
+
+# 4. Start the full stack (PostgreSQL + Redis + Django + Celery + Angular + Nginx)
+make dev
+
+# 5. Create your admin user
+make createsuperuser
+
+# 6. Open the app 🎉
 ```
-
-Fill in the key secrets:
-
-```bash
-# Django secret key
-python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
-
-# Fernet key for file encryption
-python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
-```
-
-```ini
-# .env — minimum required
-DJANGO_SECRET_KEY=<50-char-random-string>
-TURSO_DATABASE_URL=libsql://your-db.turso.io    # or file:db.sqlite3 for local dev
-TURSO_AUTH_TOKEN=<turso-jwt-token>
-FILE_ENCRYPTION_KEY=<fernet-key>
-REDIS_URL=redis://redis:6379/0
-```
-
-### 2. Start the stack
-
-```bash
-make dev              # docker compose up --build -d
-make migrate          # run all migrations
-make createsuperuser  # create first admin user
-```
-
-### 3. Access the services
 
 | Service | URL |
 |---------|-----|
-| App (Nginx) | http://localhost |
-| Frontend dev | http://localhost:4200 |
-| REST API | http://localhost:8000/api/v1/ |
-| **Swagger UI** | **http://localhost:8000/api/docs/** |
-| ReDoc | http://localhost:8000/api/redoc/ |
-| GraphQL | http://localhost:8000/graphql/ |
-| Flower | http://localhost:5555 |
+| 🌐 **Frontend** | http://localhost:4200 |
+| 🔌 **API** | http://localhost:8000/api/v1/ |
+| 📖 **Swagger UI** | http://localhost:8000/api/docs/ |
+| 🔗 **GraphiQL** | http://localhost:8000/graphql/ |
+| 🌸 **Flower (Celery)** | http://localhost:5555 |
 
 ---
 
-## 📡 API Reference
+## Local Development (without Docker)
 
-All endpoints require `Authorization: Bearer <access_token>` unless marked ❌.
+### Backend
 
-### Authentication `/api/v1/auth/`
+```bash
+cd backend
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements/development.txt
 
-| Method | Endpoint | Auth |
-|--------|----------|------|
-| `POST` | `/login/` | ❌ |
-| `POST` | `/refresh/` | ❌ |
-| `POST` | `/logout/` | ✅ |
-| `GET/PUT/PATCH` | `/me/` | ✅ |
-| `POST` | `/change-password/` | ✅ |
-| `GET/POST` | `/users/` | ✅ Admin |
+# In .env: set TURSO_DATABASE_URL=file:db.sqlite3  (remove DATABASE_URL line)
+python manage.py migrate
+python manage.py seed_global_data   # loads countries, currencies, authorities
+python manage.py createsuperuser
+python manage.py runserver          # → http://localhost:8000
+```
 
-### Companies `/api/v1/companies/`
+### Frontend
 
-| Method | Endpoint | Auth |
-|--------|----------|------|
-| `POST` | `/onboard/` | ❌ |
-| `GET/PUT/PATCH` | `/profile/` | ✅ |
+```bash
+cd frontend
+npm install
+npm start   # → http://localhost:4200
+```
 
-### Employees `/api/v1/employees/`
+### Celery (optional — needed for PDF gen, OCR, email)
 
-| Method | Endpoint |
-|--------|----------|
-| `GET/POST` | `/` — list (paginated, filterable) / create |
-| `GET/PUT/PATCH/DELETE` | `/{id}/` |
-| `POST` | `/bulk_import/` — Excel/CSV import |
-| `GET` | `/export/` — download as Excel |
-| `GET/POST` | `/departments/` |
-| `GET/PUT/PATCH/DELETE` | `/departments/{id}/` |
-
-### Documents `/api/v1/documents/`
-
-| Method | Endpoint |
-|--------|----------|
-| `GET/POST` | `/` — list / upload (Fernet encrypted + async OCR) |
-| `GET/PUT/PATCH/DELETE` | `/{id}/` |
-| `GET` | `/{id}/download/` — decrypt and stream |
-| `GET` | `/{id}/preview_text/` — OCR result |
-
-**Filters**: `document_type`, `status`, `employee`, `expiring_soon`, `search`
-
-### Compliance `/api/v1/compliance/`
-
-| Method | Endpoint |
-|--------|----------|
-| `GET` | `/dashboard/` — score + stats |
-| `GET/POST` | `/records/` |
-| `GET/PUT/PATCH/DELETE` | `/records/{id}/` |
-| `GET` | `/requirements/` — global requirement library |
-| `GET` | `/categories/` — RRA, RSSB, Labor Law, etc. |
-
-### Reports `/api/v1/reports/`
-
-| Method | Endpoint |
-|--------|----------|
-| `GET/POST` | `/` — list / request async generation |
-| `GET` | `/{id}/` — poll `is_ready` |
-| `GET` | `/{id}/download/` — download PDF (202 if pending) |
-| `DELETE` | `/{id}/` |
-
-### Notifications `/api/v1/notifications/`
-
-| Method | Endpoint |
-|--------|----------|
-| `GET` | `/` — my notifications |
-| `PATCH` | `/{id}/` — mark read |
-| `POST` | `/mark_all_read/` |
-| `GET` | `/unread_count/` — badge count |
-
-### Audit Logs `/api/v1/audit-logs/`
-
-| Method | Endpoint |
-|--------|----------|
-| `GET` | `/` — immutable read-only trail |
-
-> Full interactive docs at **`/api/docs/`** (Swagger UI) and **`/api/redoc/`**.
+```bash
+cd backend
+celery -A auditshield worker --loglevel=info -Q default,documents,reports,notifications
+celery -A auditshield beat   --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+```
 
 ---
 
-## 🔐 Security Architecture
+## Environment Variables
 
-| Layer | Mechanism |
-|-------|-----------|
-| **Auth** | JWT rotate-on-refresh + simplejwt token blacklist |
-| **Passwords** | Argon2 (GPU-resistant — strongest Django hasher) |
-| **Brute Force** | django-axes — 5 failures → 15 min IP lockout |
-| **Multi-tenancy** | Every query scoped via `TenantModel` company FK |
-| **File Encryption** | Fernet AES-128-CBC at rest — decrypt in-memory only |
-| **File Validation** | MIME type via `python-magic` — not file extension |
-| **Audit Trail** | Immutable — every mutation stored, can never be edited |
-| **Transport** | TLS 1.2/1.3, HSTS preload, CSRF protection |
-| **HTTP Headers** | CSP, `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff` |
-| **Rate Limiting** | 5/min on auth endpoints, 60/min authenticated users |
-| **UUID PKs** | All models — prevents sequential ID enumeration |
-
----
-
-## 🔄 Scheduled Tasks
-
-| Task | Schedule |
-|------|----------|
-| Document expiry check + notifications | Daily 08:00 Africa/Kigali |
-| Compliance deadline reminders | Every Monday 09:00 |
-| Expired JWT token cleanup | Every Sunday 03:00 |
+| Variable | Required | Description |
+|----------|:--------:|-------------|
+| `DJANGO_SECRET_KEY` | ✅ | Django secret key (50+ chars) |
+| `FILE_ENCRYPTION_KEY` | ✅ | Fernet key — document encryption at rest |
+| `DATABASE_URL` | 🐳 Docker | PostgreSQL `postgresql://user:pass@host/db` |
+| `TURSO_DATABASE_URL` | ✈️ Fly.io/CI | SQLite `file:db.sqlite3` |
+| `REDIS_URL` | ✅ | `redis://:password@host:6379/0` |
+| `CELERY_BROKER_URL` | ✅ | Celery broker (Redis) |
+| `DJANGO_ALLOWED_HOSTS` | 🚀 Prod | Comma-separated hostnames |
+| `CORS_ALLOWED_ORIGINS` | 🚀 Prod | Comma-separated frontend origins |
+| `EMAIL_HOST_USER` | optional | SMTP username |
+| `EMAIL_HOST_PASSWORD` | optional | SMTP app password |
+| `SENTRY_DSN` | optional | Sentry error tracking |
+| `DB_NAME / DB_USER / DB_PASSWORD` | 🐳 Docker | PostgreSQL credentials |
 
 ---
 
-## 📁 Project Structure
+## API Documentation
+
+> All endpoints require `Authorization: Bearer <access_token>` except `/health/`, `/auth/register/`, `/auth/login/`.
+
+### Login
+
+```http
+POST /api/v1/auth/login/
+Content-Type: application/json
+
+{ "email": "admin@company.com", "password": "yourpassword" }
+```
+
+### Key Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/health/` | Health check — no auth |
+| `POST` | `/api/v1/auth/register/` | Register company + admin |
+| `POST` | `/api/v1/auth/login/` | Obtain JWT tokens |
+| `GET/PATCH` | `/api/v1/companies/me/` | Company profile |
+| `GET` | `/api/v1/companies/export/` | Export all company data |
+| `GET/POST` | `/api/v1/employees/` | List / create employees |
+| `GET/PATCH/DELETE` | `/api/v1/employees/{id}/` | Employee detail |
+| `POST` | `/api/v1/employees/bulk-import/` | Import from Excel/CSV |
+| `GET/POST` | `/api/v1/employees/departments/` | List / create departments |
+| `GET/POST` | `/api/v1/documents/` | List / upload documents |
+| `GET` | `/api/v1/documents/{id}/download/` | Download decrypted file |
+| `DELETE` | `/api/v1/documents/{id}/` | Delete document |
+| `GET` | `/api/v1/compliance/dashboard/` | Compliance score + stats |
+| `GET/POST` | `/api/v1/compliance/records/` | List / create records |
+| `PATCH/DELETE` | `/api/v1/compliance/records/{id}/` | Update / delete record |
+| `GET` | `/api/v1/reports/` | List reports |
+| `POST` | `/api/v1/reports/` | Generate report (async) |
+| `POST` | `/api/v1/notifications/mark-all-read/` | Mark all read |
+| `GET` | `/api/v1/notifications/unread-count/` | Unread count |
+| `GET` | `/api/v1/audit-logs/` | Audit trail |
+| `GET` | `/api/v1/geo/countries/` | Countries list |
+| `GET` | `/api/v1/geo/currencies/` | Currencies list |
+
+> 📦 **Postman collection** → [`postman_collection.json`](postman_collection.json)
+>
+> 📖 **Swagger** → `/api/docs/` · **ReDoc** → `/api/redoc/` · **GraphiQL** → `/graphql/`
+
+---
+
+## Deployment — Fly.io
+
+```bash
+# Install CLI
+curl -L https://fly.io/install.sh | sh && flyctl auth login
+
+# Create persistent SQLite volume
+flyctl volumes create auditshield_data --region jnb --size 3 --config backend/fly.toml
+
+# Set secrets
+flyctl secrets set \
+  DJANGO_SECRET_KEY="<generated>" \
+  FILE_ENCRYPTION_KEY="<generated>" \
+  DJANGO_ALLOWED_HOSTS="auditshield-backend.fly.dev" \
+  CORS_ALLOWED_ORIGINS="https://your-frontend.fly.dev" \
+  --config backend/fly.toml
+
+# Deploy
+flyctl deploy --config backend/fly.toml
+```
+
+**Auto-deploy on push to `main`**: Add `FLY_API_TOKEN` to GitHub repo secrets → (**Settings → Secrets → Actions**).
+
+---
+
+## Deployment — Docker Compose Production
+
+```bash
+git clone https://github.com/manziosee/auditshield.git && cd auditshield
+cp .env.example .env  # fill in production values
+
+docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+docker compose exec backend python manage.py createsuperuser
+```
+
+Place SSL certs in `nginx/ssl/` and configure your domain in `nginx/nginx.prod.conf`.
+
+---
+
+## User Roles
+
+| Role | Access |
+|------|--------|
+| 👑 `super_admin` | Full platform access |
+| 🔧 `admin` | Company admin — full access to own tenant |
+| 👩‍💼 `hr` | Employees, documents, compliance |
+| 🧾 `accountant` | Payroll, financial reports |
+| 🔍 `auditor` | Read-only + audit logs |
+| 👤 `employee` | Own profile and documents only |
+
+---
+
+## Project Structure
 
 ```
 auditshield/
-├── backend/
-│   ├── auditshield/settings/{base,development,production}.py
+├── 🐍 backend/
+│   ├── auditshield/settings/       # base / development / production
 │   ├── apps/
-│   │   ├── accounts/       # User, JWT, RBAC
-│   │   ├── companies/      # Multi-tenant Company
-│   │   ├── employees/      # Employee + Department + bulk import
-│   │   ├── documents/      # Encrypted vault + OCR
-│   │   ├── compliance/     # RRA/RSSB/Labor Law checklists
-│   │   ├── reports/        # Async PDF reports
-│   │   ├── notifications/  # Alerts + email
-│   │   └── audit_logs/     # Immutable trail
-│   ├── core/               # UUIDModel, TenantModel, middleware, utils
-│   └── requirements/{base,development,production}.txt
+│   │   ├── accounts/               # User + JWT auth
+│   │   ├── companies/              # Company (tenant) + onboarding
+│   │   ├── employees/              # Employee + Department
+│   │   ├── documents/              # Encrypted upload + OCR
+│   │   ├── compliance/             # Authority + Requirements + Records
+│   │   ├── reports/                # PDF generation (WeasyPrint)
+│   │   ├── notifications/          # In-app + email alerts
+│   │   ├── audit_logs/             # Immutable activity trail
+│   │   ├── geography/              # Country + Currency + ExchangeRate
+│   │   └── payroll/                # TaxRule + PayrollRun + Payslip
+│   ├── core/                       # Shared: TenantModel, middleware, utils
+│   ├── Dockerfile.dev / Dockerfile.prod
+│   ├── entrypoint.sh               # Fly.io startup script
+│   └── fly.toml                    # Fly.io deployment config
 │
-├── frontend/               # Angular 18 SPA
-│   └── src/app/
-│       ├── core/           # guards, interceptors, services, models
-│       ├── features/       # auth, dashboard, employees, documents…
-│       └── shared/layout/  # shell (sidebar + topbar)
+├── 🅰️ frontend/src/app/
+│   ├── core/                       # Guards, interceptors, services, models
+│   ├── features/
+│   │   ├── auth/                   # Login + Register pages
+│   │   ├── dashboard/              # KPI cards + live charts
+│   │   ├── employees/              # List, Detail, Form (CRUD)
+│   │   ├── documents/              # List, Upload, Detail (CRUD)
+│   │   ├── compliance/             # Tracker + Add/Edit/Delete
+│   │   ├── reports/                # List + Generate
+│   │   ├── notifications/          # Notification centre
+│   │   ├── audit-logs/             # Audit log viewer
+│   │   └── company/                # Company settings
+│   └── shared/layout/              # Shell — sidebar + topbar
 │
-├── nginx/
-├── .github/workflows/      # Backend CI + Frontend CI
-├── docker-compose.yml
-└── Makefile
+├── 🌐 nginx/                       # nginx.dev.conf / nginx.prod.conf
+├── 💾 scripts/backup/              # GPG-encrypted backup + restore
+├── ⚙️  .github/workflows/          # CI/CD pipelines
+├── 🐳 docker-compose.yml           # Dev stack
+├── 🐳 docker-compose.prod.yml      # Production overrides
+├── 📦 postman_collection.json      # Full Postman API collection
+├── 🔧 Makefile
+└── 📋 .env.example
 ```
 
 ---
 
-## 🚢 Deployment
-
-### Frontend — Vercel
-
-Connect GitHub repo → set root directory to `frontend` → deploy. The `vercel.json` handles SPA routing automatically.
-
-### Backend — Docker
+## Makefile Commands
 
 ```bash
-# Production
-docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
-docker compose exec backend python manage.py migrate --settings=auditshield.settings.production
-```
-
-Production env extras:
-
-```ini
-DJANGO_SETTINGS_MODULE=auditshield.settings.production
-TURSO_DATABASE_URL=libsql://your-db.turso.io
-TURSO_AUTH_TOKEN=<jwt>
-SENTRY_DSN=https://...@sentry.io/...
-```
-
----
-
-## 🛠️ Makefile Commands
-
-```bash
-make dev              # start full docker stack
-make stop             # stop all containers
-make logs             # tail all logs
-make migrate          # run migrations
-make makemigrations   # create new migrations
-make createsuperuser  # create super admin
+make dev              # Start dev stack (docker compose up --build)
+make stop             # Stop all services
+make logs             # Tail all service logs
+make migrate          # Run database migrations
+make makemigrations   # Create new migrations
 make shell            # Django shell_plus
-make test             # run test suite
-make lint             # ruff + mypy
-make format           # ruff format
-make gen-secret       # generate DJANGO_SECRET_KEY
-make gen-fernet       # generate FILE_ENCRYPTION_KEY
+make createsuperuser  # Create admin user
+make seed             # Seed global countries, currencies, authorities
+make test             # Run Django test suite
+make lint             # Ruff linter
+make coverage         # Tests with coverage report
+make deploy           # Deploy backend to Fly.io
+make build-prod       # Build production Docker images
+make backup           # GPG-encrypted DB + media backup
+make gen-secret       # Generate DJANGO_SECRET_KEY
+make gen-fernet       # Generate FILE_ENCRYPTION_KEY
 ```
-
----
-
-## 🗺️ Roadmap
-
-- [ ] Two-factor authentication (TOTP)
-- [ ] Digital signature on contracts
-- [ ] Mobile PWA (offline support)
-- [ ] WhatsApp / SMS compliance reminders
-- [ ] Multi-language (Kinyarwanda, French, English, Arabic)
-- [ ] Direct e-Tax filing integration
-- [ ] Payroll module with bank transfer export
-- [ ] Public API for accounting software integrations
-
----
-
-## 📄 License
-
-MIT License — Copyright © 2026 [Osee Manzi](mailto:oseemanzi3@gmail.com)
 
 ---
 
 <div align="center">
-  <sub>Built with ❤️ for SMEs worldwide — from Rwanda to the world.</sub>
+
+**MIT License** — Copyright © 2026 [Osee Manzi](mailto:oseemanzi3@gmail.com)
+
+_Built with ❤️ to make compliance accessible for every SME, everywhere._
+
 </div>

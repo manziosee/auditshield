@@ -1,5 +1,6 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import OpenApiResponse, extend_schema, extend_schema_view
-from rest_framework import generics, status
+from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -16,7 +17,8 @@ from .serializers import NotificationSerializer
         description=(
             "Returns all notifications for the authenticated user, newest first.\n\n"
             "Notification types: `document_expiry`, `compliance_due`, "
-            "`contract_renewal`, `system`, `reminder`"
+            "`contract_renewal`, `system`, `reminder`\n\n"
+            "**Filters**: `notification_type`, `is_read`"
         ),
     ),
     retrieve=extend_schema(
@@ -36,7 +38,9 @@ from .serializers import NotificationSerializer
 class NotificationViewSet(ModelViewSet):
     serializer_class = NotificationSerializer
     permission_classes = [IsAuthenticated]
-    http_method_names = ["get", "patch", "delete", "head", "options"]
+    http_method_names = ["get", "post", "patch", "delete", "head", "options"]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["notification_type", "is_read"]
 
     def get_queryset(self):
         return Notification.objects.filter(recipient=self.request.user)
@@ -49,7 +53,7 @@ class NotificationViewSet(ModelViewSet):
             200: OpenApiResponse(description="All notifications marked as read"),
         },
     )
-    @action(detail=False, methods=["post"])
+    @action(detail=False, methods=["post"], url_path="mark-all-read")
     def mark_all_read(self, request):
         self.get_queryset().filter(is_read=False).update(is_read=True)
         return Response({"detail": "All notifications marked as read."})
@@ -62,7 +66,7 @@ class NotificationViewSet(ModelViewSet):
             200: OpenApiResponse(description="Unread count"),
         },
     )
-    @action(detail=False, methods=["get"])
+    @action(detail=False, methods=["get"], url_path="unread-count")
     def unread_count(self, request):
         count = self.get_queryset().filter(is_read=False).count()
         return Response({"unread_count": count})

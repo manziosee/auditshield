@@ -32,6 +32,7 @@ class EmployeeDetailSerializer(serializers.ModelSerializer):
     department_name = serializers.CharField(source="department.name", read_only=True)
     full_name = serializers.ReadOnlyField()
     compliance_score = serializers.SerializerMethodField()
+    currency_code = serializers.SerializerMethodField()
 
     class Meta:
         model = Employee
@@ -39,9 +40,18 @@ class EmployeeDetailSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "created_at", "updated_at"]
 
     def get_compliance_score(self, obj):
-        # Calculated from documents present
         from apps.compliance.utils import get_employee_compliance_score
         return get_employee_compliance_score(obj)
+
+    def get_currency_code(self, obj):
+        if obj.currency:
+            return obj.currency.code
+        try:
+            if obj.company.currency:
+                return obj.company.currency.code
+        except Exception:
+            pass
+        return ""
 
     def validate_employee_number(self, value):
         company = self.context["request"].user.company

@@ -43,11 +43,15 @@ createsuperuser: ## Create superuser
 create-admin:   ## Create superuser + demo company (dev shortcut)
 	$(BACKEND) python manage.py create_admin
 
-seed-compliance: ## Seed Rwanda compliance requirements (RRA/RSSB/Labor Law)
+seed:           ## Seed global countries, currencies, authorities
+	$(BACKEND) python manage.py seed_global_data --noinput
+
+seed-compliance: ## Seed compliance requirements
 	$(BACKEND) python manage.py seed_compliance
 
-setup:          ## Full dev setup: migrate + seed compliance + create admin
+setup:          ## Full dev setup: migrate + seed + create admin
 	$(BACKEND) python manage.py migrate
+	$(BACKEND) python manage.py seed_global_data --noinput
 	$(BACKEND) python manage.py seed_compliance
 	$(BACKEND) python manage.py create_admin
 
@@ -56,10 +60,13 @@ collectstatic:  ## Collect static files
 
 # ── Testing & Quality ─────────────────────────────────────────────────────────
 test:           ## Run all backend tests
-	$(BACKEND_RUN) pytest --cov=. --cov-report=term-missing -v
+	$(BACKEND) python manage.py test --verbosity=2 --buffer
 
-test-fast:      ## Run tests without coverage
-	$(BACKEND_RUN) pytest -x -q
+test-fast:      ## Run tests without coverage (fast)
+	$(BACKEND) python manage.py test --verbosity=1
+
+coverage:       ## Run tests with coverage report
+	$(BACKEND) sh -c "pip install coverage -q && coverage run manage.py test && coverage report"
 
 lint:           ## Lint backend code (ruff + mypy)
 	$(BACKEND_RUN) ruff check .
@@ -92,9 +99,16 @@ prod-logs:      ## Production logs
 prod-migrate:   ## Run migrations in production
 	$(COMPOSE_PROD) exec backend python manage.py migrate --noinput
 
+# ── Deploy ────────────────────────────────────────────────────────────────────
+deploy:         ## Deploy backend to Fly.io
+	flyctl deploy --config backend/fly.toml --remote-only
+
 # ── Build & Clean ─────────────────────────────────────────────────────────────
-build:          ## Build all images
+build:          ## Build all dev images
 	$(COMPOSE) build
+
+build-prod:     ## Build production Docker images
+	$(COMPOSE_PROD) build
 
 clean:          ## Remove containers, volumes (DESTRUCTIVE — ask first)
 	@echo "This will DELETE all data. Continue? [y/N]" && read ans && [ $${ans:-N} = y ]

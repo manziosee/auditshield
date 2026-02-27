@@ -61,11 +61,29 @@ class ComplianceRecordListView(generics.ListCreateAPIView):
     ordering = ["due_date"]
 
     def get_queryset(self):
-        return (
+        qs = (
             ComplianceRecord.objects
             .filter(company=self.request.user.company)
-            .select_related("requirement", "requirement__category", "completed_by")
+            .select_related(
+                "requirement",
+                "requirement__category",
+                "requirement__category__authority",
+                "completed_by",
+            )
         )
+        # Filter by authority type via query param (e.g. ?authority=Tax+Authority)
+        authority_filter = self.request.query_params.get("authority")
+        if authority_filter:
+            type_map = {
+                "Tax Authority": "tax",
+                "Social Security Agency": "social_security",
+                "Labour Department": "labor",
+                "Business Registry": "corporate",
+            }
+            auth_type = type_map.get(authority_filter)
+            if auth_type:
+                qs = qs.filter(requirement__category__authority__authority_type=auth_type)
+        return qs
 
     def perform_create(self, serializer):
         serializer.save(company=self.request.user.company)
@@ -86,7 +104,14 @@ class ComplianceRecordDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return ComplianceRecord.objects.filter(company=self.request.user.company)
+        return ComplianceRecord.objects.filter(
+            company=self.request.user.company
+        ).select_related(
+            "requirement",
+            "requirement__category",
+            "requirement__category__authority",
+            "completed_by",
+        )
 
 
 @extend_schema(

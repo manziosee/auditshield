@@ -8,6 +8,7 @@ on:
 
 jobs:
   build:
+    name: Angular build & lint
     runs-on: ubuntu-latest
 
     defaults:
@@ -26,6 +27,9 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Lint (ESLint)
+        run: npm run lint || true   # non-blocking until lint config is enforced
 
       - name: Build (production — includes TypeScript check)
         run: npm run build
