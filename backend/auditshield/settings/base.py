@@ -267,6 +267,11 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # ─── Logging ──────────────────────────────────────────────────────────────────
+# Ensure the log directory exists before Django's logging config runs.
+# On Fly.io the image has no pre-created /app/logs, so we create it here.
+_LOG_DIR = BASE_DIR / "logs"
+_LOG_DIR.mkdir(parents=True, exist_ok=True)
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
