@@ -360,6 +360,16 @@ flyctl deploy --config backend/fly.toml
 
 **Auto-deploy on push to `main`**: Add `FLY_API_TOKEN` to GitHub repo secrets → (**Settings → Secrets → Actions**).
 
+### Live Production URLs
+
+| | URL |
+|---|---|
+| 🌐 **API Base** | https://auditshield-backend.fly.dev/api/v1/ |
+| 📖 **Swagger UI** | https://auditshield-backend.fly.dev/api/docs/ |
+| 📄 **ReDoc** | https://auditshield-backend.fly.dev/api/redoc/ |
+| 🔗 **GraphiQL** | https://auditshield-backend.fly.dev/graphql/ |
+| ❤️ **Health check** | https://auditshield-backend.fly.dev/health/ |
+
 ---
 
 ## Deployment — Docker Compose Production
