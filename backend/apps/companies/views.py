@@ -180,7 +180,7 @@ class CompanyExportView(APIView):
             audit_logs = []
 
         def default_serializer(obj):
-            if isinstance(obj, (date, datetime)):
+            if isinstance(obj, date | datetime):
                 return obj.isoformat()
             return str(obj)
 
