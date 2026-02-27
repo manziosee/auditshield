@@ -3,7 +3,7 @@
 set -e
 
 echo "==> Ensuring data directories exist..."
-mkdir -p /data/media /data/staticfiles /app/logs
+mkdir -p /data/media /data/staticfiles
 
 echo "==> Running database migrations..."
 python manage.py migrate --noinput
