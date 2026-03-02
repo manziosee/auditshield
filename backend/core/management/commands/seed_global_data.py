@@ -43,12 +43,48 @@ COUNTRIES = [
     {"name": "United Kingdom", "iso_code": "GB", "iso_code_3": "GBR", "currency": "GBP", "timezone": "Europe/London",     "phone_prefix": "+44",  "flag_emoji": "🇬🇧", "tax_year_start_month": 4},
     {"name": "United States",  "iso_code": "US", "iso_code_3": "USA", "currency": "USD", "timezone": "America/New_York",  "phone_prefix": "+1",   "flag_emoji": "🇺🇸", "tax_year_start_month": 1},
     {"name": "India",          "iso_code": "IN", "iso_code_3": "IND", "currency": "INR", "timezone": "Asia/Kolkata",      "phone_prefix": "+91",  "flag_emoji": "🇮🇳", "tax_year_start_month": 4},
-    {"name": "UAE",            "iso_code": "AE", "iso_code_3": "ARE", "currency": "AED", "timezone": "Asia/Dubai",        "phone_prefix": "+971", "flag_emoji": "🇦🇪", "tax_year_start_month": 1},
+    {"name": "United Arab Emirates", "iso_code": "AE", "iso_code_3": "ARE", "currency": "AED", "timezone": "Asia/Dubai",        "phone_prefix": "+971", "flag_emoji": "🇦🇪", "tax_year_start_month": 1},
     {"name": "Canada",         "iso_code": "CA", "iso_code_3": "CAN", "currency": "CAD", "timezone": "America/Toronto",   "phone_prefix": "+1",   "flag_emoji": "🇨🇦", "tax_year_start_month": 1},
     {"name": "Australia",      "iso_code": "AU", "iso_code_3": "AUS", "currency": "AUD", "timezone": "Australia/Sydney",  "phone_prefix": "+61",  "flag_emoji": "🇦🇺", "tax_year_start_month": 7},
     {"name": "Egypt",          "iso_code": "EG", "iso_code_3": "EGY", "currency": "EGP", "timezone": "Africa/Cairo",      "phone_prefix": "+20",  "flag_emoji": "🇪🇬", "tax_year_start_month": 1},
     {"name": "Morocco",        "iso_code": "MA", "iso_code_3": "MAR", "currency": "MAD", "timezone": "Africa/Casablanca", "phone_prefix": "+212", "flag_emoji": "🇲🇦", "tax_year_start_month": 1},
     {"name": "Singapore",      "iso_code": "SG", "iso_code_3": "SGP", "currency": "SGD", "timezone": "Asia/Singapore",   "phone_prefix": "+65",  "flag_emoji": "🇸🇬", "tax_year_start_month": 1},
+    {"name": "France",         "iso_code": "FR", "iso_code_3": "FRA", "currency": "EUR", "timezone": "Europe/Paris",      "phone_prefix": "+33",  "flag_emoji": "🇫🇷", "tax_year_start_month": 1},
+    {"name": "Germany",        "iso_code": "DE", "iso_code_3": "DEU", "currency": "EUR", "timezone": "Europe/Berlin",     "phone_prefix": "+49",  "flag_emoji": "🇩🇪", "tax_year_start_month": 1},
+    {"name": "Netherlands",    "iso_code": "NL", "iso_code_3": "NLD", "currency": "EUR", "timezone": "Europe/Amsterdam",  "phone_prefix": "+31",  "flag_emoji": "🇳🇱", "tax_year_start_month": 1},
+    {"name": "Spain",          "iso_code": "ES", "iso_code_3": "ESP", "currency": "EUR", "timezone": "Europe/Madrid",     "phone_prefix": "+34",  "flag_emoji": "🇪🇸", "tax_year_start_month": 1},
+    {"name": "Italy",          "iso_code": "IT", "iso_code_3": "ITA", "currency": "EUR", "timezone": "Europe/Rome",       "phone_prefix": "+39",  "flag_emoji": "🇮🇹", "tax_year_start_month": 1},
+    {"name": "Brazil",         "iso_code": "BR", "iso_code_3": "BRA", "currency": "USD", "timezone": "America/Sao_Paulo", "phone_prefix": "+55",  "flag_emoji": "🇧🇷", "tax_year_start_month": 1},
+    {"name": "Mexico",         "iso_code": "MX", "iso_code_3": "MEX", "currency": "USD", "timezone": "America/Mexico_City", "phone_prefix": "+52", "flag_emoji": "🇲🇽", "tax_year_start_month": 1},
+    {"name": "Japan",          "iso_code": "JP", "iso_code_3": "JPN", "currency": "USD", "timezone": "Asia/Tokyo",        "phone_prefix": "+81",  "flag_emoji": "🇯🇵", "tax_year_start_month": 4},
+    {"name": "China",          "iso_code": "CN", "iso_code_3": "CHN", "currency": "USD", "timezone": "Asia/Shanghai",     "phone_prefix": "+86",  "flag_emoji": "🇨🇳", "tax_year_start_month": 1},
+    {"name": "South Korea",    "iso_code": "KR", "iso_code_3": "KOR", "currency": "USD", "timezone": "Asia/Seoul",        "phone_prefix": "+82",  "flag_emoji": "🇰🇷", "tax_year_start_month": 1},
+    {"name": "New Zealand",    "iso_code": "NZ", "iso_code_3": "NZL", "currency": "USD", "timezone": "Pacific/Auckland",  "phone_prefix": "+64",  "flag_emoji": "🇳🇿", "tax_year_start_month": 4},
+    {"name": "Ireland",        "iso_code": "IE", "iso_code_3": "IRL", "currency": "EUR", "timezone": "Europe/Dublin",     "phone_prefix": "+353", "flag_emoji": "🇮🇪", "tax_year_start_month": 1},
+    {"name": "Switzerland",    "iso_code": "CH", "iso_code_3": "CHE", "currency": "EUR", "timezone": "Europe/Zurich",     "phone_prefix": "+41",  "flag_emoji": "🇨🇭", "tax_year_start_month": 1},
+    {"name": "Sweden",         "iso_code": "SE", "iso_code_3": "SWE", "currency": "EUR", "timezone": "Europe/Stockholm",  "phone_prefix": "+46",  "flag_emoji": "🇸🇪", "tax_year_start_month": 1},
+    {"name": "Norway",         "iso_code": "NO", "iso_code_3": "NOR", "currency": "EUR", "timezone": "Europe/Oslo",       "phone_prefix": "+47",  "flag_emoji": "🇳🇴", "tax_year_start_month": 1},
+    {"name": "Denmark",        "iso_code": "DK", "iso_code_3": "DNK", "currency": "EUR", "timezone": "Europe/Copenhagen", "phone_prefix": "+45",  "flag_emoji": "🇩🇰", "tax_year_start_month": 1},
+    {"name": "Finland",        "iso_code": "FI", "iso_code_3": "FIN", "currency": "EUR", "timezone": "Europe/Helsinki",   "phone_prefix": "+358", "flag_emoji": "🇫🇮", "tax_year_start_month": 1},
+    {"name": "Poland",         "iso_code": "PL", "iso_code_3": "POL", "currency": "EUR", "timezone": "Europe/Warsaw",     "phone_prefix": "+48",  "flag_emoji": "🇵🇱", "tax_year_start_month": 1},
+    {"name": "Portugal",       "iso_code": "PT", "iso_code_3": "PRT", "currency": "EUR", "timezone": "Europe/Lisbon",     "phone_prefix": "+351", "flag_emoji": "🇵🇹", "tax_year_start_month": 1},
+    {"name": "Belgium",        "iso_code": "BE", "iso_code_3": "BEL", "currency": "EUR", "timezone": "Europe/Brussels",   "phone_prefix": "+32",  "flag_emoji": "🇧🇪", "tax_year_start_month": 1},
+    {"name": "Austria",        "iso_code": "AT", "iso_code_3": "AUT", "currency": "EUR", "timezone": "Europe/Vienna",     "phone_prefix": "+43",  "flag_emoji": "🇦🇹", "tax_year_start_month": 1},
+    {"name": "Greece",         "iso_code": "GR", "iso_code_3": "GRC", "currency": "EUR", "timezone": "Europe/Athens",     "phone_prefix": "+30",  "flag_emoji": "🇬🇷", "tax_year_start_month": 1},
+    {"name": "Czech Republic", "iso_code": "CZ", "iso_code_3": "CZE", "currency": "EUR", "timezone": "Europe/Prague",     "phone_prefix": "+420", "flag_emoji": "🇨🇿", "tax_year_start_month": 1},
+    {"name": "Hungary",        "iso_code": "HU", "iso_code_3": "HUN", "currency": "EUR", "timezone": "Europe/Budapest",   "phone_prefix": "+36",  "flag_emoji": "🇭🇺", "tax_year_start_month": 1},
+    {"name": "Romania",        "iso_code": "RO", "iso_code_3": "ROU", "currency": "EUR", "timezone": "Europe/Bucharest",  "phone_prefix": "+40",  "flag_emoji": "🇷🇴", "tax_year_start_month": 1},
+    {"name": "Thailand",       "iso_code": "TH", "iso_code_3": "THA", "currency": "USD", "timezone": "Asia/Bangkok",      "phone_prefix": "+66",  "flag_emoji": "🇹🇭", "tax_year_start_month": 1},
+    {"name": "Malaysia",       "iso_code": "MY", "iso_code_3": "MYS", "currency": "USD", "timezone": "Asia/Kuala_Lumpur", "phone_prefix": "+60",  "flag_emoji": "🇲🇾", "tax_year_start_month": 1},
+    {"name": "Indonesia",      "iso_code": "ID", "iso_code_3": "IDN", "currency": "USD", "timezone": "Asia/Jakarta",      "phone_prefix": "+62",  "flag_emoji": "🇮🇩", "tax_year_start_month": 1},
+    {"name": "Philippines",    "iso_code": "PH", "iso_code_3": "PHL", "currency": "USD", "timezone": "Asia/Manila",       "phone_prefix": "+63",  "flag_emoji": "🇵🇭", "tax_year_start_month": 1},
+    {"name": "Vietnam",        "iso_code": "VN", "iso_code_3": "VNM", "currency": "USD", "timezone": "Asia/Ho_Chi_Minh",  "phone_prefix": "+84",  "flag_emoji": "🇻🇳", "tax_year_start_month": 1},
+    {"name": "Pakistan",       "iso_code": "PK", "iso_code_3": "PAK", "currency": "USD", "timezone": "Asia/Karachi",      "phone_prefix": "+92",  "flag_emoji": "🇵🇰", "tax_year_start_month": 7},
+    {"name": "Bangladesh",     "iso_code": "BD", "iso_code_3": "BGD", "currency": "USD", "timezone": "Asia/Dhaka",        "phone_prefix": "+880", "flag_emoji": "🇧🇩", "tax_year_start_month": 7},
+    {"name": "Argentina",      "iso_code": "AR", "iso_code_3": "ARG", "currency": "USD", "timezone": "America/Argentina/Buenos_Aires", "phone_prefix": "+54", "flag_emoji": "🇦🇷", "tax_year_start_month": 1},
+    {"name": "Chile",          "iso_code": "CL", "iso_code_3": "CHL", "currency": "USD", "timezone": "America/Santiago",  "phone_prefix": "+56",  "flag_emoji": "🇨🇱", "tax_year_start_month": 1},
+    {"name": "Colombia",       "iso_code": "CO", "iso_code_3": "COL", "currency": "USD", "timezone": "America/Bogota",    "phone_prefix": "+57",  "flag_emoji": "🇨🇴", "tax_year_start_month": 1},
+    {"name": "Peru",           "iso_code": "PE", "iso_code_3": "PER", "currency": "USD", "timezone": "America/Lima",      "phone_prefix": "+51",  "flag_emoji": "🇵🇪", "tax_year_start_month": 1},
 ]
 
 # ─── Universal Compliance Templates (country-agnostic) ────────────────────────
@@ -237,6 +273,11 @@ class Command(BaseCommand):
             Country.objects.all().delete()
             Currency.objects.all().delete()
             self.stdout.write(self.style.WARNING("Cleared existing geo and compliance data."))
+
+        # Check if already seeded
+        if not options["reset"] and Country.objects.exists():
+            self.stdout.write(self.style.SUCCESS(f"✓ Already seeded: {Country.objects.count()} countries, {Currency.objects.count()} currencies"))
+            return
 
         # 1. Seed currencies
         currency_map = {}

@@ -4,7 +4,8 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ApiService } from '../../../core/services/api.service';
+import { CompanyService } from '../../../core/services/company.service';
+import { GeoService } from '../../../core/services/geo.service';
 import { NotificationService } from '../../../core/services/notification.service';
 
 const COMPANY_TYPES = [
@@ -13,34 +14,6 @@ const COMPANY_TYPES = [
   { value: 'accounting',    label: 'Accounting Firm' },
   { value: 'hr_consultancy',label: 'HR Consultancy' },
   { value: 'other',         label: 'Other' },
-];
-
-const COUNTRIES = [
-  { code: 'US', name: 'United States' },
-  { code: 'GB', name: 'United Kingdom' },
-  { code: 'CA', name: 'Canada' },
-  { code: 'AU', name: 'Australia' },
-  { code: 'DE', name: 'Germany' },
-  { code: 'FR', name: 'France' },
-  { code: 'AE', name: 'United Arab Emirates' },
-  { code: 'SG', name: 'Singapore' },
-  { code: 'IN', name: 'India' },
-  { code: 'NG', name: 'Nigeria' },
-  { code: 'ZA', name: 'South Africa' },
-  { code: 'KE', name: 'Kenya' },
-  { code: 'GH', name: 'Ghana' },
-  { code: 'RW', name: 'Rwanda' },
-  { code: 'UG', name: 'Uganda' },
-  { code: 'TZ', name: 'Tanzania' },
-  { code: 'EG', name: 'Egypt' },
-  { code: 'MA', name: 'Morocco' },
-  { code: 'BR', name: 'Brazil' },
-  { code: 'MX', name: 'Mexico' },
-  { code: 'JP', name: 'Japan' },
-  { code: 'KR', name: 'South Korea' },
-  { code: 'NL', name: 'Netherlands' },
-  { code: 'SE', name: 'Sweden' },
-  { code: 'CH', name: 'Switzerland' },
 ];
 
 @Component({
@@ -168,8 +141,8 @@ const COUNTRIES = [
                   <mat-icon class="input-icon">public</mat-icon>
                   <select formControlName="country">
                     <option value="" disabled>Select your country</option>
-                    @for (c of countries; track c.code) {
-                      <option [value]="c.code">{{ c.name }}</option>
+                    @for (c of countries(); track c.id) {
+                      <option [value]="c.id">{{ c.flag_emoji }} {{ c.name }}</option>
                     }
                   </select>
                   <mat-icon class="select-chevron">expand_more</mat-icon>
@@ -647,12 +620,14 @@ const COUNTRIES = [
   `],
 })
 export class RegisterComponent {
-  private readonly api    = inject(ApiService);
-  private readonly router = inject(Router);
-  private readonly notify = inject(NotificationService);
-  private readonly fb     = inject(FormBuilder);
+  private readonly company = inject(CompanyService);
+  private readonly geo     = inject(GeoService);
+  private readonly router  = inject(Router);
+  private readonly notify  = inject(NotificationService);
+  private readonly fb      = inject(FormBuilder);
 
   readonly currentStep = signal(1);
+  readonly countries   = signal<any[]>([]);
 
   readonly companyForm = this.fb.group({
     company_name:   ['', Validators.required],
@@ -667,7 +642,7 @@ export class RegisterComponent {
     admin_first_name: ['', Validators.required],
     admin_last_name:  ['', Validators.required],
     admin_email:      ['', [Validators.required, Validators.email]],
-    admin_password:   ['', [Validators.required, Validators.minLength(10)]],
+    admin_password:   ['', [Validators.required, Validators.minLength(8)]],
   });
 
   loading      = false;
@@ -675,7 +650,23 @@ export class RegisterComponent {
   errorMessage = '';
 
   readonly companyTypes = COMPANY_TYPES;
-  readonly countries    = COUNTRIES;
+
+  constructor() {
+    this.loadCountries();
+  }
+
+  loadCountries(): void {
+    this.geo.listCountries({ page_size: 250 }).subscribe({
+      next: (res) => {
+        console.log('Countries loaded:', res.results?.length);
+        this.countries.set(res.results || []);
+      },
+      error: (err) => {
+        console.error('Failed to load countries:', err);
+        this.countries.set([]);
+      }
+    });
+  }
 
   readonly benefits = [
     { icon: 'folder_special',    title: 'Secure Document Vault',    desc: 'AES-256 encrypted storage for all HR and compliance documents.', bg: 'rgba(99,102,241,0.15)',  color: '#818cf8' },
@@ -694,15 +685,32 @@ export class RegisterComponent {
     this.loading = true;
     this.errorMessage = '';
 
-    const payload = { ...this.companyForm.value, ...this.adminForm.value };
-    this.api.post('companies/onboard/', payload).subscribe({
-      next: () => {
+    const selectedCountry = this.countries().find(c => c.id === this.companyForm.value.country);
+
+    const payload = {
+      company_name: this.companyForm.value.company_name,
+      company_type: this.companyForm.value.company_type,
+      company_email: this.companyForm.value.company_email,
+      company_phone: this.companyForm.value.company_phone,
+      country_iso: selectedCountry?.iso_code || '',
+      tax_identifier: this.companyForm.value.tax_identifier || '',
+      ...this.adminForm.value
+    };
+    
+    this.company.onboard(payload as any).subscribe({
+      next: (res) => {
         this.notify.success('Company registered! Please log in.');
         this.router.navigate(['/auth/login']);
       },
       error: (err) => {
         this.loading = false;
-        this.errorMessage = err?.error?.detail ?? 'Registration failed. Please try again.';
+        console.error('Registration error:', err);
+        const errorDetail = err?.error?.detail || err?.error?.message;
+        const fieldErrors = err?.error ? Object.entries(err.error)
+          .filter(([key]) => !['detail', 'message'].includes(key))
+          .map(([key, val]) => `${key}: ${Array.isArray(val) ? val.join(', ') : val}`)
+          .join('; ') : '';
+        this.errorMessage = errorDetail || fieldErrors || 'Registration failed. Please try again.';
       },
     });
   }

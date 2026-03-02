@@ -349,9 +349,9 @@ SPECTACULAR_SETTINGS = {
     },
     # Group endpoints by tag in Swagger UI
     "TAGS": [
-        {"name": "auth", "description": "Authentication — login, refresh, logout, password change"},
+        {"name": "auth", "description": "Authentication — login, refresh, logout, password change, company onboarding"},
         {"name": "users", "description": "User management within a company"},
-        {"name": "companies", "description": "Company onboarding and settings"},
+        {"name": "companies", "description": "Company profile and settings"},
         {"name": "employees", "description": "Employee profiles, bulk import, and Excel export"},
         {"name": "departments", "description": "Departments within a company"},
         {"name": "documents", "description": "Encrypted document vault with OCR and expiry tracking"},
@@ -359,6 +359,7 @@ SPECTACULAR_SETTINGS = {
         {"name": "reports", "description": "Async PDF report generation and download"},
         {"name": "notifications", "description": "In-app notification feed"},
         {"name": "audit-logs", "description": "Immutable activity trail (read-only)"},
+        {"name": "geography", "description": "Countries, currencies, and exchange rates (public)"},
     ],
     "SCHEMA_PATH_PREFIX": r"/api/v1/",
     "SORT_OPERATIONS": False,

@@ -6,51 +6,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
-import { User } from '../../../core/models/auth.models';
-
-// ── Demo accounts ─────────────────────────────────────────────────────────────
-const DEMO_ADMIN: User = {
-  id: 'demo-user-001', email: 'admin@demo.com',
-  first_name: 'James', last_name: 'Okafor',
-  full_name: 'James Okafor', phone: '+1 415 100 0001',
-  role: 'admin', company: 'company-001', company_name: 'GlobalCo International Ltd',
-  avatar: null, two_factor_enabled: false, created_at: '2024-01-15T08:00:00Z',
-};
-const DEMO_HR: User = {
-  id: 'demo-user-002', email: 'hr@demo.com',
-  first_name: 'Sarah', last_name: 'Chen',
-  full_name: 'Sarah Chen', phone: '+1 415 100 0002',
-  role: 'hr', company: 'company-001', company_name: 'GlobalCo International Ltd',
-  avatar: null, two_factor_enabled: false, created_at: '2024-02-01T09:00:00Z',
-};
-const DEMO_ACCOUNTANT: User = {
-  id: 'demo-user-003', email: 'accountant@demo.com',
-  first_name: 'David', last_name: 'Mensah',
-  full_name: 'David Mensah', phone: '+1 415 100 0003',
-  role: 'accountant', company: 'company-001', company_name: 'GlobalCo International Ltd',
-  avatar: null, two_factor_enabled: false, created_at: '2024-03-01T08:00:00Z',
-};
-const DEMO_AUDITOR: User = {
-  id: 'demo-user-004', email: 'auditor@demo.com',
-  first_name: 'Amina', last_name: 'Hassan',
-  full_name: 'Amina Hassan', phone: '+1 415 100 0004',
-  role: 'auditor', company: 'company-001', company_name: 'GlobalCo International Ltd',
-  avatar: null, two_factor_enabled: false, created_at: '2024-04-01T08:00:00Z',
-};
-const DEMO_EMPLOYEE: User = {
-  id: 'demo-user-005', email: 'employee@demo.com',
-  first_name: 'Lucas', last_name: 'Ferreira',
-  full_name: 'Lucas Ferreira', phone: '+1 415 100 0007',
-  role: 'employee', company: 'company-001', company_name: 'GlobalCo International Ltd',
-  avatar: null, two_factor_enabled: false, created_at: '2026-01-15T08:00:00Z',
-};
-const DEMO_ACCOUNTS: Record<string, { password: string; user: User }> = {
-  'admin@demo.com':      { password: 'Demo@1234', user: DEMO_ADMIN },
-  'hr@demo.com':         { password: 'Demo@1234', user: DEMO_HR },
-  'accountant@demo.com': { password: 'Demo@1234', user: DEMO_ACCOUNTANT },
-  'auditor@demo.com':    { password: 'Demo@1234', user: DEMO_AUDITOR },
-  'employee@demo.com':   { password: 'Demo@1234', user: DEMO_EMPLOYEE },
-};
 
 @Component({
   selector: 'as-login',
@@ -128,31 +83,6 @@ const DEMO_ACCOUNTS: Record<string, { password: string; user: User }> = {
             <h2>Welcome back</h2>
             <p>Sign in to your AuditShield account</p>
           </div>
-
-          <!-- Demo credentials banner -->
-          <div class="demo-banner">
-            <div class="demo-banner-title">
-              <mat-icon>science</mat-icon>
-              <span>Try the live demo — no sign-up required</span>
-            </div>
-            <div class="demo-grid">
-              @for (acc of demoAccounts; track acc.email) {
-                <button type="button" class="demo-card" (click)="fillDemo(acc.email, acc.password)" [style.--demo-color]="acc.color">
-                  <div class="demo-card-icon">
-                    <mat-icon>{{ acc.icon }}</mat-icon>
-                  </div>
-                  <div class="demo-card-body">
-                    <span class="demo-card-role">{{ acc.role }}</span>
-                    <span class="demo-card-email">{{ acc.email }}</span>
-                  </div>
-                  <mat-icon class="demo-card-arrow">arrow_forward</mat-icon>
-                </button>
-              }
-            </div>
-            <div class="demo-pw-hint"><mat-icon>key</mat-icon>All accounts use password: <strong>Demo@1234</strong></div>
-          </div>
-
-          <div class="divider"><span>or sign in with your account</span></div>
 
           <!-- Form -->
           <form [formGroup]="form" (ngSubmit)="submit()">
@@ -373,74 +303,6 @@ const DEMO_ACCOUNTS: Record<string, { password: string; user: User }> = {
       margin: 0 0 6px; letter-spacing: -0.5px;
     }
     .form-header p { font-size: 0.875rem; color: var(--text-muted); margin: 0; }
-
-    /* Demo banner */
-    .demo-banner {
-      background: color-mix(in srgb, var(--brand) 8%, var(--surface-card));
-      border: 1px solid color-mix(in srgb, var(--brand) 25%, transparent);
-      border-radius: 14px;
-      padding: 14px;
-      margin-bottom: 20px;
-    }
-    .demo-banner-title {
-      display: flex; align-items: center; gap: 7px;
-      font-size: 0.8rem; font-weight: 700; color: var(--brand);
-      margin-bottom: 10px;
-    }
-    .demo-banner-title mat-icon { font-size: 1rem; width: 1rem; height: 1rem; }
-
-    /* 5-account vertical list */
-    .demo-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      margin-bottom: 10px;
-    }
-    .demo-card {
-      display: flex; align-items: center; gap: 10px;
-      background: transparent;
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 7px 10px;
-      cursor: pointer; text-align: left;
-      transition: all 0.15s; width: 100%;
-    }
-    .demo-card:hover {
-      border-color: var(--demo-color);
-      background: color-mix(in srgb, var(--demo-color) 7%, transparent);
-      transform: translateX(3px);
-    }
-    .demo-card-icon {
-      width: 28px; height: 28px; border-radius: 7px;
-      background: color-mix(in srgb, var(--demo-color) 15%, transparent);
-      color: var(--demo-color);
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
-    .demo-card-icon mat-icon { font-size: 0.95rem; width: 0.95rem; height: 0.95rem; }
-    .demo-card-body { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
-    .demo-card-role  { font-size: 0.68rem; font-weight: 700; color: var(--demo-color); text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; min-width: 68px; }
-    .demo-card-email { font-size: 0.72rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .demo-card-arrow { color: var(--text-faint) !important; font-size: 0.85rem !important; width: 0.85rem !important; height: 0.85rem !important; flex-shrink: 0; }
-    .demo-card:hover .demo-card-arrow { color: var(--demo-color) !important; }
-
-    .demo-pw-hint {
-      display: flex; align-items: center; gap: 5px;
-      font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;
-    }
-    .demo-pw-hint mat-icon { font-size: 0.85rem; width: 0.85rem; height: 0.85rem; color: var(--brand); }
-    .demo-pw-hint strong { color: var(--text-secondary); font-family: monospace; }
-
-    /* Divider */
-    .divider {
-      display: flex; align-items: center; gap: 12px;
-      margin-bottom: 20px;
-    }
-    .divider::before, .divider::after {
-      content: ''; flex: 1; height: 1px;
-      background: var(--border-color);
-    }
-    .divider span { font-size: 0.75rem; color: var(--text-muted); white-space: nowrap; }
 
     /* Fields */
     .field-group { margin-bottom: 16px; }
@@ -715,35 +577,12 @@ export class LoginComponent {
   emailFocused  = false;
   pwFocused     = false;
 
-  readonly demoAccounts = [
-    { email: 'admin@demo.com',      password: 'Demo@1234', role: 'Admin',      icon: 'admin_panel_settings', color: '#6366f1' },
-    { email: 'hr@demo.com',         password: 'Demo@1234', role: 'HR',         icon: 'badge',               color: '#22c55e' },
-    { email: 'accountant@demo.com', password: 'Demo@1234', role: 'Accountant', icon: 'calculate',           color: '#3b82f6' },
-    { email: 'auditor@demo.com',    password: 'Demo@1234', role: 'Auditor',    icon: 'fact_check',          color: '#f59e0b' },
-    { email: 'employee@demo.com',   password: 'Demo@1234', role: 'Employee',   icon: 'person',              color: '#8b5cf6' },
-  ];
-
-  fillDemo(email: string, password: string): void {
-    this.form.setValue({ email, password });
-    this.submit();
-  }
-
   submit(): void {
     if (this.form.invalid) return;
     this.loading = true;
     this.errorMessage = '';
 
     const { email, password } = this.form.value as { email: string; password: string };
-
-    // Demo shortcut
-    const demo = DEMO_ACCOUNTS[email];
-    if (demo && demo.password === password) {
-      this.auth.loginDemo(demo.user);
-      this.notify.success(`Welcome, ${demo.user.first_name}! (Demo mode)`);
-      this.loading = false;
-      this.router.navigate(['/dashboard']);
-      return;
-    }
 
     this.auth.login({ email, password }).subscribe({
       next: () => {

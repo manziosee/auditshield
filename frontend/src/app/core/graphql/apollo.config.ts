@@ -32,7 +32,7 @@ export function createApolloOptions(): any {
   });
 
   const http = httpLink.create({
-    uri: `${environment.apiUrl.replace('/api/v1', '')}/graphql/`,
+    uri: environment.graphqlUrl || `${environment.apiUrl.replace('/api/v1', '')}/graphql/`,
   });
 
   return {

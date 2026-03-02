@@ -20,13 +20,14 @@ class OnboardingRateThrottle(AnonRateThrottle):
 
 
 @extend_schema(
-    tags=["companies"],
+    tags=["auth"],
     summary="Onboard a new company",
     description=(
         "Creates a new **Company** tenant and its first **admin user** in a single "
         "atomic transaction. This is the public sign-up endpoint — no authentication needed.\n\n"
         "On success, use `POST /api/v1/auth/login/` with the admin credentials to obtain tokens."
     ),
+    request=CompanyOnboardingSerializer,
     responses={
         201: OpenApiResponse(description="Company and admin user created. Returns company_id and user_id."),
         400: OpenApiResponse(description="Validation error — check field errors in the response."),

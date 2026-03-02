@@ -6,7 +6,7 @@
     "version": { "major": 1, "minor": 0, "patch": 0 }
   },
   "variable": [
-    { "key": "base_url",       "value": "http://localhost:8000", "type": "string" },
+    { "key": "base_url",       "value": "https://auditshield-backend.fly.dev", "type": "string" },
     { "key": "access_token",   "value": "", "type": "string" },
     { "key": "refresh_token",  "value": "", "type": "string" },
     { "key": "company_id",     "value": "", "type": "string" },
@@ -36,16 +36,16 @@
       "name": "Auth",
       "item": [
         {
-          "name": "Register Company",
+          "name": "Onboard Company",
           "request": {
             "method": "POST",
-            "url": "{{base_url}}/api/v1/auth/register/",
+            "url": "{{base_url}}/api/v1/companies/onboard/",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"company_name\": \"Acme Corp\",\n  \"country\": \"RW\",\n  \"tax_identifier\": \"100123456B\",\n  \"email\": \"admin@acme.com\",\n  \"password\": \"StrongP@ssw0rd!\",\n  \"first_name\": \"Alice\",\n  \"last_name\": \"Smith\"\n}"
+              "raw": "{\n  \"company_name\": \"Acme Corp\",\n  \"company_type\": \"sme\",\n  \"company_email\": \"info@acme.com\",\n  \"company_phone\": \"+250788123456\",\n  \"country_iso\": \"RW\",\n  \"tax_identifier\": \"100123456\",\n  \"admin_first_name\": \"Alice\",\n  \"admin_last_name\": \"Smith\",\n  \"admin_email\": \"admin@acme.com\",\n  \"admin_password\": \"StrongP@ssw0rd!\"\n}"
             },
-            "description": "Creates a new company tenant and the first admin user."
+            "description": "Creates a new company tenant and the first admin user. No authentication required."
           }
         },
         {

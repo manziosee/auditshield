@@ -5,7 +5,7 @@ export type NotificationType =
   | 'system'
   | 'reminder';
 
-export interface AppNotification {
+export interface Notification {
   id: string;
   notification_type: NotificationType;
   title: string;
@@ -16,3 +16,5 @@ export interface AppNotification {
   related_object_type: string;
   created_at: string;
 }
+
+export interface AppNotification extends Notification {}

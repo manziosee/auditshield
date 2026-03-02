@@ -1,7 +1,8 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:8000/api/v1',
-  wsUrl: 'ws://localhost:8000/ws',
+  apiUrl: 'https://auditshield-backend.fly.dev/api/v1',
+  graphqlUrl: 'https://auditshield-backend.fly.dev/graphql',
+  wsUrl: 'wss://auditshield-backend.fly.dev/ws',
   appName: 'AuditShield',
   version: '1.0.0',
 };
