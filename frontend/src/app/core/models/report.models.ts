@@ -21,3 +21,11 @@ export interface Report {
   parameters: Record<string, unknown>;
   created_at: string;
 }
+
+export interface ReportRequest {
+  report_type: ReportType;
+  title?: string;
+  period_start?: string;
+  period_end?: string;
+  parameters?: Record<string, unknown>;
+}

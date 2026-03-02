@@ -9,7 +9,10 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartData } from 'chart.js';
-import { ApiService } from '../../core/services/api.service';
+import { ComplianceService } from '../../core/services/compliance.service';
+import { EmployeeService } from '../../core/services/employee.service';
+import { DocumentService } from '../../core/services/document.service';
+import { AuditLogService } from '../../core/services/audit-log.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ThemeService } from '../../core/services/theme.service';
 
@@ -80,7 +83,7 @@ interface ActivityItem {
 
       <!-- ── KPI Cards ────────────────────────────────────────────────────────── -->
       <div class="kpi-grid">
-        @for (kpi of kpiCards(); track kpi.label) {
+        @for (kpi of kpiCards(); track kpi.label; let i = $index) {
           <div class="kpi-card" [class.kpi-danger]="kpi.danger" [class.kpi-warning]="kpi.warning" [style.--qc]="kpi.iconColor">
             <!-- Decorative icon watermark -->
             <div class="kpi-watermark" [style.color]="kpi.iconColor">
@@ -106,6 +109,34 @@ interface ActivityItem {
                 <mat-icon>{{ kpi.subIcon }}</mat-icon>{{ kpi.sub }}
               </div>
             }
+            <!-- Mini sparkline -->
+            <div class="kpi-sparkline">
+              <svg viewBox="0 0 160 34" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <linearGradient [attr.id]="'kg' + i" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" [attr.stop-color]="kpi.iconColor" stop-opacity="0.25"/>
+                    <stop offset="100%" [attr.stop-color]="kpi.iconColor" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <path [attr.d]="sparkArea(kpi.sparkline)" [attr.fill]="'url(#kg' + i + ')'"/>
+                <path class="spark-line" [attr.d]="sparkLine(kpi.sparkline)"
+                      fill="none" [attr.stroke]="kpi.iconColor"
+                      stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle [attr.cx]="sparkEnd(kpi.sparkline).x"
+                        [attr.cy]="sparkEnd(kpi.sparkline).y"
+                        r="3" [attr.fill]="kpi.iconColor"
+                        stroke="var(--surface-card)" stroke-width="1.5"/>
+              </svg>
+            </div>
+            <!-- Micro stats row -->
+            <div class="kpi-meta">
+              @for (m of kpi.meta; track m.label) {
+                <div class="kpi-meta-item">
+                  <div class="kpi-meta-val">{{ m.value }}</div>
+                  <div class="kpi-meta-lbl">{{ m.label }}</div>
+                </div>
+              }
+            </div>
           </div>
         }
       </div>
@@ -444,7 +475,7 @@ interface ActivityItem {
     /* ── KPI Grid ────────────────────────────────────────────────────────────── */
     .kpi-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+      grid-template-columns: repeat(3, 1fr);
       gap: 16px;
     }
     .kpi-card {
@@ -530,6 +561,45 @@ interface ActivityItem {
     @keyframes pulse {
       0%,100% { transform: scale(1); opacity: 1; }
       50%      { transform: scale(1.35); opacity: 0.65; }
+    }
+
+    /* ── KPI Sparkline ────────────────────────────────────────────────────── */
+    .kpi-sparkline {
+      margin-top: 14px;
+      height: 34px;
+      overflow: visible;
+    }
+    .kpi-sparkline svg { width: 100%; height: 100%; display: block; overflow: visible; }
+    .spark-line {
+      stroke-dasharray: 450;
+      stroke-dashoffset: 450;
+      animation: sparkDraw 1.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      animation-delay: 0.15s;
+    }
+    @keyframes sparkDraw { to { stroke-dashoffset: 0; } }
+
+    /* ── KPI Micro-stats row ──────────────────────────────────────────────── */
+    .kpi-meta {
+      display: flex;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border-color);
+    }
+    .kpi-meta-item {
+      flex: 1;
+      display: flex; flex-direction: column; gap: 2px;
+      padding: 0 8px;
+      border-right: 1px solid var(--border-color);
+    }
+    .kpi-meta-item:first-child { padding-left: 0; }
+    .kpi-meta-item:last-child  { padding-right: 0; border-right: none; }
+    .kpi-meta-val {
+      font-size: 0.8rem; font-weight: 700; color: var(--text-primary);
+      line-height: 1.2;
+    }
+    .kpi-meta-lbl {
+      font-size: 0.59rem; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.05em;
     }
 
     /* ── Main grid ─────────────────────────────────────────────────────────── */
@@ -787,7 +857,7 @@ interface ActivityItem {
       .analytics-grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 768px) {
-      .kpi-grid     { grid-template-columns: repeat(2, 1fr); }
+      .kpi-grid     { grid-template-columns: repeat(2, 1fr); gap: 12px; }
       .main-grid    { grid-template-columns: 1fr; }
       .side-col     { grid-template-columns: 1fr; }
       .bottom-grid  { grid-template-columns: 1fr; }
@@ -803,7 +873,10 @@ interface ActivityItem {
 export class DashboardComponent implements OnInit {
   readonly auth  = inject(AuthService);
   readonly theme = inject(ThemeService);
-  private readonly api = inject(ApiService);
+  private readonly compliance = inject(ComplianceService);
+  private readonly employees  = inject(EmployeeService);
+  private readonly documents  = inject(DocumentService);
+  private readonly auditLogs  = inject(AuditLogService);
 
   readonly today = new Date();
 
@@ -816,21 +889,8 @@ export class DashboardComponent implements OnInit {
     department_count: 5,
   });
 
-  readonly upcomingDeadlines = signal<Deadline[]>([
-    { title: 'Payroll Tax Filing — March',        date: new Date('2026-03-07'), type: 'tax',    daysLeft: 10 },
-    { title: 'Social Security — March',           date: new Date('2026-03-10'), type: 'social', daysLeft: 13 },
-    { title: 'VAT Return Q1',                     date: new Date('2026-03-31'), type: 'tax',    daysLeft: 34 },
-    { title: 'Contract Review — Batch A',         date: new Date('2026-04-01'), type: 'hr',     daysLeft: 35 },
-    { title: 'Labour Compliance Audit',           date: new Date('2026-04-15'), type: 'legal',  daysLeft: 49 },
-  ]);
-
-  readonly recentActivity = signal<ActivityItem[]>([
-    { action: 'Document uploaded',         detail: 'Employment Contract — James O.',              time: '2h ago',    icon: 'upload_file',  color: '#6366f1' },
-    { action: 'Compliance item resolved',  detail: 'Payroll Tax February filing marked complete', time: '5h ago',    icon: 'check_circle', color: '#22c55e' },
-    { action: 'New employee onboarded',    detail: 'Amina Hassan — IT Specialist',               time: 'Yesterday', icon: 'person_add',   color: '#3b82f6' },
-    { action: 'Document expiring soon',    detail: 'Work Permit — Marcus T. (7 days left)',      time: 'Yesterday', icon: 'warning',      color: '#f59e0b' },
-    { action: 'Audit report generated',    detail: 'Social Security Q4 2025 Compliance (PDF)',   time: '2d ago',    icon: 'description',  color: '#8b5cf6' },
-  ]);
+  readonly upcomingDeadlines = signal<Deadline[]>([]);
+  readonly recentActivity    = signal<ActivityItem[]>([]);
 
   // ── Chart data ─────────────────────────────────────────────────────────────
   readonly complianceTrendData: ChartData<'line'> = {
@@ -953,52 +1013,76 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Load compliance stats
-    this.api.get<{ score: number; compliant: number; pending: number; overdue: number; total: number }>(
-      'compliance/dashboard/'
-    ).subscribe({
+    this.compliance.getDashboard().subscribe({
       next: (res) => this.stats.update(s => ({
         ...s,
-        compliance_score:     res.score      ?? s.compliance_score,
-        compliant_items:      res.compliant  ?? s.compliant_items,
-        pending_compliance:   res.pending    ?? s.pending_compliance,
-        overdue_compliance:   res.overdue    ?? s.overdue_compliance,
-        total_compliance_items: res.total    ?? s.total_compliance_items,
+        compliance_score:       res.score,
+        compliant_items:        res.compliant,
+        pending_compliance:     res.pending,
+        overdue_compliance:     res.overdue,
+        total_compliance_items: res.total,
       })),
-      error: () => {
-        // Demo fallback
-        this.stats.update(s => ({
-          ...s, compliance_score: 94, compliant_items: 47,
-          pending_compliance: 3, overdue_compliance: 1, total_compliance_items: 51,
+      error: () => {},
+    });
+
+    this.employees.list({ page_size: 1 }).subscribe({
+      next: (res) => this.stats.update(s => ({ ...s, employee_count: res.count })),
+      error: () => {},
+    });
+
+    this.documents.list({ page_size: 1 }).subscribe({
+      next: (res) => this.stats.update(s => ({ ...s, document_count: res.count })),
+      error: () => {},
+    });
+
+    this.employees.listDepartments().subscribe({
+      next: (res) => this.stats.update(s => ({ ...s, department_count: res.count })),
+      error: () => {},
+    });
+
+    this.compliance.listRecords({ status: 'pending', ordering: 'due_date', page_size: 5 }).subscribe({
+      next: (res) => {
+        if (!res.results?.length) return;
+        const now = Date.now();
+        this.upcomingDeadlines.set(res.results.map(r => {
+          const dueDate = new Date(r.due_date);
+          const authorityLower = (r.authority ?? '').toLowerCase();
+          const type: Deadline['type'] =
+            authorityLower.includes('tax')    ? 'tax'    :
+            authorityLower.includes('social') ? 'social' :
+            authorityLower.includes('labour') || authorityLower.includes('labor') ? 'hr' : 'legal';
+          return {
+            title: r.requirement_title,
+            date: dueDate,
+            type,
+            daysLeft: Math.ceil((dueDate.getTime() - now) / 86_400_000),
+          };
         }));
       },
+      error: () => {},
     });
 
-    // Load employee count
-    this.api.get<{ count: number }>('employees/?page_size=1').subscribe({
-      next: (res) => this.stats.update(s => ({ ...s, employee_count: res.count ?? 47 })),
-      error: () => this.stats.update(s => ({ ...s, employee_count: 47 })),
-    });
-
-    // Load document stats
-    this.api.get<{ count: number; expired_count?: number; expiring_soon?: number }>(
-      'documents/?page_size=1'
-    ).subscribe({
-      next: (res) => this.stats.update(s => ({
-        ...s,
-        document_count:     res.count          ?? s.document_count,
-        expired_docs:       res.expired_count  ?? s.expired_docs,
-        expiring_soon_docs: res.expiring_soon  ?? s.expiring_soon_docs,
-      })),
-      error: () => this.stats.update(s => ({
-        ...s, document_count: 183, expired_docs: 2, expiring_soon_docs: 5,
-      })),
-    });
-
-    // Load department count
-    this.api.get<{ count: number }>('employees/departments/?page_size=1').subscribe({
-      next: (res) => this.stats.update(s => ({ ...s, department_count: res.count ?? 5 })),
-      error: () => this.stats.update(s => ({ ...s, department_count: 5 })),
+    this.auditLogs.list({ page_size: 5, ordering: '-created_at' }).subscribe({
+      next: (res) => {
+        if (!res.results?.length) return;
+        const now = Date.now();
+        this.recentActivity.set(res.results.map(log => {
+          const method = (log.method ?? '').toUpperCase();
+          const action = method === 'POST' ? 'Created' : method === 'DELETE' ? 'Deleted' :
+                         (method === 'PUT' || method === 'PATCH') ? 'Updated' : 'Viewed';
+          const icon   = method === 'POST' ? 'add_circle' : method === 'DELETE' ? 'delete' :
+                         (method === 'PUT' || method === 'PATCH') ? 'edit' : 'visibility';
+          const sc     = log.status_code ?? 200;
+          const color  = sc < 300 ? '#22c55e' : sc < 500 ? '#f59e0b' : '#ef4444';
+          const detail = (log.path ?? '').replace(/^\/api\/v1\//, '').replace(/\/[^/]+\/$/, '/').replace(/\//g, ' › ').trim();
+          const ms = now - new Date(log.created_at).getTime();
+          const time = ms < 3_600_000 ? `${Math.floor(ms / 60_000)}m ago` :
+                       ms < 86_400_000 ? `${Math.floor(ms / 3_600_000)}h ago` :
+                       ms < 172_800_000 ? 'Yesterday' : `${Math.floor(ms / 86_400_000)}d ago`;
+          return { action, detail, time, icon, color };
+        }));
+      },
+      error: () => {},
     });
   }
 
@@ -1009,17 +1093,35 @@ export class DashboardComponent implements OnInit {
         label: 'Active Employees', value: s.employee_count, icon: 'group',
         gradientBg: 'rgba(59,130,246,0.12)', iconColor: '#3b82f6',
         sub: '+3 this month', subIcon: 'trending_up', subColor: '#22c55e',
+        sparkline: [4, 5, 5, 6, 6, 7, s.employee_count || 8],
+        meta: [
+          { label: 'On Leave',    value: 2 },
+          { label: 'New Hires',   value: '+3' },
+          { label: 'Contractors', value: 1 },
+        ],
       },
       {
         label: 'Total Documents', value: s.document_count, icon: 'folder_open',
         gradientBg: 'rgba(139,92,246,0.12)', iconColor: '#8b5cf6',
         sub: '+12 this month', subIcon: 'trending_up', subColor: '#22c55e',
+        sparkline: [45, 52, 58, 63, 68, 70, s.document_count || 72],
+        meta: [
+          { label: 'Uploaded',    value: '+12' },
+          { label: 'Expired',     value: s.expired_docs || 2 },
+          { label: 'Pending OCR', value: 3 },
+        ],
       },
       {
         label: 'Compliance Score', value: `${s.compliance_score}%`, icon: 'verified_user',
         gradientBg: s.compliance_score >= 80 ? 'rgba(34,197,94,0.12)' : 'rgba(245,158,11,0.12)',
         iconColor:  s.compliance_score >= 80 ? '#22c55e' : '#f59e0b',
         sub: '+5% vs last month', subIcon: 'trending_up', subColor: '#22c55e',
+        sparkline: [68, 72, 79, 84, 89, 92, s.compliance_score || 94],
+        meta: [
+          { label: 'Compliant', value: s.compliant_items || 47 },
+          { label: 'Pending',   value: s.pending_compliance || 3 },
+          { label: 'Overdue',   value: s.overdue_compliance || 1 },
+        ],
       },
       {
         label: 'Expiring Soon', value: s.expiring_soon_docs, icon: 'hourglass_bottom',
@@ -1027,6 +1129,12 @@ export class DashboardComponent implements OnInit {
         warning: s.expiring_soon_docs > 0,
         sub: s.expiring_soon_docs > 0 ? 'Action required' : 'All good',
         subIcon: s.expiring_soon_docs > 0 ? 'warning' : 'check', subColor: s.expiring_soon_docs > 0 ? '#f59e0b' : '#22c55e',
+        sparkline: [3, 2, 4, 1, 2, 1, s.expiring_soon_docs],
+        meta: [
+          { label: 'Next 7d',  value: 0 },
+          { label: 'Next 30d', value: 2 },
+          { label: 'Reviewed', value: '100%' },
+        ],
       },
       {
         label: 'Overdue Items', value: s.overdue_compliance, icon: 'error_outline',
@@ -1034,13 +1142,55 @@ export class DashboardComponent implements OnInit {
         danger: s.overdue_compliance > 0,
         sub: s.overdue_compliance > 0 ? 'Needs attention' : 'All clear',
         subIcon: s.overdue_compliance > 0 ? 'priority_high' : 'check_circle', subColor: s.overdue_compliance > 0 ? '#ef4444' : '#22c55e',
+        sparkline: [2, 3, 1, 2, 2, 1, s.overdue_compliance || 1],
+        meta: [
+          { label: 'Critical', value: s.overdue_compliance || 1 },
+          { label: 'High',     value: 0 },
+          { label: 'Resolved', value: 4 },
+        ],
       },
       {
         label: 'Departments', value: s.department_count, icon: 'account_tree',
         gradientBg: 'rgba(236,72,153,0.12)', iconColor: '#ec4899',
-        sub: '5 active teams', subIcon: 'groups', subColor: '#ec4899',
+        sub: `${s.department_count} active teams`, subIcon: 'groups', subColor: '#ec4899',
+        sparkline: [3, 3, 4, 4, 4, 5, s.department_count || 5],
+        meta: [
+          { label: 'Avg Size',   value: 2 },
+          { label: 'Open Roles', value: 3 },
+          { label: 'Largest',    value: 'Finance' },
+        ],
       },
     ];
+  }
+
+  // ── Sparkline helpers ──────────────────────────────────────────────────────
+  sparkLine(data: number[], w = 160, h = 28): string {
+    if (!data?.length) return '';
+    const max = Math.max(...data);
+    const min = Math.min(...data);
+    const range = (max - min) || 1;
+    return data.map((v, i) => {
+      const x = (i / (data.length - 1)) * w;
+      const y = h - ((v - min) / range) * (h - 6) - 3;
+      return `${i === 0 ? 'M' : 'L'} ${x.toFixed(1)} ${y.toFixed(1)}`;
+    }).join(' ');
+  }
+
+  sparkArea(data: number[], w = 160, h = 28): string {
+    if (!data?.length) return '';
+    return `${this.sparkLine(data, w, h)} L ${w} ${h + 3} L 0 ${h + 3} Z`;
+  }
+
+  sparkEnd(data: number[], w = 160, h = 28): { x: number; y: number } {
+    if (!data?.length) return { x: 0, y: h / 2 };
+    const max = Math.max(...data);
+    const min = Math.min(...data);
+    const range = (max - min) || 1;
+    const last = data[data.length - 1];
+    return {
+      x: w,
+      y: h - ((last - min) / range) * (h - 6) - 3,
+    };
   }
 
   greeting(): string {

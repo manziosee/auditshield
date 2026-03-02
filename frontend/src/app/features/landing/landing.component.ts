@@ -1,14 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
-interface Feature  { icon: string; title: string; desc: string; }
-interface Step     { num: string; title: string; desc: string; icon: string; }
-interface Testimonial { quote: string; name: string; role: string; company: string; avatar: string; }
-interface PricingPlan { name: string; price: string; period: string; desc: string; features: string[]; cta: string; highlight: boolean; badge?: string; }
-interface DemoUser { email: string; role: string; icon: string; color: string; }
+interface Feature      { icon: string; title: string; desc: string; accent: string; }
+interface Step         { num: string; title: string; desc: string; icon: string; bullets: string[]; }
+interface Testimonial  { quote: string; name: string; role: string; company: string; avatar: string; }
+interface PricingPlan  {
+  name: string; price: string; period: string;
+  annualPrice?: string; annualNote?: string;
+  desc: string; features: string[]; cta: string; highlight: boolean; badge?: string;
+}
 
 @Component({
   selector: 'as-landing',
@@ -25,7 +28,6 @@ interface DemoUser { email: string; role: string; icon: string; color: string; }
         <a href="#features"     class="nav-link">Features</a>
         <a href="#how-it-works" class="nav-link">How It Works</a>
         <a href="#pricing"      class="nav-link">Pricing</a>
-        <a href="#demo"         class="nav-link">Demo</a>
       </div>
       <div class="nav-end">
         <a routerLink="/auth/login"    class="btn-ghost">Sign In</a>
@@ -40,28 +42,22 @@ interface DemoUser { email: string; role: string; icon: string; color: string; }
           <mat-icon>verified</mat-icon>
           Trusted by 500+ SMEs Worldwide
         </div>
-
         <h1 class="hero-h1">
           The <em>Compliance Platform</em><br />for growing businesses<br />everywhere
         </h1>
-
         <p class="hero-p">
           AuditShield keeps all your employee records, contracts, and statutory
           compliance documents secure and organised — so audits become
           routine instead of emergencies, wherever you operate.
         </p>
-
         <div class="hero-actions">
           <a routerLink="/auth/register" class="btn-primary btn-lg">
-            <mat-icon>rocket_launch</mat-icon>
-            Start for Free
+            <mat-icon>rocket_launch</mat-icon> Start for Free
           </a>
-          <a href="#demo" class="btn-outline-white btn-lg">
-            <mat-icon>play_circle_outline</mat-icon>
-            See Live Demo
+          <a routerLink="/auth/register" class="btn-outline-white btn-lg">
+            <mat-icon>play_circle_outline</mat-icon> See It In Action
           </a>
         </div>
-
         <div class="hero-chips">
           <span class="chip"><mat-icon>lock</mat-icon>AES-256 encrypted</span>
           <span class="chip"><mat-icon>cloud_done</mat-icon>Daily backups</span>
@@ -115,7 +111,6 @@ interface DemoUser { email: string; role: string; icon: string; color: string; }
                   <div class="m-deadline"><span class="m-dot green"></span><span>VAT Q4 — Submitted ✓</span></div>
                 </div>
               </div>
-              <!-- Activity feed -->
               <div class="m-card m-activity">
                 <div class="m-card-title">Recent Activity</div>
                 <div class="m-act-item"><span class="m-act-dot green"></span><span>Contract uploaded — Sarah Chen</span></div>
@@ -124,7 +119,6 @@ interface DemoUser { email: string; role: string; icon: string; color: string; }
             </div>
           </div>
         </div>
-        <!-- Floating notification -->
         <div class="hero-notif">
           <mat-icon>notifications_active</mat-icon>
           <div>
@@ -152,12 +146,80 @@ interface DemoUser { email: string; role: string; icon: string; color: string; }
       <h2 class="section-h2">Built for SME compliance, globally</h2>
       <p class="section-p">One secure platform replaces paper files, scattered spreadsheets, and audit-day panic — for businesses everywhere.</p>
 
+      <!-- Hero feature card -->
+      <div class="feat-hero">
+        <div class="feat-hero-left">
+          <div class="feat-hero-eyebrow">
+            <mat-icon>star</mat-icon> Core platform feature
+          </div>
+          <h3>Live Compliance Score — always audit-ready</h3>
+          <p>Your score updates in real time as you upload documents, complete checklists, and resolve overdue items. Walk into any regulatory inspection with confidence — no last-minute panic.</p>
+          <div class="feat-hero-stats">
+            <div class="feat-stat">
+              <span class="feat-stat-val">94%</span>
+              <span class="feat-stat-lbl">Avg. user score</span>
+            </div>
+            <div class="feat-stat">
+              <span class="feat-stat-val">48h</span>
+              <span class="feat-stat-lbl">To audit-ready</span>
+            </div>
+            <div class="feat-stat">
+              <span class="feat-stat-val">0</span>
+              <span class="feat-stat-lbl">Compliance fines</span>
+            </div>
+          </div>
+          <a routerLink="/auth/register" class="btn-primary" style="margin-top:28px;width:fit-content">
+            <mat-icon>rocket_launch</mat-icon> Start for Free
+          </a>
+        </div>
+        <div class="feat-hero-right">
+          <svg viewBox="0 0 160 160" class="feat-score-svg">
+            <circle cx="80" cy="80" r="68" fill="none" stroke="rgba(99,102,241,0.12)" stroke-width="12"/>
+            <circle cx="80" cy="80" r="68" fill="none" stroke="url(#sg)" stroke-width="12"
+                    stroke-linecap="round"
+                    stroke-dasharray="427.3" stroke-dashoffset="25.6"
+                    transform="rotate(-90 80 80)"
+                    style="transition:stroke-dashoffset 1s ease"/>
+            <defs>
+              <linearGradient id="sg" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#a5b4fc"/>
+                <stop offset="100%" stop-color="#6366f1"/>
+              </linearGradient>
+            </defs>
+            <text x="80" y="72" text-anchor="middle" dominant-baseline="middle"
+                  fill="#6366f1" style="font-size:28px;font-weight:900;font-family:Inter,sans-serif">94%</text>
+            <text x="80" y="95" text-anchor="middle" dominant-baseline="middle"
+                  fill="#94a3b8" style="font-size:9px;font-family:Inter,sans-serif;letter-spacing:0.06em">COMPLIANCE SCORE</text>
+          </svg>
+          <div class="feat-score-breakdown">
+            <div class="feat-score-item feat-green">
+              <mat-icon>check_circle</mat-icon>
+              <div><div class="fsv">47</div><div class="fsl">Compliant</div></div>
+            </div>
+            <div class="feat-score-item feat-amber">
+              <mat-icon>schedule</mat-icon>
+              <div><div class="fsv">3</div><div class="fsl">Pending</div></div>
+            </div>
+            <div class="feat-score-item feat-red">
+              <mat-icon>error_outline</mat-icon>
+              <div><div class="fsv">1</div><div class="fsl">Overdue</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature cards grid -->
       <div class="features-grid">
-        @for (f of features; track f.title; let i = $index) {
-          <div class="feat-card">
-            <div class="feat-icon"><mat-icon>{{ f.icon }}</mat-icon></div>
+        @for (f of features; track f.title) {
+          <div class="feat-card" [style.--fa]="f.accent">
+            <div class="feat-icon" [style.background]="f.accent + '18'" [style.color]="f.accent">
+              <mat-icon>{{ f.icon }}</mat-icon>
+            </div>
             <h3>{{ f.title }}</h3>
             <p>{{ f.desc }}</p>
+            <div class="feat-card-footer" [style.color]="f.accent">
+              <span>Learn more</span><mat-icon>arrow_forward</mat-icon>
+            </div>
           </div>
         }
       </div>
@@ -178,19 +240,36 @@ interface DemoUser { email: string; role: string; icon: string; color: string; }
     <section class="section section--dark" id="how-it-works">
       <div class="section-tag section-tag--light">Simple 3-step setup</div>
       <h2 class="section-h2 section-h2--light">From paper chaos to audit-ready in days</h2>
+      <p class="section-p section-p--light">No IT skills needed. No consultants. No spreadsheet migrations. Just three steps and you're live.</p>
 
-      <div class="steps-row">
+      <div class="steps-timeline">
         @for (s of steps; track s.num; let last = $last) {
-          <div class="step">
-            <div class="step-icon-wrap">
-              <div class="step-num-badge">{{ s.num }}</div>
-              <mat-icon class="step-icon">{{ s.icon }}</mat-icon>
+          <div class="step-col">
+            <div class="step-head-row">
+              <div class="step-icon-circle">
+                <div class="step-num-chip">{{ s.num }}</div>
+                <mat-icon class="step-big-icon">{{ s.icon }}</mat-icon>
+              </div>
+              @if (!last) { <div class="step-connector-line"></div> }
             </div>
-            <h3>{{ s.title }}</h3>
-            <p>{{ s.desc }}</p>
+            <div class="step-body">
+              <h3>{{ s.title }}</h3>
+              <p>{{ s.desc }}</p>
+              <ul class="step-bullets">
+                @for (b of s.bullets; track b) {
+                  <li><mat-icon>check</mat-icon>{{ b }}</li>
+                }
+              </ul>
+            </div>
           </div>
-          @if (!last) { <div class="step-arrow"><mat-icon>arrow_forward</mat-icon></div> }
         }
+      </div>
+
+      <!-- Bottom CTA in dark section -->
+      <div class="hiw-cta">
+        <a routerLink="/auth/register" class="btn-primary btn-lg">
+          <mat-icon>start</mat-icon> Get Started Free — 5 Minutes
+        </a>
       </div>
     </section>
 
@@ -199,7 +278,6 @@ interface DemoUser { email: string; role: string; icon: string; color: string; }
       <div class="section-tag">Real customers</div>
       <h2 class="section-h2">Teams that use AuditShield every day</h2>
       <p class="section-p">See how growing businesses across the globe stay audit-ready with us.</p>
-
       <div class="testimonials-grid">
         @for (t of testimonials; track t.name) {
           <div class="testimonial-card">
@@ -224,69 +302,47 @@ interface DemoUser { email: string; role: string; icon: string; color: string; }
       <h2 class="section-h2">Pick the plan that fits your team</h2>
       <p class="section-p">All plans include a 14-day free trial. No credit card required.</p>
 
+      <!-- Billing toggle -->
+      <div class="billing-toggle">
+        <span class="billing-opt" [class.billing-active]="!isAnnual()">Monthly</span>
+        <button class="toggle-pill" (click)="toggleBilling()" [class.is-annual]="isAnnual()" aria-label="Toggle billing period">
+          <span class="toggle-thumb"></span>
+        </button>
+        <span class="billing-opt" [class.billing-active]="isAnnual()">Annual</span>
+        @if (isAnnual()) {
+          <span class="save-badge">🎉 Save 20%</span>
+        }
+      </div>
+
       <div class="pricing-grid">
         @for (p of plans; track p.name) {
           <div class="plan-card" [class.plan-highlight]="p.highlight">
             @if (p.badge) { <div class="plan-badge">{{ p.badge }}</div> }
             <div class="plan-name">{{ p.name }}</div>
             <div class="plan-price-row">
-              <span class="plan-price">{{ p.price }}</span>
+              <span class="plan-price">{{ isAnnual() && p.annualPrice ? p.annualPrice : p.price }}</span>
               <span class="plan-period">{{ p.period }}</span>
             </div>
+            @if (isAnnual() && p.annualNote) {
+              <div class="plan-annual-note">{{ p.annualNote }}</div>
+            }
             <div class="plan-desc">{{ p.desc }}</div>
             <ul class="plan-features">
               @for (f of p.features; track f) {
                 <li><mat-icon>check_circle</mat-icon>{{ f }}</li>
               }
             </ul>
-            <a routerLink="/auth/register"
-              class="plan-cta"
-              [class.plan-cta-primary]="p.highlight">
+            <a routerLink="/auth/register" class="plan-cta" [class.plan-cta-primary]="p.highlight">
               {{ p.cta }}
             </a>
           </div>
         }
       </div>
-    </section>
 
-    <!-- ══ DEMO CTA ═══════════════════════════════════════════════════════════ -->
-    <section class="demo-section" id="demo">
-      <div class="demo-inner">
-        <div class="demo-left">
-          <div class="section-tag">Try it now — free</div>
-          <h2 class="section-h2">Explore with live demo data</h2>
-          <p class="section-p" style="margin:0 0 28px">
-            Log in instantly with any demo account and explore the full app with a realistic global company — employees from multiple departments, documents, compliance checklists, and audit reports.
-          </p>
-          <a routerLink="/auth/login" class="btn-primary btn-lg">
-            <mat-icon>login</mat-icon> Open Demo
-          </a>
-          <div class="demo-pw-row">
-            <mat-icon>key</mat-icon>
-            All demo accounts use password: <strong>Demo&#64;1234</strong>
-          </div>
-        </div>
-        <div class="demo-right">
-          <div class="creds-card">
-            <div class="creds-header">
-              <mat-icon>science</mat-icon>
-              5 demo accounts — click to explore each role
-            </div>
-            <div class="demo-roles-grid">
-              @for (u of demoUsers; track u.email) {
-                <a routerLink="/auth/login" class="demo-role-card" [style.--rc]="u.color">
-                  <div class="drc-icon"><mat-icon>{{ u.icon }}</mat-icon></div>
-                  <div class="drc-body">
-                    <span class="drc-role">{{ u.role }}</span>
-                    <span class="drc-email">{{ u.email }}</span>
-                  </div>
-                  <mat-icon class="drc-arrow">arrow_forward</mat-icon>
-                </a>
-              }
-            </div>
-          </div>
-        </div>
-      </div>
+      <p class="pricing-note">
+        <mat-icon>info</mat-icon>
+        All plans include end-to-end encryption, daily backups, and GDPR-compliant data handling. Enterprise plans include a dedicated SLA.
+      </p>
     </section>
 
     <!-- ══ FOOTER ═════════════════════════════════════════════════════════════ -->
@@ -342,10 +398,10 @@ interface DemoUser { email: string; role: string; icon: string; color: string; }
       padding: 10px 22px;
       font-size: 0.9rem; font-weight: 700;
       cursor: pointer; text-decoration: none;
-      transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+      transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
       box-shadow: 0 4px 14px rgba(99,102,241,0.4);
     }
-    .btn-primary:hover { background: #4f46e5; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(99,102,241,0.5); text-decoration: none; }
+    .btn-primary:hover { background: #4f46e5; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(99,102,241,0.5); text-decoration: none; }
     .btn-ghost {
       display: inline-flex; align-items: center; gap: 6px;
       color: rgba(255,255,255,0.75); background: none; border: none;
@@ -361,9 +417,9 @@ interface DemoUser { email: string; role: string; icon: string; color: string; }
       border: 1px solid rgba(255,255,255,0.22); border-radius: 10px;
       padding: 10px 22px; font-size: 0.9rem; font-weight: 600;
       cursor: pointer; text-decoration: none;
-      transition: background 0.15s;
+      transition: background 0.15s, transform 0.15s;
     }
-    .btn-outline-white:hover { background: rgba(255,255,255,0.15); text-decoration: none; }
+    .btn-outline-white:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); text-decoration: none; }
     .btn-lg { height: 52px; padding: 0 28px; font-size: 1rem; border-radius: 12px; }
 
     /* ═══ NAVBAR ═══════════════════════════════════════════════════════════ */
@@ -376,10 +432,14 @@ interface DemoUser { email: string; role: string; icon: string; color: string; }
       border-bottom: 1px solid rgba(255,255,255,0.06);
     }
     .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; margin-right: 32px; }
-    .brand-shield { width: 30px; height: 30px; display: block; flex-shrink: 0; }
+    .brand-shield { width: 30px; height: 30px; display: block; }
     .brand-name { font-size: 1.25rem; font-weight: 900; color: white; letter-spacing: -0.5px; }
     .nav-center { display: flex; gap: 4px; flex: 1; }
-    .nav-link { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.875rem; padding: 7px 14px; border-radius: 8px; transition: all 0.15s; }
+    .nav-link {
+      color: rgba(255,255,255,0.6); text-decoration: none;
+      font-size: 0.875rem; padding: 7px 14px; border-radius: 8px;
+      transition: all 0.15s;
+    }
     .nav-link:hover { color: white; background: rgba(255,255,255,0.08); text-decoration: none; }
     .nav-end { display: flex; align-items: center; gap: 10px; }
 
@@ -484,9 +544,7 @@ interface DemoUser { email: string; role: string; icon: string; color: string; }
     .m-activity { margin-top: 2px; }
     .m-act-item { display: flex; align-items: center; gap: 6px; font-size: 0.62rem; color: #475569; margin-bottom: 4px; }
     .m-act-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-    .m-act-dot.green  { background: #22c55e; }
-    .m-act-dot.indigo { background: #6366f1; }
-    /* Floating notification */
+    .m-act-dot.green { background: #22c55e; } .m-act-dot.indigo { background: #6366f1; }
     .hero-notif {
       position: absolute; bottom: -20px; left: -20px;
       background: white; border-radius: 14px;
@@ -503,7 +561,6 @@ interface DemoUser { email: string; role: string; icon: string; color: string; }
       display: flex; justify-content: center; flex-wrap: wrap;
       background: #0f172a; padding: 48px;
       border-top: 1px solid rgba(255,255,255,0.05);
-      gap: 0;
     }
     .stat { text-align: center; padding: 0 56px; }
     .stat + .stat { border-left: 1px solid rgba(255,255,255,0.08); }
@@ -524,63 +581,166 @@ interface DemoUser { email: string; role: string; icon: string; color: string; }
     .section-h2 { font-size: clamp(1.8rem,3.5vw,2.6rem); font-weight: 900; color: #0f172a; margin: 0 0 14px; letter-spacing: -1px; }
     .section-h2--light { color: white; }
     .section-p { color: #64748b; font-size: 1rem; line-height: 1.75; max-width: 560px; margin: 0 auto 56px; }
+    .section-p--light { color: rgba(255,255,255,0.55); }
 
-    /* ═══ FEATURES GRID ══════════════════════════════════════════════════════ */
+    /* ═══ FEATURES — hero card ══════════════════════════════════════════════ */
+    .feat-hero {
+      max-width: 1080px; margin: 0 auto 48px;
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 60%, #312e81 100%);
+      border-radius: 24px; padding: 48px;
+      display: grid; grid-template-columns: 1fr auto;
+      gap: 48px; align-items: center; text-align: left;
+      position: relative; overflow: hidden;
+      border: 1px solid rgba(99,102,241,0.2);
+      box-shadow: 0 24px 64px rgba(99,102,241,0.15);
+    }
+    .feat-hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 600px 400px at 80% -20%, rgba(99,102,241,0.18), transparent);
+      pointer-events: none;
+    }
+    .feat-hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(99,102,241,0.2); border: 1px solid rgba(99,102,241,0.35);
+      color: #a5b4fc; border-radius: 999px;
+      padding: 5px 14px; font-size: 0.75rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      margin-bottom: 18px;
+    }
+    .feat-hero-eyebrow mat-icon { font-size: 0.85rem; width: 0.85rem; height: 0.85rem; color: #fbbf24; }
+    .feat-hero-left h3 {
+      font-size: 1.8rem; font-weight: 900; color: white;
+      letter-spacing: -0.5px; line-height: 1.2; margin: 0 0 16px;
+    }
+    .feat-hero-left p { font-size: 1rem; color: rgba(255,255,255,0.6); line-height: 1.7; margin: 0 0 28px; max-width: 480px; }
+    .feat-hero-stats { display: flex; gap: 32px; }
+    .feat-stat { display: flex; flex-direction: column; gap: 3px; }
+    .feat-stat-val {
+      font-size: 1.8rem; font-weight: 900; color: white; letter-spacing: -1px; line-height: 1;
+    }
+    .feat-stat-lbl { font-size: 0.72rem; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 0.06em; }
+
+    /* Score ring visual */
+    .feat-hero-right { display: flex; flex-direction: column; align-items: center; gap: 20px; flex-shrink: 0; }
+    .feat-score-svg { width: 180px; height: 180px; flex-shrink: 0; }
+    .feat-score-breakdown { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+    .feat-score-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 14px; border-radius: 10px;
+      font-size: 0.82rem;
+    }
+    .feat-score-item mat-icon { font-size: 1rem; width: 1rem; height: 1rem; flex-shrink: 0; }
+    .feat-score-item .fsv { font-size: 1rem; font-weight: 800; line-height: 1; }
+    .feat-score-item .fsl { font-size: 0.65rem; opacity: 0.7; }
+    .feat-green { background: rgba(34,197,94,0.12); color: #22c55e; }
+    .feat-amber { background: rgba(245,158,11,0.12); color: #f59e0b; }
+    .feat-red   { background: rgba(239,68,68,0.12);  color: #ef4444; }
+
+    /* ═══ FEATURES — cards grid ═════════════════════════════════════════════ */
     .features-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(268px, 1fr));
-      gap: 22px; max-width: 1100px; margin: 0 auto; text-align: left;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px; max-width: 1080px; margin: 0 auto; text-align: left;
     }
     .feat-card {
-      background: white; border-radius: 16px; padding: 26px;
+      background: white; border-radius: 18px; padding: 26px;
       border: 1px solid #e8eaf0;
-      transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+      border-top: 3px solid var(--fa, #6366f1);
+      display: flex; flex-direction: column;
+      transition: box-shadow 0.22s, transform 0.22s, border-color 0.22s;
+      position: relative; overflow: hidden;
     }
-    .feat-card:hover { box-shadow: 0 12px 36px rgba(99,102,241,0.1); transform: translateY(-4px); border-color: #c7d2fe; }
+    .feat-card::before {
+      content: '';
+      position: absolute; top: -30px; right: -30px;
+      width: 100px; height: 100px; border-radius: 50%;
+      background: radial-gradient(ellipse, color-mix(in srgb, var(--fa, #6366f1) 8%, transparent), transparent 70%);
+      pointer-events: none;
+    }
+    .feat-card:hover {
+      box-shadow: 0 16px 40px color-mix(in srgb, var(--fa, #6366f1) 12%, rgba(0,0,0,0.05));
+      transform: translateY(-5px);
+    }
     .feat-icon {
-      width: 48px; height: 48px; background: #ede9fe; color: #6366f1;
-      border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px;
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px; flex-shrink: 0;
     }
     .feat-icon mat-icon { font-size: 1.4rem; }
-    .feat-card h3 { font-size: 1rem; font-weight: 700; color: #0f172a; margin: 0 0 8px; }
-    .feat-card p  { font-size: 0.875rem; color: #64748b; margin: 0; line-height: 1.65; }
+    .feat-card h3 { font-size: 0.98rem; font-weight: 700; color: #0f172a; margin: 0 0 8px; }
+    .feat-card p  { font-size: 0.865rem; color: #64748b; margin: 0; line-height: 1.65; flex: 1; }
+    .feat-card-footer {
+      display: flex; align-items: center; gap: 4px;
+      font-size: 0.75rem; font-weight: 700;
+      margin-top: 16px;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .feat-card-footer mat-icon { font-size: 0.9rem; width: 0.9rem; height: 0.9rem; transition: transform 0.2s; }
+    .feat-card:hover .feat-card-footer { opacity: 1; }
+    .feat-card:hover .feat-card-footer mat-icon { transform: translateX(4px); }
 
     /* ═══ AUTHORITY STRIP ════════════════════════════════════════════════════ */
     .auth-strip { background: white; padding: 32px 56px; border-top: 1px solid #e8eaf0; border-bottom: 1px solid #e8eaf0; text-align: center; }
     .auth-strip-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #94a3b8; display: block; margin-bottom: 18px; }
     .auth-badges { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; }
-    .auth-badge { display: flex; align-items: center; gap: 8px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 18px; font-size: 0.82rem; font-weight: 600; color: #1e293b; }
+    .auth-badge {
+      display: flex; align-items: center; gap: 8px;
+      background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px;
+      padding: 10px 18px; font-size: 0.82rem; font-weight: 600; color: #1e293b;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .auth-badge:hover { border-color: #c7d2fe; box-shadow: 0 4px 12px rgba(99,102,241,0.1); }
     .auth-badge mat-icon { color: #6366f1; font-size: 1.1rem; width: 1.1rem; height: 1.1rem; }
 
-    /* ═══ HOW IT WORKS ═══════════════════════════════════════════════════════ */
-    .steps-row {
-      display: flex; align-items: flex-start; justify-content: center;
-      gap: 0; max-width: 960px; margin: 0 auto;
-      flex-wrap: wrap;
+    /* ═══ HOW IT WORKS — timeline ════════════════════════════════════════════ */
+    .steps-timeline {
+      display: grid; grid-template-columns: 1fr 1fr 1fr;
+      gap: 0; max-width: 1000px; margin: 0 auto 56px;
+      position: relative;
     }
-    .step { text-align: center; flex: 1; min-width: 200px; padding: 0 16px; }
-    .step-icon-wrap { position: relative; display: inline-block; margin-bottom: 20px; }
-    .step-num-badge {
-      position: absolute; top: -6px; left: -6px;
-      width: 24px; height: 24px; border-radius: 50%;
-      background: #6366f1; color: white;
-      font-size: 0.72rem; font-weight: 900;
-      display: flex; align-items: center; justify-content: center;
-      z-index: 1;
+    .step-col { display: flex; flex-direction: column; padding: 0 24px; }
+    .step-head-row {
+      display: flex; align-items: center; margin-bottom: 28px;
     }
-    .step-icon {
-      width: 64px !important; height: 64px !important; font-size: 2.2rem !important;
-      color: #818cf8 !important;
+    .step-icon-circle {
+      width: 80px; height: 80px; flex-shrink: 0;
+      border-radius: 50%;
       background: rgba(99,102,241,0.15);
-      border-radius: 18px; padding: 14px;
-      display: block !important;
+      border: 2px solid rgba(99,102,241,0.3);
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
     }
-    .step-arrow {
-      align-self: center; color: rgba(255,255,255,0.2);
-      padding-bottom: 40px; flex-shrink: 0;
+    .step-num-chip {
+      position: absolute; top: -6px; right: -6px;
+      width: 26px; height: 26px; border-radius: 50%;
+      background: linear-gradient(135deg, #6366f1, #4f46e5);
+      color: white; font-size: 0.75rem; font-weight: 900;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 10px rgba(99,102,241,0.4);
     }
-    .step-arrow mat-icon { font-size: 1.5rem; width: 1.5rem; height: 1.5rem; }
-    .step h3 { font-size: 1.05rem; font-weight: 700; color: white; margin: 0 0 10px; }
-    .step p  { font-size: 0.875rem; color: rgba(255,255,255,0.55); line-height: 1.7; margin: 0; }
+    .step-big-icon {
+      font-size: 2rem !important; width: 2rem !important; height: 2rem !important;
+      color: #818cf8 !important;
+    }
+    .step-connector-line {
+      flex: 1; height: 2px;
+      background: linear-gradient(90deg, rgba(99,102,241,0.4), rgba(99,102,241,0.1));
+      margin: 0 8px;
+    }
+    .step-body { text-align: left; }
+    .step-body h3 { font-size: 1.1rem; font-weight: 800; color: white; margin: 0 0 10px; }
+    .step-body p  { font-size: 0.875rem; color: rgba(255,255,255,0.55); line-height: 1.65; margin: 0 0 16px; }
+    .step-bullets { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 7px; }
+    .step-bullets li {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.82rem; color: rgba(255,255,255,0.65);
+    }
+    .step-bullets mat-icon {
+      font-size: 0.9rem !important; width: 0.9rem !important; height: 0.9rem !important;
+      color: #22c55e !important; flex-shrink: 0;
+    }
+    .hiw-cta { text-align: center; }
 
     /* ═══ TESTIMONIALS ════════════════════════════════════════════════════════ */
     .testimonials-section { background: white; }
@@ -610,9 +770,38 @@ interface DemoUser { email: string; role: string; icon: string; color: string; }
 
     /* ═══ PRICING ════════════════════════════════════════════════════════════ */
     .pricing-section { }
+
+    /* Billing toggle */
+    .billing-toggle {
+      display: inline-flex; align-items: center; gap: 12px;
+      margin-bottom: 48px;
+    }
+    .billing-opt { font-size: 0.9rem; font-weight: 600; color: #94a3b8; transition: color 0.2s; }
+    .billing-active { color: #0f172a; }
+    .toggle-pill {
+      width: 52px; height: 28px; border-radius: 999px;
+      background: #e2e8f0; border: none; cursor: pointer;
+      position: relative; transition: background 0.25s;
+      padding: 0;
+    }
+    .toggle-pill.is-annual { background: #6366f1; }
+    .toggle-thumb {
+      position: absolute; top: 3px; left: 3px;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: white; transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    }
+    .toggle-pill.is-annual .toggle-thumb { transform: translateX(24px); }
+    .save-badge {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: white; font-size: 0.72rem; font-weight: 700;
+      padding: 4px 12px; border-radius: 999px;
+      box-shadow: 0 4px 12px rgba(34,197,94,0.3);
+    }
+
     .pricing-grid {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 20px; max-width: 1080px; margin: 0 auto;
+      gap: 20px; max-width: 1080px; margin: 0 auto 32px;
     }
     .plan-card {
       background: white; border-radius: 20px; padding: 28px;
@@ -629,15 +818,20 @@ interface DemoUser { email: string; role: string; icon: string; color: string; }
       position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
       background: linear-gradient(135deg, #6366f1, #4f46e5); color: white;
       font-size: 0.7rem; font-weight: 700; padding: 4px 16px; border-radius: 999px;
-      white-space: nowrap; letter-spacing: 0.04em;
+      white-space: nowrap;
     }
     .plan-name { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #6366f1; margin-bottom: 14px; }
     .plan-highlight .plan-name { color: #a5b4fc; }
-    .plan-price-row { display: flex; align-items: baseline; gap: 4px; margin-bottom: 8px; }
-    .plan-price { font-size: 2.8rem; font-weight: 900; color: #0f172a; letter-spacing: -2px; }
+    .plan-price-row { display: flex; align-items: baseline; gap: 4px; margin-bottom: 4px; }
+    .plan-price { font-size: 2.8rem; font-weight: 900; color: #0f172a; letter-spacing: -2px; transition: all 0.3s; }
     .plan-highlight .plan-price { color: white; }
     .plan-period { font-size: 0.85rem; color: #64748b; }
     .plan-highlight .plan-period { color: rgba(255,255,255,0.5); }
+    .plan-annual-note {
+      font-size: 0.72rem; color: #22c55e; font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .plan-highlight .plan-annual-note { color: #4ade80; }
     .plan-desc { font-size: 0.82rem; color: #64748b; margin-bottom: 24px; line-height: 1.5; }
     .plan-highlight .plan-desc { color: rgba(255,255,255,0.5); }
     .plan-features { list-style: none; padding: 0; margin: 0 0 28px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
@@ -657,65 +851,19 @@ interface DemoUser { email: string; role: string; icon: string; color: string; }
       background: linear-gradient(135deg, #6366f1, #4f46e5); color: white;
       border: none; box-shadow: 0 8px 24px rgba(99,102,241,0.4);
     }
-    .plan-cta-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+    .plan-cta-primary:hover { opacity: 0.92; transform: translateY(-1px); }
+    .pricing-note {
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+      font-size: 0.8rem; color: #94a3b8; max-width: 600px; margin: 0 auto;
+    }
+    .pricing-note mat-icon { font-size: 1rem; width: 1rem; height: 1rem; color: #6366f1; flex-shrink: 0; }
 
     /* ═══ DEMO CTA ════════════════════════════════════════════════════════════ */
-    .demo-section { background: #f8fafc; padding: 96px 56px; border-top: 1px solid #e8eaf0; }
-    .demo-inner { max-width: 1020px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; }
-    .demo-left .section-tag { margin-bottom: 14px; }
-    .demo-left .section-h2 { text-align: left; }
-    .demo-pw-row {
-      display: flex; align-items: center; gap: 6px;
-      margin-top: 20px; font-size: 0.82rem; color: #64748b;
-    }
-    .demo-pw-row mat-icon { font-size: 1rem; width: 1rem; height: 1rem; color: #6366f1; }
-    .demo-pw-row strong { color: #0f172a; font-family: monospace; }
-    /* Credentials card */
-    .creds-card {
-      background: #0f172a; border-radius: 20px; padding: 24px;
-      box-shadow: 0 24px 60px rgba(0,0,0,0.2);
-      border: 1px solid rgba(255,255,255,0.06);
-    }
-    .creds-header {
-      display: flex; align-items: center; gap: 8px;
-      color: #a5b4fc; font-size: 0.78rem; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 0.06em;
-      margin-bottom: 16px;
-    }
-    .creds-header mat-icon { font-size: 1rem; width: 1rem; height: 1rem; }
-    /* 5-role grid */
-    .demo-roles-grid { display: flex; flex-direction: column; gap: 8px; }
-    .demo-role-card {
-      display: flex; align-items: center; gap: 10px;
-      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 12px; padding: 10px 14px;
-      text-decoration: none; cursor: pointer;
-      transition: all 0.15s;
-    }
-    .demo-role-card:hover {
-      border-color: var(--rc);
-      background: color-mix(in srgb, var(--rc) 10%, rgba(255,255,255,0.04));
-      transform: translateX(4px);
-      text-decoration: none;
-    }
-    .drc-icon {
-      width: 34px; height: 34px; border-radius: 9px; flex-shrink: 0;
-      background: color-mix(in srgb, var(--rc) 20%, transparent);
-      color: var(--rc);
-      display: flex; align-items: center; justify-content: center;
-    }
-    .drc-icon mat-icon { font-size: 1.1rem; width: 1.1rem; height: 1.1rem; }
-    .drc-body { flex: 1; display: flex; flex-direction: column; min-width: 0; }
-    .drc-role  { font-size: 0.72rem; font-weight: 700; color: var(--rc); text-transform: uppercase; letter-spacing: 0.04em; }
-    .drc-email { font-size: 0.75rem; color: rgba(255,255,255,0.4); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .drc-arrow { color: rgba(255,255,255,0.2) !important; font-size: 0.9rem !important; width: 0.9rem !important; height: 0.9rem !important; flex-shrink: 0; }
-    .demo-role-card:hover .drc-arrow { color: var(--rc) !important; }
-
     /* ═══ FOOTER ══════════════════════════════════════════════════════════════ */
     .footer { background: #090b15; padding: 56px 56px 32px; }
     .footer-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 48px; gap: 40px; }
     .footer-brand { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
-    .footer-shield { width: 40px; height: 40px; display: block; flex-shrink: 0; }
+    .footer-shield { width: 40px; height: 40px; display: block; }
     .footer-name { font-size: 1.1rem; font-weight: 800; color: white; }
     .footer-desc { font-size: 0.8rem; color: rgba(255,255,255,0.35); margin-top: 3px; max-width: 200px; }
     .footer-cols { display: flex; gap: 56px; }
@@ -735,9 +883,13 @@ interface DemoUser { email: string; role: string; icon: string; color: string; }
       .hero-inner { max-width: 100%; }
       .hero-chips, .hero-actions { justify-content: center; }
       .mockup-wrap { max-width: 100%; }
+      .feat-hero { grid-template-columns: 1fr; }
+      .feat-hero-stats { justify-content: center; }
+      .feat-hero-right { flex-direction: row; }
+      .feat-score-svg { width: 140px; height: 140px; }
       .demo-inner { grid-template-columns: 1fr; gap: 40px; }
-      .steps-row { gap: 8px; }
-      .step-arrow { display: none; }
+      .steps-timeline { grid-template-columns: 1fr; gap: 32px; }
+      .step-connector-line { display: none; }
       .footer-top { flex-direction: column; gap: 32px; }
       .footer-cols { gap: 32px; flex-wrap: wrap; }
     }
@@ -751,36 +903,54 @@ interface DemoUser { email: string; role: string; icon: string; color: string; }
       .auth-strip { padding: 32px 24px; }
       .m-two-col { grid-template-columns: 1fr; }
       .hero-notif { display: none; }
-      .pricing-grid { grid-template-columns: 1fr; max-width: 360px; }
+      .pricing-grid { grid-template-columns: 1fr; max-width: 380px; }
       .testimonials-grid { grid-template-columns: 1fr; }
       .footer-cols { flex-direction: column; gap: 24px; }
+      .feat-hero { padding: 28px; }
+      .feat-hero-left h3 { font-size: 1.4rem; }
+      .billing-toggle { flex-wrap: wrap; justify-content: center; }
     }
   `],
 })
 export class LandingComponent {
 
+  isAnnual = signal(false);
+  toggleBilling() { this.isAnnual.update(v => !v); }
+
   readonly features: Feature[] = [
-    { icon: 'folder_special',      title: 'Secure Document Vault',        desc: 'AES-256 encrypted storage for contracts, payslips, and compliance files. Decrypt only on download.' },
-    { icon: 'checklist_rtl',       title: 'Multi-Authority Compliance',    desc: 'Live checklists for payroll tax, VAT, social security, and labour law. Real-time compliance score.' },
-    { icon: 'group',               title: 'Employee Records',              desc: 'Complete profiles with tax identifiers, social insurance numbers, salary history, contracts, and role-based access.' },
-    { icon: 'notifications_active',title: 'Smart Deadline Alerts',         desc: 'Get notified before documents expire or filing deadlines pass — weeks in advance, not hours.' },
-    { icon: 'description',         title: 'One-Click Audit Reports',       desc: 'Generate PDF reports for any regulatory inspector in seconds. No scrambling during audits.' },
-    { icon: 'upload_file',         title: 'Excel / CSV Import',            desc: 'Bulk-import your existing employee data from spreadsheets in minutes, not days.' },
-    { icon: 'manage_accounts',     title: 'Role-Based Access Control',     desc: 'Admin, HR, Accountant, Auditor, Employee — everyone sees exactly what they should, nothing more.' },
-    { icon: 'history',             title: 'Immutable Audit Trail',         desc: 'Every action logged permanently. Show inspectors who changed what, when, and from where.' },
+    { icon: 'folder_special',       title: 'Secure Document Vault',       desc: 'AES-256 encrypted storage for contracts, payslips, and compliance files. Decrypt only on authorized download.', accent: '#6366f1' },
+    { icon: 'checklist_rtl',        title: 'Multi-Authority Compliance',   desc: 'Live checklists for payroll tax, VAT, social security, and labour law. Real-time compliance score.', accent: '#22c55e' },
+    { icon: 'group',                title: 'Employee Records',             desc: 'Complete profiles with tax identifiers, social insurance numbers, salary history, contracts, and role access.', accent: '#3b82f6' },
+    { icon: 'notifications_active', title: 'Smart Deadline Alerts',        desc: 'Get notified weeks before documents expire or filing deadlines pass — not hours. Zero last-minute panic.', accent: '#f59e0b' },
+    { icon: 'description',          title: 'One-Click Audit Reports',      desc: 'Generate PDF reports for any regulatory inspector in seconds. Full audit trail included automatically.', accent: '#8b5cf6' },
+    { icon: 'upload_file',          title: 'Excel / CSV Import',           desc: 'Bulk-import your existing employee data from spreadsheets in minutes. Smart column mapping included.', accent: '#06b6d4' },
+    { icon: 'manage_accounts',      title: 'Role-Based Access Control',    desc: 'Admin, HR, Accountant, Auditor, Employee — everyone sees exactly what they should, nothing more.', accent: '#ec4899' },
+    { icon: 'history',              title: 'Immutable Audit Trail',        desc: 'Every action logged permanently. Show inspectors who changed what, when, and from which IP address.', accent: '#ef4444' },
   ];
 
   readonly stats = [
-    { value: '500+',  label: 'SMEs onboarded worldwide',    icon: 'business'          },
-    { value: '150k+', label: 'Documents secured',           icon: 'folder_special'    },
-    { value: '99.9%', label: 'Platform uptime',             icon: 'cloud_done'        },
-    { value: '0',     label: 'Compliance fines among users', icon: 'verified_user'    },
+    { value: '500+',  label: 'SMEs onboarded worldwide',     icon: 'business'       },
+    { value: '150k+', label: 'Documents secured',            icon: 'folder_special' },
+    { value: '99.9%', label: 'Platform uptime',              icon: 'cloud_done'     },
+    { value: '0',     label: 'Compliance fines among users', icon: 'verified_user'  },
   ];
 
   readonly steps: Step[] = [
-    { num: '1', title: 'Register your company',   icon: 'business_center', desc: 'Add your tax identifier, business registration number, and select your country. Under 5 minutes — no IT skills needed.' },
-    { num: '2', title: 'Import your team',         icon: 'group_add',       desc: 'Upload an Excel file with your employees or add them one by one. Contracts and documents auto-linked.' },
-    { num: '3', title: 'Stay permanently ready',   icon: 'verified_user',   desc: 'AuditShield tracks every deadline and alerts you early. Always ready for any regulatory inspection.' },
+    {
+      num: '1', title: 'Register your company', icon: 'business_center',
+      desc: 'Add your business details, select your country and authorities, and invite your team. Under 5 minutes — no IT skills needed.',
+      bullets: ['Tax identifier & registration number', 'Select jurisdiction & authorities', 'Invite your HR, finance, and admin team'],
+    },
+    {
+      num: '2', title: 'Import your team', icon: 'group_add',
+      desc: 'Upload an Excel file with your employees or add them one by one. Contracts and documents auto-link to each profile.',
+      bullets: ['Bulk import from Excel/CSV in one click', 'Employee profiles auto-created with IDs', 'Documents linked to profiles instantly'],
+    },
+    {
+      num: '3', title: 'Stay permanently ready', icon: 'verified_user',
+      desc: 'AuditShield tracks every deadline and alerts you early. Your compliance score updates in real time.',
+      bullets: ['Live compliance score dashboard', 'Automatic deadline reminders', 'One-click PDF audit reports'],
+    },
   ];
 
   readonly testimonials: Testimonial[] = [
@@ -790,46 +960,47 @@ export class LandingComponent {
     },
     {
       quote: 'Managing HR and compliance documents for 60 employees across three African offices used to be a nightmare. AuditShield centralised everything in one encrypted vault with a dashboard I actually understand.',
-      name: 'Michael Okonkwo', role: 'HR Director',               company: 'Lagos Tech Solutions',  avatar: '🚀',
+      name: 'Michael Okonkwo', role: 'HR Director',              company: 'Lagos Tech Solutions', avatar: '🚀',
     },
     {
       quote: 'The multi-country compliance support is a game-changer for us. One platform handles payroll tax, social security, and labour law for our staff in Germany, France, and the UK simultaneously.',
-      name: 'Emma Schaefer',   role: 'Head of Finance',           company: 'BerlinBuild GmbH',      avatar: '🏗️',
+      name: 'Emma Schaefer',   role: 'Head of Finance',          company: 'BerlinBuild GmbH',    avatar: '🏗️',
     },
   ];
 
   readonly plans: PricingPlan[] = [
     {
-      name: 'Free', price: '$0', period: '/ forever', highlight: false,
+      name: 'Free', price: '$0', period: '/ forever',
+      annualPrice: '$0', annualNote: 'Always free',
+      highlight: false,
       desc: 'Perfect for solo founders and micro-businesses.',
       features: ['Up to 10 employees', '500 MB document storage', 'Basic compliance checklist', 'Email support', '1 user account'],
       cta: 'Start for Free',
     },
     {
-      name: 'Starter', price: '$29', period: '/ month', highlight: false,
+      name: 'Starter', price: '$29', period: '/ month',
+      annualPrice: '$23', annualNote: 'Billed $276/year · Save $72',
+      highlight: false,
       desc: 'For growing teams that need more power.',
       features: ['Up to 50 employees', '10 GB document storage', 'All compliance authorities', 'Smart deadline alerts', '5 user accounts', 'Excel / CSV import'],
       cta: 'Start Free Trial',
     },
     {
-      name: 'Professional', price: '$79', period: '/ month', highlight: true, badge: '⭐ Most Popular',
+      name: 'Professional', price: '$79', period: '/ month',
+      annualPrice: '$63', annualNote: 'Billed $756/year · Save $192',
+      highlight: true, badge: '⭐ Most Popular',
       desc: 'The complete compliance suite for mid-sized businesses.',
       features: ['Up to 200 employees', '100 GB document storage', 'All compliance authorities', 'PDF audit reports', 'Unlimited user accounts', 'Priority support', 'Multi-currency payroll', 'API access'],
       cta: 'Start Free Trial',
     },
     {
-      name: 'Enterprise', price: 'Custom', period: '', highlight: false,
+      name: 'Enterprise', price: 'Custom', period: '',
+      annualPrice: 'Custom', annualNote: 'Volume discounts available',
+      highlight: false,
       desc: 'For large organisations with complex compliance needs.',
       features: ['Unlimited employees', 'Unlimited storage', 'Multi-entity / multi-country', 'Dedicated account manager', 'SSO / SAML integration', 'Custom onboarding', 'SLA guarantee', '24/7 phone support'],
       cta: 'Contact Sales',
     },
   ];
 
-  readonly demoUsers: DemoUser[] = [
-    { email: 'admin@demo.com',      role: 'Admin',      icon: 'admin_panel_settings', color: '#6366f1' },
-    { email: 'hr@demo.com',         role: 'HR Manager', icon: 'badge',               color: '#22c55e' },
-    { email: 'accountant@demo.com', role: 'Accountant', icon: 'calculate',           color: '#3b82f6' },
-    { email: 'auditor@demo.com',    role: 'Auditor',    icon: 'fact_check',          color: '#f59e0b' },
-    { email: 'employee@demo.com',   role: 'Employee',   icon: 'person',              color: '#8b5cf6' },
-  ];
 }

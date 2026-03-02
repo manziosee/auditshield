@@ -12,7 +12,6 @@ import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
-import { mockInterceptor } from './core/interceptors/mock.interceptor';
 import { createApolloOptions } from './core/graphql/apollo.config';
 
 export const appConfig: ApplicationConfig = {
@@ -24,8 +23,7 @@ export const appConfig: ApplicationConfig = {
       withViewTransitions(),
       withRouterConfig({ paramsInheritanceStrategy: 'always' }),
     ),
-    // HttpClient — mockInterceptor runs first (no-op unless as_demo=true)
-    provideHttpClient(withInterceptors([mockInterceptor, authInterceptor])),
+    provideHttpClient(withInterceptors([authInterceptor])),
     provideAnimationsAsync(),
     // Apollo GraphQL client — connects to /graphql/ on the Django backend
     provideApollo(createApolloOptions),

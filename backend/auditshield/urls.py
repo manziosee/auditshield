@@ -22,7 +22,28 @@ def health_check(request):
     })
 
 
+def root_view(request):
+    """Welcome message for root URL."""
+    return JsonResponse({
+        "message": "🛡️ AuditShield API — Keep your business audit-ready, anywhere in the world.",
+        "version": "1.0.0",
+        "docs": {
+            "swagger": request.build_absolute_uri("/api/docs/"),
+            "redoc": request.build_absolute_uri("/api/redoc/"),
+            "graphql": request.build_absolute_uri("/graphql/"),
+        },
+        "endpoints": {
+            "health": request.build_absolute_uri("/health/"),
+            "api": request.build_absolute_uri("/api/v1/"),
+        },
+        "status": "operational",
+    })
+
+
 urlpatterns = [
+    # ── Root welcome ───────────────────────────────────────────────────────────
+    path("", root_view, name="root"),
+
     # ── Health check (no auth — required by Fly.io/load balancers) ────────────
     path("health/", health_check, name="health"),
 

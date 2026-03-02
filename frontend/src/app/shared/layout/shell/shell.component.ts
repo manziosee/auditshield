@@ -1,6 +1,7 @@
-import { Component, inject, signal, HostListener } from '@angular/core';
+import { Component, inject, signal, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { ApiService } from '../../../core/services/api.service';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
@@ -47,14 +48,6 @@ interface NavItem {
             <mat-icon>{{ sidebarCollapsed() ? 'chevron_right' : 'chevron_left' }}</mat-icon>
           </button>
         </div>
-
-        <!-- Demo mode pill -->
-        @if (isDemo() && !sidebarCollapsed()) {
-          <div class="demo-pill">
-            <mat-icon>science</mat-icon>
-            <span>Demo Mode</span>
-          </div>
-        }
 
         <!-- Navigation -->
         <nav class="sidebar-nav">
@@ -128,13 +121,6 @@ interface NavItem {
           </div>
 
           <div class="topbar-right">
-            <!-- Demo badge -->
-            @if (isDemo()) {
-              <span class="demo-badge">
-                <mat-icon>science</mat-icon> Demo
-              </span>
-            }
-
             <!-- Notifications -->
             <a routerLink="/notifications" class="topbar-icon-btn" title="Notifications">
               <mat-icon [class.has-badge]="unreadCount() > 0">notifications</mat-icon>
@@ -289,22 +275,6 @@ interface NavItem {
     }
     .collapse-btn:hover { color: white; background: rgba(255, 255, 255, 0.08); }
     .collapse-btn mat-icon { font-size: 1.1rem; width: 1.1rem; height: 1.1rem; }
-
-    /* Demo pill */
-    .demo-pill {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin: 0 12px 12px;
-      padding: 6px 12px;
-      background: rgba(99, 102, 241, 0.18);
-      border: 1px solid rgba(99, 102, 241, 0.35);
-      border-radius: 8px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: #a5b4fc;
-    }
-    .demo-pill mat-icon { font-size: 0.9rem; width: 0.9rem; height: 0.9rem; }
 
     /* Navigation */
     .sidebar-nav {
@@ -503,20 +473,6 @@ interface NavItem {
       align-items: center;
       gap: 8px;
     }
-    .demo-badge {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      background: rgba(99, 102, 241, 0.1);
-      border: 1px solid rgba(99, 102, 241, 0.25);
-      color: var(--brand);
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 999px;
-    }
-    .demo-badge mat-icon { font-size: 0.85rem; width: 0.85rem; height: 0.85rem; }
-
     .topbar-icon-btn {
       position: relative;
       width: 36px;
@@ -621,15 +577,33 @@ interface NavItem {
     }
   `],
 })
-export class ShellComponent {
+export class ShellComponent implements OnInit, OnDestroy {
   readonly auth  = inject(AuthService);
   readonly theme = inject(ThemeService);
   private readonly router = inject(Router);
+  private readonly api    = inject(ApiService);
 
   readonly sidebarCollapsed = signal(false);
   readonly mobileMenuOpen   = signal(false);
   readonly unreadCount      = signal(0);
-  readonly isDemo           = signal(localStorage.getItem('as_demo') === 'true');
+
+  private pollInterval?: ReturnType<typeof setInterval>;
+
+  ngOnInit(): void {
+    this.refreshUnreadCount();
+    this.pollInterval = setInterval(() => this.refreshUnreadCount(), 60_000);
+  }
+
+  ngOnDestroy(): void {
+    clearInterval(this.pollInterval);
+  }
+
+  private refreshUnreadCount(): void {
+    this.api.get<{ unread_count: number }>('notifications/unread-count/').subscribe({
+      next: (res) => this.unreadCount.set(res.unread_count ?? 0),
+      error: () => {},
+    });
+  }
 
   readonly navItems: NavItem[] = [
     { label: 'Dashboard',     icon: 'dashboard',     route: '/dashboard' },

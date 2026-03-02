@@ -9,13 +9,17 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(AuthService);
   const token = auth.getAccessToken();
 
-  const authedReq = token
+  // Skip auth for public endpoints
+  const publicEndpoints = ['/geo/countries', '/geo/currencies', '/auth/login', '/companies/onboard'];
+  const isPublic = publicEndpoints.some(endpoint => req.url.includes(endpoint));
+
+  const authedReq = (token && !isPublic)
     ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
     : req;
 
   return next(authedReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (error.status === 401 && !req.url.includes('auth/login') && !isRefreshing) {
+      if (error.status === 401 && !isPublic && !isRefreshing) {
         isRefreshing = true;
         return auth.refreshToken().pipe(
           switchMap((res) => {

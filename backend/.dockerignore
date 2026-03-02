@@ -29,15 +29,15 @@ htmlcov/
 .ruff_cache/
 
 # ── Media / user uploads (mounted as Fly volume in prod) ──────────────────────
-media/
+media/*
+!media/.gitkeep
 
 # ── Dev SQLite DB (prod uses /data volume) ────────────────────────────────────
 *.sqlite3
 *.db
 
 # ── Logs ──────────────────────────────────────────────────────────────────────
-logs/
-*.log
+logs/*.log
 
 # ── Secrets & env ─────────────────────────────────────────────────────────────
 .env
@@ -55,12 +55,12 @@ logs/
 *.swo
 
 # ── Static files (generated at runtime via collectstatic) ─────────────────────
-staticfiles/
+staticfiles/*
+!staticfiles/.gitkeep
 
 # ── Docker ────────────────────────────────────────────────────────────────────
 Dockerfile.dev
 docker-compose*.yml
-.dockerignore
 
 # ── CI / deploy ───────────────────────────────────────────────────────────────
 .github/
