@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -137,8 +137,8 @@ import { NotificationService } from '../../../core/services/notification.service
               </div>
             }
 
-            <button type="submit" class="submit-btn" [class.loading]="loading" [disabled]="loading || form.invalid">
-              @if (loading) {
+            <button type="submit" class="submit-btn" [class.loading]="loading()" [disabled]="loading() || form.invalid">
+              @if (loading()) {
                 <mat-spinner diameter="20" />
                 <span>Signing in…</span>
               } @else {
@@ -571,7 +571,7 @@ export class LoginComponent {
     password: ['', Validators.required],
   });
 
-  loading       = false;
+  readonly loading = signal(false);
   showPassword  = false;
   errorMessage  = '';
   emailFocused  = false;
@@ -579,19 +579,19 @@ export class LoginComponent {
 
   submit(): void {
     if (this.form.invalid) return;
-    this.loading = true;
+    this.loading.set(true);
     this.errorMessage = '';
 
     const { email, password } = this.form.value as { email: string; password: string };
 
     this.auth.login({ email, password }).subscribe({
       next: () => {
-        this.loading = false;
+        this.loading.set(false);
         this.notify.success('Welcome back!');
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
-        this.loading = false;
+        this.loading.set(false);
         this.errorMessage =
           err?.error?.detail?.non_field_errors?.[0] ??
           err?.error?.detail ??
