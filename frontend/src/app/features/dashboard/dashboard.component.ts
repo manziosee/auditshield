@@ -27,6 +27,8 @@ interface DashboardStats {
   overdue_compliance: number;
   total_compliance_items: number;
   department_count: number;
+  on_leave_count: number;
+  contractors_count: number;
 }
 
 interface Deadline {
@@ -292,7 +294,7 @@ interface ActivityItem {
               <div class="chart-card-sub">Employees per department</div>
             </div>
             <div class="chart-badge" style="background:rgba(236,72,153,0.12);color:#ec4899">
-              <mat-icon>account_tree</mat-icon> 5 teams
+              <mat-icon>account_tree</mat-icon> {{ stats().department_count }} teams
             </div>
           </div>
           <div class="chart-wrap chart-wrap--md">
@@ -886,18 +888,18 @@ export class DashboardComponent implements OnInit {
     expiring_soon_docs: 0, compliance_score: 0,
     compliant_items: 0, pending_compliance: 0,
     overdue_compliance: 0, total_compliance_items: 0,
-    department_count: 5,
+    department_count: 0, on_leave_count: 0, contractors_count: 0,
   });
 
   readonly upcomingDeadlines = signal<Deadline[]>([]);
   readonly recentActivity    = signal<ActivityItem[]>([]);
 
-  // ── Chart data ─────────────────────────────────────────────────────────────
-  readonly complianceTrendData: ChartData<'line'> = {
-    labels: ['Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb'],
+  // ── Chart data (mutable — updated from API in ngOnInit) ───────────────────
+  complianceTrendData: ChartData<'line'> = {
+    labels: [],
     datasets: [{
       label: 'Compliance %',
-      data: [68, 72, 79, 84, 89, 94],
+      data: [],
       borderColor: '#6366f1',
       backgroundColor: 'rgba(99,102,241,0.08)',
       fill: true,
@@ -909,52 +911,53 @@ export class DashboardComponent implements OnInit {
     }],
   };
 
-  readonly docActivityData: ChartData<'bar'> = {
-    labels: ['Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb'],
+  docActivityData: ChartData<'bar'> = {
+    labels: [],
     datasets: [
-      { label: 'Uploaded', data: [12, 18, 15, 22, 28, 19], backgroundColor: 'rgba(99,102,241,0.85)', borderRadius: 6, borderSkipped: false },
-      { label: 'Expired',  data: [3, 1, 4, 2, 1, 0],      backgroundColor: 'rgba(239,68,68,0.7)',   borderRadius: 6, borderSkipped: false },
+      { label: 'Uploaded', data: [], backgroundColor: 'rgba(99,102,241,0.85)', borderRadius: 6, borderSkipped: false },
+      { label: 'Expired',  data: [], backgroundColor: 'rgba(239,68,68,0.7)',   borderRadius: 6, borderSkipped: false },
     ],
   };
 
-  readonly deptHeadcountData: ChartData<'bar'> = {
-    labels: ['Administration', 'IT', 'HR', 'Finance', 'Marketing & Sales'],
+  deptHeadcountData: ChartData<'bar'> = {
+    labels: [],
     datasets: [{
       label: 'Employees',
-      data: [1, 1, 1, 2, 2],
+      data: [],
       backgroundColor: [
         'rgba(245,158,11,0.8)', 'rgba(59,130,246,0.8)',
         'rgba(34,197,94,0.8)',  'rgba(99,102,241,0.8)',
-        'rgba(236,72,153,0.8)',
+        'rgba(236,72,153,0.8)', 'rgba(239,68,68,0.8)',
+        'rgba(168,85,247,0.8)',
       ],
       borderRadius: 6,
       borderSkipped: false,
     }],
   };
 
-  readonly contractTypeData: ChartData<'doughnut'> = {
+  contractTypeData: ChartData<'doughnut'> = {
     labels: ['Permanent', 'Fixed-Term', 'Internship', 'Consultant', 'Part-Time'],
     datasets: [{
-      data: [5, 2, 0, 0, 0],
+      data: [0, 0, 0, 0, 0],
       backgroundColor: ['#6366f1', '#3b82f6', '#22c55e', '#f59e0b', '#8b5cf6'],
       borderColor: 'transparent',
       hoverOffset: 8,
     }],
   };
 
-  readonly authorityComplianceData: ChartData<'bar'> = {
-    labels: ['Tax Authority', 'Social Security', 'Labour Dept', 'Business Registry'],
+  authorityComplianceData: ChartData<'bar'> = {
+    labels: [],
     datasets: [
-      { label: 'Compliant', data: [2, 1, 1, 0], backgroundColor: 'rgba(34,197,94,0.85)',  borderRadius: 4, borderSkipped: false },
-      { label: 'Pending',   data: [2, 0, 0, 1], backgroundColor: 'rgba(245,158,11,0.85)', borderRadius: 4, borderSkipped: false },
-      { label: 'Overdue',   data: [0, 1, 0, 0], backgroundColor: 'rgba(239,68,68,0.85)',  borderRadius: 4, borderSkipped: false },
+      { label: 'Compliant', data: [], backgroundColor: 'rgba(34,197,94,0.85)',  borderRadius: 4, borderSkipped: false },
+      { label: 'Pending',   data: [], backgroundColor: 'rgba(245,158,11,0.85)', borderRadius: 4, borderSkipped: false },
+      { label: 'Overdue',   data: [], backgroundColor: 'rgba(239,68,68,0.85)',  borderRadius: 4, borderSkipped: false },
     ],
   };
 
-  readonly empStatusData: ChartData<'doughnut'> = {
+  empStatusData: ChartData<'doughnut'> = {
     labels: ['Active', 'Probation', 'On Leave', 'Terminated'],
     datasets: [{
-      data: [5, 1, 0, 0],
+      data: [0, 0, 0, 0],
       backgroundColor: ['#22c55e', '#f59e0b', '#3b82f6', '#ef4444'],
       borderColor: 'transparent',
       hoverOffset: 8,
@@ -971,7 +974,7 @@ export class DashboardComponent implements OnInit {
   // ── Chart ring ─────────────────────────────────────────────────────────────
   readonly ringCircumference = 2 * Math.PI * 52; // r=52
 
-  readonly trendDelta    = computed(() => 5);
+  readonly trendDelta    = computed(() => 0);
   readonly trendBadgeBg  = computed(() => this.theme.isDark() ? 'rgba(34,197,94,0.12)' : '#dcfce7');
   readonly trendBadgeColor = computed(() => '#22c55e');
 
@@ -1025,8 +1028,50 @@ export class DashboardComponent implements OnInit {
       error: () => {},
     });
 
-    this.employees.list({ page_size: 1 }).subscribe({
-      next: (res) => this.stats.update(s => ({ ...s, employee_count: res.count })),
+    this.employees.list({ page_size: 200 }).subscribe({
+      next: (res) => {
+        const emps = res.results ?? [];
+        let onLeave = 0, contractors = 0;
+        const statusCounts: Record<string, number> = { active: 0, probation: 0, on_leave: 0, terminated: 0 };
+        const contractCounts: Record<string, number> = { permanent: 0, fixed_term: 0, internship: 0, consultant: 0, part_time: 0 };
+        const deptCounts: Record<string, number> = {};
+
+        for (const emp of emps) {
+          const st = emp.employment_status ?? '';
+          if (st in statusCounts) statusCounts[st]++;
+          if (st === 'on_leave') onLeave++;
+
+          const ct = emp.contract_type ?? '';
+          if (ct in contractCounts) contractCounts[ct]++;
+          if (ct === 'consultant' || ct === 'part_time') contractors++;
+
+          const dept = emp.department_name || 'Unknown';
+          deptCounts[dept] = (deptCounts[dept] ?? 0) + 1;
+        }
+
+        this.stats.update(s => ({
+          ...s,
+          employee_count:    res.count,
+          on_leave_count:    onLeave,
+          contractors_count: contractors,
+        }));
+
+        this.empStatusData = {
+          ...this.empStatusData,
+          datasets: [{ ...this.empStatusData.datasets[0], data: [statusCounts['active'], statusCounts['probation'], statusCounts['on_leave'], statusCounts['terminated']] }],
+        };
+
+        this.contractTypeData = {
+          ...this.contractTypeData,
+          datasets: [{ ...this.contractTypeData.datasets[0], data: [contractCounts['permanent'], contractCounts['fixed_term'], contractCounts['internship'], contractCounts['consultant'], contractCounts['part_time']] }],
+        };
+
+        const deptLabels = Object.keys(deptCounts);
+        this.deptHeadcountData = {
+          labels: deptLabels,
+          datasets: [{ ...this.deptHeadcountData.datasets[0], data: deptLabels.map(l => deptCounts[l]) }],
+        };
+      },
       error: () => {},
     });
 
@@ -1037,6 +1082,31 @@ export class DashboardComponent implements OnInit {
 
     this.employees.listDepartments().subscribe({
       next: (res) => this.stats.update(s => ({ ...s, department_count: res.count })),
+      error: () => {},
+    });
+
+    this.compliance.listRecords({ page_size: 200 }).subscribe({
+      next: (res) => {
+        const records = res.results ?? [];
+        const byAuth: Record<string, { compliant: number; pending: number; overdue: number }> = {};
+        for (const r of records) {
+          const auth = r.authority ?? 'Other';
+          if (!byAuth[auth]) byAuth[auth] = { compliant: 0, pending: 0, overdue: 0 };
+          const st = r.status ?? '';
+          if (st === 'compliant') byAuth[auth].compliant++;
+          else if (st === 'pending') byAuth[auth].pending++;
+          else if (st === 'overdue') byAuth[auth].overdue++;
+        }
+        const labels = Object.keys(byAuth);
+        this.authorityComplianceData = {
+          labels,
+          datasets: [
+            { label: 'Compliant', data: labels.map(l => byAuth[l].compliant), backgroundColor: 'rgba(34,197,94,0.85)',  borderRadius: 4, borderSkipped: false },
+            { label: 'Pending',   data: labels.map(l => byAuth[l].pending),   backgroundColor: 'rgba(245,158,11,0.85)', borderRadius: 4, borderSkipped: false },
+            { label: 'Overdue',   data: labels.map(l => byAuth[l].overdue),   backgroundColor: 'rgba(239,68,68,0.85)',  borderRadius: 4, borderSkipped: false },
+          ],
+        };
+      },
       error: () => {},
     });
 
@@ -1092,35 +1162,37 @@ export class DashboardComponent implements OnInit {
       {
         label: 'Active Employees', value: s.employee_count, icon: 'group',
         gradientBg: 'rgba(59,130,246,0.12)', iconColor: '#3b82f6',
-        sub: '+3 this month', subIcon: 'trending_up', subColor: '#22c55e',
-        sparkline: [4, 5, 5, 6, 6, 7, s.employee_count || 8],
+        sub: `${s.employee_count} total`, subIcon: 'people', subColor: '#3b82f6',
+        sparkline: Array(7).fill(s.employee_count),
         meta: [
-          { label: 'On Leave',    value: 2 },
-          { label: 'New Hires',   value: '+3' },
-          { label: 'Contractors', value: 1 },
+          { label: 'On Leave',    value: s.on_leave_count },
+          { label: 'Contractors', value: s.contractors_count },
+          { label: 'Departments', value: s.department_count },
         ],
       },
       {
         label: 'Total Documents', value: s.document_count, icon: 'folder_open',
         gradientBg: 'rgba(139,92,246,0.12)', iconColor: '#8b5cf6',
-        sub: '+12 this month', subIcon: 'trending_up', subColor: '#22c55e',
-        sparkline: [45, 52, 58, 63, 68, 70, s.document_count || 72],
+        sub: s.document_count > 0 ? `${s.document_count} on file` : 'No documents yet',
+        subIcon: 'folder', subColor: '#8b5cf6',
+        sparkline: Array(7).fill(s.document_count),
         meta: [
-          { label: 'Uploaded',    value: '+12' },
-          { label: 'Expired',     value: s.expired_docs || 2 },
-          { label: 'Pending OCR', value: 3 },
+          { label: 'Expired',     value: s.expired_docs },
+          { label: 'Expiring',    value: s.expiring_soon_docs },
+          { label: 'Active',      value: Math.max(0, s.document_count - s.expired_docs) },
         ],
       },
       {
         label: 'Compliance Score', value: `${s.compliance_score}%`, icon: 'verified_user',
         gradientBg: s.compliance_score >= 80 ? 'rgba(34,197,94,0.12)' : 'rgba(245,158,11,0.12)',
         iconColor:  s.compliance_score >= 80 ? '#22c55e' : '#f59e0b',
-        sub: '+5% vs last month', subIcon: 'trending_up', subColor: '#22c55e',
-        sparkline: [68, 72, 79, 84, 89, 92, s.compliance_score || 94],
+        sub: s.total_compliance_items > 0 ? `${s.total_compliance_items} requirements` : 'No records yet',
+        subIcon: 'checklist', subColor: s.compliance_score >= 80 ? '#22c55e' : '#f59e0b',
+        sparkline: Array(7).fill(s.compliance_score),
         meta: [
-          { label: 'Compliant', value: s.compliant_items || 47 },
-          { label: 'Pending',   value: s.pending_compliance || 3 },
-          { label: 'Overdue',   value: s.overdue_compliance || 1 },
+          { label: 'Compliant', value: s.compliant_items },
+          { label: 'Pending',   value: s.pending_compliance },
+          { label: 'Overdue',   value: s.overdue_compliance },
         ],
       },
       {
@@ -1129,11 +1201,11 @@ export class DashboardComponent implements OnInit {
         warning: s.expiring_soon_docs > 0,
         sub: s.expiring_soon_docs > 0 ? 'Action required' : 'All good',
         subIcon: s.expiring_soon_docs > 0 ? 'warning' : 'check', subColor: s.expiring_soon_docs > 0 ? '#f59e0b' : '#22c55e',
-        sparkline: [3, 2, 4, 1, 2, 1, s.expiring_soon_docs],
+        sparkline: Array(7).fill(s.expiring_soon_docs),
         meta: [
-          { label: 'Next 7d',  value: 0 },
-          { label: 'Next 30d', value: 2 },
-          { label: 'Reviewed', value: '100%' },
+          { label: 'Expired',  value: s.expired_docs },
+          { label: 'Expiring', value: s.expiring_soon_docs },
+          { label: 'Safe',     value: Math.max(0, s.document_count - s.expired_docs - s.expiring_soon_docs) },
         ],
       },
       {
@@ -1142,22 +1214,23 @@ export class DashboardComponent implements OnInit {
         danger: s.overdue_compliance > 0,
         sub: s.overdue_compliance > 0 ? 'Needs attention' : 'All clear',
         subIcon: s.overdue_compliance > 0 ? 'priority_high' : 'check_circle', subColor: s.overdue_compliance > 0 ? '#ef4444' : '#22c55e',
-        sparkline: [2, 3, 1, 2, 2, 1, s.overdue_compliance || 1],
+        sparkline: Array(7).fill(s.overdue_compliance),
         meta: [
-          { label: 'Critical', value: s.overdue_compliance || 1 },
-          { label: 'High',     value: 0 },
-          { label: 'Resolved', value: 4 },
+          { label: 'Overdue',  value: s.overdue_compliance },
+          { label: 'Pending',  value: s.pending_compliance },
+          { label: 'Compliant',value: s.compliant_items },
         ],
       },
       {
         label: 'Departments', value: s.department_count, icon: 'account_tree',
         gradientBg: 'rgba(236,72,153,0.12)', iconColor: '#ec4899',
-        sub: `${s.department_count} active teams`, subIcon: 'groups', subColor: '#ec4899',
-        sparkline: [3, 3, 4, 4, 4, 5, s.department_count || 5],
+        sub: s.department_count > 0 ? `${s.department_count} active teams` : 'No departments yet',
+        subIcon: 'groups', subColor: '#ec4899',
+        sparkline: Array(7).fill(s.department_count),
         meta: [
-          { label: 'Avg Size',   value: 2 },
-          { label: 'Open Roles', value: 3 },
-          { label: 'Largest',    value: 'Finance' },
+          { label: 'Teams',    value: s.department_count },
+          { label: 'Avg Size', value: s.department_count > 0 ? Math.round(s.employee_count / s.department_count) : 0 },
+          { label: 'Employees',value: s.employee_count },
         ],
       },
     ];
