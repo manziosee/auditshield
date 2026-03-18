@@ -2,4 +2,7 @@ from django.urls import path
 
 from . import views
 
-urlpatterns = [path("", views.AuditLogListView.as_view(), name="audit-log-list")]
+urlpatterns = [
+    path("",        views.AuditLogListView.as_view(),   name="audit-log-list"),
+    path("export/", views.AuditLogExportView.as_view(), name="audit-log-export"),
+]

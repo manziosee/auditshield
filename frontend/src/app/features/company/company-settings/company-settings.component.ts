@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { AuthService } from '../../../core/services/auth.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -257,6 +258,63 @@ interface CurrencyOption { code: string; name: string; symbol: string; flag: str
             </div>
           </mat-tab>
 
+          <!-- ── Security tab ───────────────────────────────────────────────── -->
+          <mat-tab label="Security">
+            <div class="tab-content">
+              <mat-card class="security-card">
+                <mat-card-header>
+                  <mat-icon mat-card-avatar class="security-icon">shield</mat-icon>
+                  <mat-card-title>Two-Factor Authentication</mat-card-title>
+                  <mat-card-subtitle>Add an extra layer of security to your account</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="twofa-status-row" [class.twofa-enabled]="twoFactorEnabled()">
+                    <div class="twofa-status-icon">
+                      <mat-icon>{{ twoFactorEnabled() ? 'verified_user' : 'gpp_maybe' }}</mat-icon>
+                    </div>
+                    <div class="twofa-status-body">
+                      <div class="twofa-status-title">
+                        2FA is currently
+                        <span class="twofa-badge" [class.twofa-badge-on]="twoFactorEnabled()" [class.twofa-badge-off]="!twoFactorEnabled()">
+                          {{ twoFactorEnabled() ? 'ENABLED' : 'DISABLED' }}
+                        </span>
+                      </div>
+                      <p class="twofa-status-desc">
+                        {{ twoFactorEnabled()
+                          ? 'Your account is protected. A verification code will be required at each login.'
+                          : 'Anyone who obtains your password can access your account. Enable 2FA to protect it.' }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <form [formGroup]="securityForm" (ngSubmit)="toggle2FA()" class="twofa-form">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Confirm your current password</mat-label>
+                      <mat-icon matPrefix>lock</mat-icon>
+                      <input matInput type="password" formControlName="password" />
+                      @if (securityForm.get('password')?.invalid && securityForm.get('password')?.touched) {
+                        <mat-error>Password is required to change 2FA settings</mat-error>
+                      }
+                    </mat-form-field>
+
+                    <button mat-raised-button
+                      [color]="twoFactorEnabled() ? 'warn' : 'primary'"
+                      type="submit"
+                      [disabled]="securityForm.invalid || saving()">
+                      <mat-icon>{{ twoFactorEnabled() ? 'lock_open' : 'lock' }}</mat-icon>
+                      {{ twoFactorEnabled() ? 'Disable 2FA' : 'Enable 2FA' }}
+                    </button>
+                  </form>
+
+                  <div class="info-banner" style="margin-top:16px">
+                    <mat-icon>info</mat-icon>
+                    <p>Two-factor authentication adds a one-time code requirement at login. Your password confirmation is required to change this setting for security.</p>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </mat-tab>
+
           <!-- ── Danger Zone tab ────────────────────────────────────────────── -->
           <mat-tab label="Danger Zone">
             <div class="tab-content">
@@ -422,20 +480,66 @@ interface CurrencyOption { code: string; name: string; symbol: string; flag: str
     }
     .danger-check-item mat-icon { font-size:1rem; width:1rem; height:1rem; color:var(--danger); }
 
+    /* ── Security card ───────────────────────────────────────────────────────── */
+    .security-card { border-top:3px solid #6366f1 !important; }
+    .security-icon { color:#6366f1; }
+
+    .twofa-status-row {
+      display:flex; gap:16px; align-items:flex-start;
+      padding:16px; border-radius:12px;
+      background:var(--danger-bg);
+      border:1px solid color-mix(in srgb, var(--danger) 20%, transparent);
+      margin-bottom:20px;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .twofa-status-row.twofa-enabled {
+      background:var(--success-bg);
+      border-color:color-mix(in srgb, var(--success) 20%, transparent);
+    }
+    .twofa-status-icon {
+      width:44px; height:44px; border-radius:12px; flex-shrink:0;
+      display:flex; align-items:center; justify-content:center;
+      background:rgba(239,68,68,0.12); color:var(--danger);
+    }
+    .twofa-enabled .twofa-status-icon { background:rgba(16,185,129,0.12); color:var(--success); }
+    .twofa-status-icon mat-icon { font-size:1.4rem; }
+    .twofa-status-body { flex:1; }
+    .twofa-status-title { font-size:0.9rem; font-weight:600; color:var(--text-primary); margin-bottom:4px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+    .twofa-badge {
+      font-size:0.65rem; font-weight:800; letter-spacing:0.08em;
+      padding:2px 8px; border-radius:999px; text-transform:uppercase;
+    }
+    .twofa-badge-on  { background:rgba(16,185,129,0.12);  color:var(--success); }
+    .twofa-badge-off { background:rgba(239,68,68,0.12);   color:var(--danger);  }
+    .twofa-status-desc { margin:0; font-size:0.8rem; color:var(--text-muted); line-height:1.5; }
+
+    .twofa-form {
+      display:flex; gap:16px; align-items:flex-start; flex-wrap:wrap;
+    }
+    .twofa-form mat-form-field { flex:1; min-width:240px; }
+
     @media(max-width:600px) {
       .form-grid { grid-template-columns:1fr; }
       .action-row { flex-direction:column; }
       .currency-grid { flex-direction:column; }
+      .twofa-form { flex-direction:column; }
     }
   `],
 })
 export class CompanySettingsComponent implements OnInit {
-  private readonly api = inject(ApiService);
+  private readonly api    = inject(ApiService);
   private readonly notify = inject(NotificationService);
-  private readonly fb = inject(FormBuilder);
+  private readonly fb     = inject(FormBuilder);
+  private readonly auth   = inject(AuthService);
 
   loading = signal(false);
-  saving = signal(false);
+  saving  = signal(false);
+
+  readonly twoFactorEnabled = signal(false);
+
+  readonly securityForm = this.fb.group({
+    password: ['', Validators.required],
+  });
 
   readonly months = [
     { value: 1, label: 'January' }, { value: 2, label: 'February' },
@@ -505,6 +609,9 @@ export class CompanySettingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loading.set(true);
+    // Load 2FA state from cached user
+    this.twoFactorEnabled.set(this.auth.user()?.two_factor_enabled ?? false);
+
     this.api.get<Company>('companies/me/').subscribe({
       next: (c) => {
         this.companyId = c.id;
@@ -524,6 +631,26 @@ export class CompanySettingsComponent implements OnInit {
         this.loading.set(false);
       },
       error: () => { this.loading.set(false); this.notify.error('Failed to load company settings.'); },
+    });
+  }
+
+  toggle2FA(): void {
+    if (this.securityForm.invalid) { this.securityForm.markAllAsTouched(); return; }
+    this.saving.set(true);
+    this.api.post<{ two_factor_enabled: boolean; detail: string }>('auth/toggle-2fa/', {
+      enable: !this.twoFactorEnabled(),
+      password: this.securityForm.value.password,
+    }).subscribe({
+      next: (res) => {
+        this.twoFactorEnabled.set(res.two_factor_enabled);
+        this.securityForm.reset();
+        this.saving.set(false);
+        this.notify.success(res.detail);
+      },
+      error: (err) => {
+        this.saving.set(false);
+        this.notify.error(err?.error?.detail ?? 'Failed to update 2FA settings.');
+      },
     });
   }
 

@@ -57,6 +57,16 @@ export const routes: Routes = [
         canActivate: [roleGuard('super_admin', 'admin')],
         loadChildren: () => import('./features/company/company.routes').then((m) => m.COMPANY_ROUTES),
       },
+      {
+        path: 'portfolio',
+        canActivate: [roleGuard('super_admin')],
+        loadChildren: () => import('./features/portfolio/portfolio.routes').then((m) => m.PORTFOLIO_ROUTES),
+      },
+      {
+        path: 'self-service',
+        loadComponent: () => import('./features/self-service/self-service.component').then((m) => m.SelfServiceComponent),
+        title: 'My Profile — AuditShield',
+      },
     ],
   },
 

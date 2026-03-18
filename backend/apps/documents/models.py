@@ -71,6 +71,13 @@ class Document(TenantModel):
     extracted_text = models.TextField(blank=True)
     ocr_processed = models.BooleanField(default=False)
 
+    # AI / structured extraction results (populated after OCR)
+    metadata = models.JSONField(
+        default=dict,
+        blank=True,
+        help_text="Flexible metadata store — includes ai_extracted sub-key after OCR processing",
+    )
+
     # Period (for tax filings)
     period_start = models.DateField(null=True, blank=True)
     period_end = models.DateField(null=True, blank=True)

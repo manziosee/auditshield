@@ -1,6 +1,7 @@
 # ─── AuditShield Makefile ─────────────────────────────────────────────────────
 .PHONY: help dev prod stop logs shell migrate makemigrations createsuperuser \
-        test lint format backup restore build clean
+        test lint format backup restore build clean \
+        health-pulse gap-analysis audit-export portfolio webhook-list
 
 COMPOSE        = docker compose
 COMPOSE_PROD   = docker compose -f docker-compose.yml -f docker-compose.prod.yml
@@ -120,6 +121,22 @@ psql:           ## Connect to PostgreSQL shell
 
 redis-cli:      ## Connect to Redis CLI
 	$(COMPOSE) exec redis redis-cli
+
+# ── Feature shortcuts (dev only) ──────────────────────────────────────────────
+health-pulse:   ## Show compliance health pulse (requires TOKEN=<jwt>)
+	@curl -s -H "Authorization: Bearer $(TOKEN)" http://localhost:8000/api/v1/compliance/health-pulse/ | python3 -m json.tool
+
+gap-analysis:   ## Show compliance gap analysis (requires TOKEN=<jwt>)
+	@curl -s -H "Authorization: Bearer $(TOKEN)" http://localhost:8000/api/v1/compliance/gap-analysis/ | python3 -m json.tool
+
+audit-export:   ## Download audit trail as CSV (requires TOKEN=<jwt>)
+	@curl -s -H "Authorization: Bearer $(TOKEN)" "http://localhost:8000/api/v1/audit-logs/export/?format=csv" -o audit-export.csv && echo "Saved to audit-export.csv"
+
+portfolio:      ## Show multi-company portfolio (super_admin, requires TOKEN=<jwt>)
+	@curl -s -H "Authorization: Bearer $(TOKEN)" http://localhost:8000/api/v1/companies/portfolio/ | python3 -m json.tool
+
+webhook-list:   ## List configured webhook endpoints (requires TOKEN=<jwt>)
+	@curl -s -H "Authorization: Bearer $(TOKEN)" http://localhost:8000/api/v1/webhooks/ | python3 -m json.tool
 
 # ── Secrets ───────────────────────────────────────────────────────────────────
 gen-secret:     ## Generate Django secret key
