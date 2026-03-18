@@ -53,10 +53,19 @@ class CompanyType:
     address: auto
     city: auto
     state_province: auto
+    postal_code: auto
+    industry: auto
+    fiscal_year_start: auto
+    tax_identifier: auto
+    social_security_identifier: auto
     country: Optional[CountryType]
     subscription_plan: auto
     is_active: auto
     created_at: auto
+
+    @strawberry.field
+    def preferred_currency(self) -> Optional[str]:
+        return self.currency.code if self.currency_id else None
 
 
 # ── Department ────────────────────────────────────────────────────────────────

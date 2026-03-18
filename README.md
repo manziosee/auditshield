@@ -82,12 +82,14 @@ Every company is a **fully isolated tenant** with UUID-keyed records and scoped 
 ## Table of Contents
 
 - [Features](#features)
+- [Innovation Features](#innovation-features)
 - [Tech Stack](#tech-stack)
 - [Architecture](#architecture)
 - [Quick Start (Docker)](#quick-start-docker)
 - [Local Development (without Docker)](#local-development-without-docker)
 - [Environment Variables](#environment-variables)
 - [API Documentation](#api-documentation)
+- [New API Endpoints](#new-api-endpoints)
 - [Deployment — Fly.io](#deployment--flyio)
 - [Deployment — Docker Compose Production](#deployment--docker-compose-production)
 - [User Roles](#user-roles)
@@ -104,15 +106,97 @@ Every company is a **fully isolated tenant** with UUID-keyed records and scoped 
 | 🏢 **Multi-tenancy** | Each company is a fully isolated tenant — UUID PKs, cascading row-level scoping |
 | 👥 **Employees** | Full CRUD, department management, bulk Excel/CSV import, one-click export |
 | 🔒 **Documents** | Fernet AES-128 encryption at rest, OCR extraction, expiry tracking & email alerts |
-| ✅ **Compliance** | Tax, social security & labour law tracker; authority dashboards; full CRUD |
+| 🤖 **AI Extraction** | OCR auto-extracts employee name, salary, start/end dates from uploaded contracts |
+| ✅ **Compliance** | Tax, social security & labour law tracker; authority dashboards; full CRUD; bulk updates |
+| 🧠 **Health Pulse** | Rolling 6-month compliance trend + 30-day AI risk prediction ("declining — hits 70% in 14 days") |
+| 🔍 **Gap Analysis** | Auto-detects missing requirements vs your country + industry — turns platform into a consultant |
+| 📅 **Deadline Calendar** | Monthly calendar view of all compliance deadlines with one-click iCal export to Google/Outlook |
+| 👤 **Self-Service Portal** | Employees see only their own payslips, documents, and compliance status — zero HR involvement |
 | 📊 **Reports** | Async PDF generation (WeasyPrint + Celery), download when ready |
+| 📈 **Expiry Timeline** | Gantt-style document expiry view with visual 30-day red zone |
 | 💰 **Payroll** | Country-specific tax rule engine, payroll runs, payslip generation |
+| ⚠️ **Variance Alerts** | Compares payroll runs — flags >15% salary spikes, missing employees, and new additions |
 | 🌍 **Geography** | 16+ countries, 17+ currencies, live exchange rate support |
-| 🔑 **Auth** | JWT rotate-on-refresh, Argon2 hashing, brute-force lockout (django-axes) |
-| 📜 **Audit Trail** | Immutable middleware log of every POST/PUT/PATCH/DELETE |
+| 🔑 **Auth & 2FA** | JWT rotate-on-refresh, Argon2 hashing, brute-force lockout (django-axes), 2FA toggle |
+| 📜 **Audit Trail** | Immutable middleware log of every POST/PUT/PATCH/DELETE; CSV/PDF export for auditors |
 | 🔔 **Notifications** | In-app + email alerts, unread badge, mark-all-read |
+| 🏛️ **Portfolio View** | Super-admin sees all tenant companies with live compliance scores in one dashboard |
+| 🔗 **Webhooks** | Configure outbound webhooks for events (employee added, payroll run, document expired) |
 | 🔗 **GraphQL** | Strawberry endpoint — Apollo-compatible at `/graphql/` with GraphiQL playground |
 | 📖 **REST API** | Full DRF REST API with auto OpenAPI/Swagger docs at `/api/docs/` |
+
+---
+
+## Innovation Features
+
+### 🧠 Compliance Health Pulse
+`GET /api/v1/compliance/health-pulse/`
+
+Returns rolling 6-month history + linear regression prediction:
+```json
+{
+  "current_score": 78,
+  "trend": "improving",
+  "predicted_30d": 83,
+  "risk_level": "moderate",
+  "days_to_threshold": null,
+  "history": [
+    {"month": "2025-10", "score": 65},
+    {"month": "2025-11", "score": 70},
+    {"month": "2025-12", "score": 72},
+    {"month": "2026-01", "score": 74},
+    {"month": "2026-02", "score": 76},
+    {"month": "2026-03", "score": 78}
+  ]
+}
+```
+
+### 🔍 Compliance Gap Analysis
+`GET /api/v1/compliance/gap-analysis/`
+
+Compares your company's tracked requirements against the global requirement library for your country + industry. Returns prioritised list of missing requirements:
+```json
+{
+  "total_gaps": 4,
+  "coverage_percent": 76,
+  "gaps": [
+    {
+      "requirement_id": "...",
+      "title": "Annual Tax Return Filing",
+      "authority": "IRS",
+      "priority": "high",
+      "is_mandatory": true,
+      "frequency": "annually"
+    }
+  ]
+}
+```
+
+### ⚠️ Payroll Variance Check
+`POST /api/v1/payroll/runs/{id}/variance-check/`
+
+Compares current run against the previous completed run. Flags salary spikes >15%, missing employees, and new additions.
+
+### 📤 Audit Trail Export
+`GET /api/v1/audit-logs/export/?format=csv&date_from=2026-01-01&date_to=2026-03-31`
+
+Downloads the audit trail as CSV (or JSON) for external auditors. Supports date range, method, and status filters.
+
+### 🏛️ Portfolio Dashboard
+`GET /api/v1/companies/portfolio/` _(super_admin only)_
+
+Returns all tenant companies with live compliance scores, employee counts, and last activity — for accounting firms managing multiple clients.
+
+### 🔗 Webhooks
+`/api/v1/webhooks/` — Full CRUD for webhook endpoints.
+
+Configure outbound HTTP webhooks for platform events:
+- `employee.created` / `employee.updated`
+- `payroll.run.completed`
+- `document.expired` / `document.expiring_soon`
+- `compliance.overdue`
+
+All deliveries are HMAC-SHA256 signed with `X-AuditShield-Signature` header. Automatic retry on failure.
 
 ---
 

@@ -197,3 +197,64 @@ class CompanyExportView(APIView):
         response = HttpResponse(payload, content_type="application/json")
         response["Content-Disposition"] = f'attachment; filename="company-export-{company.id}.json"'
         return response
+
+
+@extend_schema(
+    tags=["companies"],
+    summary="Multi-company portfolio overview (super admin only)",
+    description=(
+        "Returns all companies in the platform with key metrics: compliance score, "
+        "employee count, document count, and last activity.\n\n"
+        "**Access**: super_admin role only."
+    ),
+    responses={
+        200: OpenApiResponse(description="Portfolio summary"),
+        403: OpenApiResponse(description="Forbidden — super admin only"),
+    },
+)
+class CompanyPortfolioView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        if request.user.role != "super_admin":
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("super_admin role required.")
+
+        from apps.compliance.models import ComplianceRecord
+        from apps.documents.models import Document
+        from apps.employees.models import Employee
+        from apps.audit_logs.models import AuditLog
+
+        companies = Company.objects.select_related("country").all().order_by("name")
+
+        result = []
+        for company in companies:
+            # Compliance score
+            records = ComplianceRecord.objects.filter(company=company)
+            total = records.count()
+            compliant = records.filter(status=ComplianceRecord.ComplianceStatus.COMPLIANT).count()
+            compliance_score = int((compliant / total) * 100) if total > 0 else 0
+
+            # Counts
+            employee_count = Employee.objects.filter(company=company).count()
+            document_count = Document.objects.filter(company=company).count()
+
+            # Last activity
+            last_log = AuditLog.objects.filter(company=company).order_by("-created_at").first()
+            last_activity = last_log.created_at.isoformat() if last_log else None
+
+            result.append({
+                "id": str(company.id),
+                "name": company.name,
+                "country": company.country.iso_code if company.country else "",
+                "subscription_plan": company.subscription_plan,
+                "compliance_score": compliance_score,
+                "employee_count": employee_count,
+                "document_count": document_count,
+                "last_activity": last_activity,
+            })
+
+        return Response({
+            "total_companies": len(result),
+            "companies": result,
+        })

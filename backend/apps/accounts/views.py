@@ -8,7 +8,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from .models import User
-from .serializers import ChangePasswordSerializer, UserCreateSerializer, UserMeSerializer
+from .serializers import ChangePasswordSerializer, Toggle2FASerializer, UserCreateSerializer, UserMeSerializer
 
 
 class AuthRateThrottle(AnonRateThrottle):
@@ -113,6 +113,37 @@ class ChangePasswordView(generics.GenericAPIView):
         user.must_change_password = False
         user.save(update_fields=["password", "must_change_password"])
         return Response({"detail": "Password changed successfully."})
+
+
+@extend_schema(
+    tags=["auth"],
+    summary="Toggle two-factor authentication",
+    description=(
+        "Enable or disable two-factor authentication for the current user. "
+        "Requires the current password as confirmation."
+    ),
+    responses={
+        200: OpenApiResponse(description="2FA state updated"),
+        400: OpenApiResponse(description="Password incorrect or validation error"),
+    },
+)
+class Toggle2FAView(generics.GenericAPIView):
+    serializer_class = Toggle2FASerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = request.user
+        if not user.check_password(serializer.validated_data["password"]):
+            return Response({"detail": "Password is incorrect."}, status=status.HTTP_400_BAD_REQUEST)
+        user.two_factor_enabled = serializer.validated_data["enable"]
+        user.save(update_fields=["two_factor_enabled"])
+        state = "enabled" if user.two_factor_enabled else "disabled"
+        return Response({
+            "detail": f"Two-factor authentication {state}.",
+            "two_factor_enabled": user.two_factor_enabled,
+        })
 
 
 @extend_schema(

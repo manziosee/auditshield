@@ -2,6 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { ExpiryTimelineComponent } from '../expiry-timeline/expiry-timeline.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
@@ -27,6 +28,7 @@ import { Document as Doc } from '../../../core/models/document.models';
     MatButtonModule, MatIconModule, MatInputModule, MatFormFieldModule,
     MatSelectModule, MatMenuModule, MatTooltipModule,
     MatProgressSpinnerModule, MatCardModule, MatDividerModule,
+    ExpiryTimelineComponent,
   ],
   template: `
     <div class="page-container">
@@ -35,10 +37,20 @@ import { Document as Doc } from '../../../core/models/document.models';
           <h2>Documents</h2>
           <p class="subtitle">{{ total() }} documents in the encrypted vault</p>
         </div>
-        <button mat-raised-button color="primary" routerLink="/documents/upload">
-          <mat-icon>upload_file</mat-icon> Upload Document
-        </button>
+        <div class="header-actions">
+          <button mat-stroked-button (click)="showTimeline = !showTimeline" [class.active-view-btn]="showTimeline">
+            <mat-icon>timeline</mat-icon>
+            {{ showTimeline ? 'List View' : 'Timeline View' }}
+          </button>
+          <button mat-raised-button color="primary" routerLink="/documents/upload">
+            <mat-icon>upload_file</mat-icon> Upload Document
+          </button>
+        </div>
       </div>
+
+      @if (showTimeline) {
+        <as-expiry-timeline />
+      }
 
       <mat-card class="filters-card">
         <div class="filters-row">
@@ -211,6 +223,7 @@ export class DocumentListComponent implements OnInit {
   total = signal(0);
   loading = signal(false);
 
+  showTimeline = false;
   columns = ['icon','title','employee','status','expiry_date','created_at','actions'];
   pageSize = 25;
   currentPage = 1;

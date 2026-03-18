@@ -426,7 +426,7 @@ interface ActivityItem {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #4f46e5 100%);
+      background: linear-gradient(135deg, #0d0f2e 0%, #1e1b4b 35%, #312e81 65%, #1e3a5f 100%);
       border-radius: 16px;
       padding: 24px 28px;
       gap: 16px;
@@ -438,8 +438,9 @@ interface ActivityItem {
       content: '';
       position: absolute; inset: 0;
       background:
-        radial-gradient(ellipse 400px 300px at 80% -10%, rgba(129,140,248,0.2), transparent),
-        radial-gradient(ellipse 200px 200px at 5% 110%, rgba(99,102,241,0.15), transparent);
+        radial-gradient(ellipse 500px 350px at 90% -20%, rgba(6,182,212,0.18), transparent),
+        radial-gradient(ellipse 300px 300px at 5% 110%, rgba(99,102,241,0.18), transparent),
+        radial-gradient(ellipse 200px 200px at 50% 50%, rgba(124,58,237,0.08), transparent);
       pointer-events: none;
     }
     .welcome-greeting {
@@ -900,22 +901,23 @@ export class DashboardComponent implements OnInit {
     datasets: [{
       label: 'Compliance %',
       data: [],
-      borderColor: '#6366f1',
-      backgroundColor: 'rgba(99,102,241,0.08)',
+      borderColor: '#06b6d4',
+      backgroundColor: 'rgba(6,182,212,0.08)',
       fill: true,
-      tension: 0.4,
-      pointBackgroundColor: '#6366f1',
+      tension: 0.42,
+      pointBackgroundColor: '#06b6d4',
       pointBorderColor: 'white',
       pointBorderWidth: 2,
       pointRadius: 5,
+      pointHoverRadius: 7,
     }],
   };
 
   docActivityData: ChartData<'bar'> = {
     labels: [],
     datasets: [
-      { label: 'Uploaded', data: [], backgroundColor: 'rgba(99,102,241,0.85)', borderRadius: 6, borderSkipped: false },
-      { label: 'Expired',  data: [], backgroundColor: 'rgba(239,68,68,0.7)',   borderRadius: 6, borderSkipped: false },
+      { label: 'Uploaded', data: [], backgroundColor: 'rgba(99,102,241,0.88)', borderRadius: 7, borderSkipped: false },
+      { label: 'Expired',  data: [], backgroundColor: 'rgba(239,68,68,0.72)',  borderRadius: 7, borderSkipped: false },
     ],
   };
 
@@ -939,8 +941,9 @@ export class DashboardComponent implements OnInit {
     labels: ['Permanent', 'Fixed-Term', 'Internship', 'Consultant', 'Part-Time'],
     datasets: [{
       data: [0, 0, 0, 0, 0],
-      backgroundColor: ['#6366f1', '#3b82f6', '#22c55e', '#f59e0b', '#8b5cf6'],
+      backgroundColor: ['#6366f1', '#06b6d4', '#10b981', '#f59e0b', '#7c3aed'],
       borderColor: 'transparent',
+      borderWidth: 0,
       hoverOffset: 8,
     }],
   };

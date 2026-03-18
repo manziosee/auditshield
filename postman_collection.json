@@ -16,7 +16,9 @@
     { "key": "compliance_id",  "value": "", "type": "string" },
     { "key": "requirement_id", "value": "", "type": "string" },
     { "key": "report_id",      "value": "", "type": "string" },
-    { "key": "notification_id","value": "", "type": "string" }
+    { "key": "notification_id", "value": "", "type": "string" },
+    { "key": "payroll_run_id",  "value": "", "type": "string" },
+    { "key": "webhook_id",      "value": "", "type": "string" }
   ],
   "item": [
     {
@@ -730,6 +732,179 @@
               "mode": "raw",
               "raw": "{\n  \"query\": \"query {\\n  complianceDashboard {\\n    score\\n    compliant\\n    pending\\n    overdue\\n    total\\n  }\\n}\"\n}"
             }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🧠 Innovation Features",
+      "item": [
+        {
+          "name": "Compliance Health Pulse",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/compliance/health-pulse/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "description": "Returns 6-month rolling compliance trend + 30-day AI prediction.\n\nResponse: { current_score, trend, predicted_30d, risk_level, days_to_threshold, history[] }"
+          }
+        },
+        {
+          "name": "Compliance Gap Analysis",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/compliance/gap-analysis/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "description": "Returns requirements missing from your company's tracked records, filtered by country + industry.\n\nResponse: { total_gaps, coverage_percent, gaps[] }"
+          }
+        },
+        {
+          "name": "Bulk Update Compliance Records",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/compliance/records/bulk-update/",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ids\": [\"{{compliance_id}}\"],\n  \"status\": \"compliant\",\n  \"notes\": \"Batch updated via API\"\n}"
+            },
+            "description": "Bulk-update status for multiple compliance records in one request."
+          }
+        },
+        {
+          "name": "Audit Trail Export (CSV)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/audit-logs/export/?format=csv&date_from=2026-01-01&date_to=2026-03-31",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "audit-logs", "export", ""],
+              "query": [
+                { "key": "format", "value": "csv" },
+                { "key": "date_from", "value": "2026-01-01" },
+                { "key": "date_to", "value": "2026-03-31" }
+              ]
+            },
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "description": "Download audit trail as CSV (or JSON). Supports date_from, date_to, method, status_range filters. Max 10,000 rows."
+          }
+        },
+        {
+          "name": "Audit Trail Export (JSON)",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/audit-logs/export/?format=json",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "description": "Download audit trail as JSON array."
+          }
+        },
+        {
+          "name": "Multi-Company Portfolio (super_admin)",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/companies/portfolio/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "description": "Returns all tenant companies with live compliance scores. Only accessible to super_admin role.\n\nResponse: { total_companies, companies[{ id, name, country, compliance_score, employee_count, ... }] }"
+          }
+        },
+        {
+          "name": "Payroll Variance Check",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/payroll/runs/{{payroll_run_id}}/variance-check/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "description": "Compares current payroll run against the previous completed run. Flags salary spikes >15%, missing employees, and new additions."
+          }
+        },
+        {
+          "name": "Toggle 2FA",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/auth/toggle-2fa/",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"enable\": true,\n  \"password\": \"YourCurrentPassword\"\n}"
+            },
+            "description": "Enable or disable two-factor authentication. Requires current password confirmation."
+          }
+        },
+        {
+          "name": "Document Extracted Fields (AI OCR)",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/documents/{{document_id}}/extracted-fields/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "description": "Returns AI-extracted fields from document OCR: name, start_date, salary, contract_end."
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔗 Webhooks",
+      "item": [
+        {
+          "name": "List Webhooks",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/webhooks/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "description": "List all configured webhook endpoints for your company."
+          }
+        },
+        {
+          "name": "Create Webhook",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "if (data.id) pm.collectionVariables.set('webhook_id', data.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/webhooks/",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"url\": \"https://your-server.com/webhook\",\n  \"secret\": \"your-webhook-secret\",\n  \"events\": [\"employee.created\", \"payroll.run.completed\", \"document.expired\"],\n  \"is_active\": true\n}"
+            },
+            "description": "Register a new webhook endpoint. Events:\n- employee.created / employee.updated\n- payroll.run.completed\n- document.expired / document.expiring_soon\n- compliance.overdue\n\nAll deliveries include X-AuditShield-Signature HMAC-SHA256 header."
+          }
+        },
+        {
+          "name": "Update Webhook",
+          "request": {
+            "method": "PATCH",
+            "url": "{{base_url}}/api/v1/webhooks/{{webhook_id}}/",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"is_active\": false\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Webhook",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/api/v1/webhooks/{{webhook_id}}/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
           }
         }
       ]

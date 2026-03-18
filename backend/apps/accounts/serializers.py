@@ -65,3 +65,8 @@ class ChangePasswordSerializer(serializers.Serializer):
         if attrs["new_password"] != attrs["new_password_confirm"]:
             raise serializers.ValidationError({"new_password_confirm": "Passwords do not match."})
         return attrs
+
+
+class Toggle2FASerializer(serializers.Serializer):
+    enable = serializers.BooleanField()
+    password = serializers.CharField(help_text="Current password for confirmation")

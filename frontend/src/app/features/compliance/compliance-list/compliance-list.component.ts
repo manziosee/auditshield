@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -13,21 +14,25 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ApiService } from '../../../core/services/api.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import {
   ComplianceRecord, ComplianceDashboard, ComplianceStatus, ComplianceRequirement,
 } from '../../../core/models/compliance.models';
+import { DeadlineCalendarComponent } from '../deadline-calendar/deadline-calendar.component';
 
 @Component({
   selector: 'as-compliance-list',
   standalone: true,
   imports: [
-    CommonModule, FormsModule,
+    CommonModule, FormsModule, RouterLink,
     MatTableModule, MatPaginatorModule,
     MatButtonModule, MatIconModule, MatInputModule, MatFormFieldModule,
     MatSelectModule, MatMenuModule, MatTooltipModule,
     MatProgressSpinnerModule, MatCardModule, MatDividerModule,
+    MatCheckboxModule,
+    DeadlineCalendarComponent,
   ],
   template: `
     <div class="page-container">
@@ -36,11 +41,43 @@ import {
           <h2>Compliance Tracker</h2>
           <p class="subtitle">Tax, social security &amp; labour law obligations</p>
         </div>
-        <button mat-raised-button color="primary" (click)="toggleAddPanel()">
-          <mat-icon>{{ showAddPanel ? 'close' : 'add' }}</mat-icon>
-          {{ showAddPanel ? 'Cancel' : 'Add Record' }}
-        </button>
+        <div class="header-actions">
+          <button mat-stroked-button (click)="toggleCalendar()" [class.active-view-btn]="showCalendar">
+            <mat-icon>calendar_month</mat-icon>
+            {{ showCalendar ? 'List View' : 'Calendar View' }}
+          </button>
+          <button mat-stroked-button routerLink="/compliance/gap-analysis">
+            <mat-icon>analytics</mat-icon> Gap Analysis
+          </button>
+          <button mat-raised-button color="primary" (click)="toggleAddPanel()">
+            <mat-icon>{{ showAddPanel ? 'close' : 'add' }}</mat-icon>
+            {{ showAddPanel ? 'Cancel' : 'Add Record' }}
+          </button>
+        </div>
       </div>
+
+      <!-- ── Bulk action toolbar ─────────────────────────────────────────────── -->
+      @if (selectedIds().size > 0) {
+        <div class="bulk-toolbar">
+          <mat-icon>checklist</mat-icon>
+          <span>{{ selectedIds().size }} selected</span>
+          <button mat-flat-button class="bulk-btn bulk-success" (click)="bulkUpdate('compliant')" [disabled]="bulkSaving()">
+            <mat-icon>check_circle</mat-icon> Mark Compliant
+          </button>
+          <button mat-flat-button class="bulk-btn bulk-warning" (click)="bulkUpdate('pending')" [disabled]="bulkSaving()">
+            <mat-icon>schedule</mat-icon> Mark Pending
+          </button>
+          <button mat-stroked-button (click)="clearSelection()">
+            <mat-icon>clear</mat-icon> Clear
+          </button>
+          @if (bulkSaving()) { <mat-spinner diameter="20" /> }
+        </div>
+      }
+
+      <!-- ── Calendar View ─────────────────────────────────────────────────── -->
+      @if (showCalendar) {
+        <as-deadline-calendar />
+      }
 
       <!-- ── Add Record Panel ──────────────────────────────────────────────── -->
       @if (showAddPanel) {
@@ -167,6 +204,23 @@ import {
         }
         <div class="table-wrapper">
           <table mat-table [dataSource]="records()">
+            <!-- Checkbox column -->
+            <ng-container matColumnDef="select">
+              <th mat-header-cell *matHeaderCellDef>
+                <mat-checkbox
+                  [checked]="allSelected()"
+                  [indeterminate]="someSelected()"
+                  (change)="toggleAll($event.checked)"
+                />
+              </th>
+              <td mat-cell *matCellDef="let r" (click)="$event.stopPropagation()">
+                <mat-checkbox
+                  [checked]="selectedIds().has(r.id)"
+                  (change)="toggleRow(r.id, $event.checked)"
+                />
+              </td>
+            </ng-container>
+
             <ng-container matColumnDef="authority">
               <th mat-header-cell *matHeaderCellDef>Authority</th>
               <td mat-cell *matCellDef="let r">
@@ -229,7 +283,7 @@ import {
               </td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="columns"></tr>
-            <tr mat-row *matRowDef="let row; columns: columns;"></tr>
+            <tr mat-row *matRowDef="let row; columns: columns;" [class.row-selected]="selectedIds().has(row.id)"></tr>
           </table>
         </div>
         @if (!loading() && records().length === 0) {
@@ -251,9 +305,22 @@ import {
   `,
   styles: [`
     .page-container { display:flex; flex-direction:column; gap:20px; }
-    .page-header { display:flex; justify-content:space-between; align-items:center; }
+    .page-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
     .page-header h2 { margin:0 0 2px; font-size:1.5rem; font-weight:700; }
     .subtitle { margin:0; color:#64748b; font-size:0.875rem; }
+    .header-actions { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    .active-view-btn { background:var(--brand-subtle) !important; color:var(--brand) !important; border-color:var(--brand) !important; }
+    /* Bulk toolbar */
+    .bulk-toolbar {
+      display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+      padding:12px 20px; background:var(--brand-subtle);
+      border:1px solid var(--brand); border-radius:12px;
+      font-size:0.875rem; font-weight:600; color:var(--brand);
+    }
+    .bulk-toolbar mat-icon { font-size:1.1rem; height:1.1rem; width:1.1rem; }
+    .bulk-btn { border-radius:8px !important; font-size:0.8rem !important; }
+    .bulk-success { background:rgba(13,148,136,0.15) !important; color:#0d9488 !important; }
+    .bulk-warning { background:rgba(245,158,11,0.12) !important; color:#d97706 !important; }
     /* Add panel */
     .add-panel { padding:20px !important; }
     .add-panel-title { display:flex; align-items:center; gap:8px; font-size:1rem; font-weight:600; color:#1e293b; margin-bottom:16px; }
@@ -270,14 +337,14 @@ import {
     .score-num { font-size:2.5rem; font-weight:800; }
     .score-label { font-size:1rem; color:#64748b; }
     .score-title { margin:4px 0 0; font-size:0.8rem; color:#64748b; text-transform:uppercase; letter-spacing:0.05em; }
-    .score-circle.green .score-num { color:#16a34a; }
+    .score-circle.green .score-num { color:#0d9488; }
     .score-circle.amber .score-num { color:#d97706; }
     .score-circle.red .score-num { color:#dc2626; }
     .sc-icon { font-size:2rem; height:2rem; width:2rem; }
     .sc-body { display:flex; flex-direction:column; }
     .sc-num { font-size:1.6rem; font-weight:700; color:#1e293b; }
     .sc-label { font-size:0.75rem; color:#64748b; text-transform:uppercase; letter-spacing:0.05em; }
-    .icon-success { color:#16a34a; }
+    .icon-success { color:#0d9488; }
     .icon-warning { color:#d97706; }
     .icon-danger { color:#dc2626; }
     .icon-neutral { color:#8b5cf6; }
@@ -309,6 +376,7 @@ import {
     .text-warn { color:#f59e0b; }
     .days-tag { font-size:0.75rem; }
     .danger-item { color:#dc2626; }
+    .row-selected td { background:var(--brand-subtle) !important; }
     .empty-state { text-align:center; padding:48px 24px; color:#64748b; }
     .empty-state mat-icon { font-size:3rem; height:3rem; width:3rem; opacity:0.4; display:block; margin:0 auto 12px; }
     .empty-state h3 { margin:0 0 8px; color:#1e293b; }
@@ -328,9 +396,14 @@ export class ComplianceListComponent implements OnInit {
   loading      = signal(false);
   addSaving    = signal(false);
   reqLoading   = signal(false);
+  bulkSaving   = signal(false);
+
+  // Bulk selection
+  selectedIds = signal<Set<string>>(new Set<string>());
 
   showAddPanel = false;
-  columns      = ['authority', 'requirement', 'period', 'due_date', 'status', 'completed_date', 'actions'];
+  showCalendar = false;
+  columns      = ['select', 'authority', 'requirement', 'period', 'due_date', 'status', 'completed_date', 'actions'];
   pageSize     = 25;
   currentPage  = 1;
   searchQuery  = '';
@@ -353,6 +426,10 @@ export class ComplianceListComponent implements OnInit {
     this.showAddPanel = !this.showAddPanel;
     if (this.showAddPanel) this.loadRequirements();
     else this.newForm = this.blankForm();
+  }
+
+  toggleCalendar(): void {
+    this.showCalendar = !this.showCalendar;
   }
 
   loadDashboard(): void {
@@ -434,6 +511,45 @@ export class ComplianceListComponent implements OnInit {
         this.loadDashboard();
       },
       error: () => this.notify.error('Failed to delete record.'),
+    });
+  }
+
+  // ── Bulk selection ───────────────────────────────────────────────────────────
+  allSelected(): boolean {
+    const recs = this.records();
+    return recs.length > 0 && recs.every(r => this.selectedIds().has(r.id));
+  }
+
+  someSelected(): boolean {
+    return this.selectedIds().size > 0 && !this.allSelected();
+  }
+
+  toggleAll(checked: boolean): void {
+    const next = new Set<string>(checked ? this.records().map(r => r.id) : []);
+    this.selectedIds.set(next);
+  }
+
+  toggleRow(id: string, checked: boolean): void {
+    const next = new Set<string>(this.selectedIds());
+    if (checked) next.add(id); else next.delete(id);
+    this.selectedIds.set(next);
+  }
+
+  clearSelection(): void { this.selectedIds.set(new Set<string>()); }
+
+  bulkUpdate(status: ComplianceStatus): void {
+    const ids = Array.from(this.selectedIds());
+    if (!ids.length) return;
+    this.bulkSaving.set(true);
+    this.api.post('compliance/records/bulk-update/', { ids, status }).subscribe({
+      next: () => {
+        this.notify.success(`${ids.length} records marked as ${status}.`);
+        this.clearSelection();
+        this.bulkSaving.set(false);
+        this.loadRecords();
+        this.loadDashboard();
+      },
+      error: () => { this.bulkSaving.set(false); this.notify.error('Bulk update failed.'); },
     });
   }
 

@@ -35,9 +35,14 @@ interface NavItem {
     <div class="shell-root">
       <!-- ── Sidebar ───────────────────────────────────────────────────────── -->
       <aside class="sidebar" [class.collapsed]="sidebarCollapsed()">
+        <!-- Decorative glow orb -->
+        <div class="sidebar-glow" aria-hidden="true"></div>
+
         <!-- Logo row -->
         <div class="sidebar-logo">
-          <img src="logo.svg" class="logo-mark" alt="AuditShield" />
+          <div class="logo-mark-wrap">
+            <img src="logo.svg" class="logo-mark" alt="AuditShield" />
+          </div>
           @if (!sidebarCollapsed()) {
             <div class="logo-text-group">
               <span class="logo-name">AuditShield</span>
@@ -79,7 +84,7 @@ interface NavItem {
         <div class="sidebar-bottom">
           <div class="sidebar-divider"></div>
           <button class="user-panel" [matMenuTriggerFor]="userMenu">
-            <div class="user-avatar">{{ userInitials() }}</div>
+            <div class="user-avatar">{{ userInitials() }}<span class="status-dot"></span></div>
             @if (!sidebarCollapsed()) {
               <div class="user-info">
                 <span class="user-name">{{ auth.user()?.first_name }} {{ auth.user()?.last_name }}</span>
@@ -94,9 +99,13 @@ interface NavItem {
               <span>{{ auth.user()?.email }}</span>
             </div>
             <mat-divider />
+            <button mat-menu-item routerLink="/company" [queryParams]="{tab:'security'}">
+              <mat-icon>shield</mat-icon> Profile &amp; Security
+            </button>
             <button mat-menu-item routerLink="/company">
               <mat-icon>business</mat-icon> Company Settings
             </button>
+            <mat-divider />
             <button mat-menu-item (click)="auth.logout()">
               <mat-icon>logout</mat-icon> Sign Out
             </button>
@@ -213,18 +222,29 @@ interface NavItem {
     .sidebar {
       width: 256px;
       min-width: 256px;
-      background: var(--sidebar-bg);
+      background: linear-gradient(180deg, #08101f 0%, #0d1629 55%, #130d2e 100%);
       display: flex;
       flex-direction: column;
       height: 100vh;
       overflow: hidden;
-      transition: width 0.25s ease, min-width 0.25s ease, background-color 0.2s ease;
+      transition: width 0.25s ease, min-width 0.25s ease;
       position: relative;
       z-index: 50;
       flex-shrink: 0;
       border-right: 1px solid rgba(255, 255, 255, 0.04);
     }
     .sidebar.collapsed { width: 68px; min-width: 68px; }
+
+    /* Decorative glow orb */
+    .sidebar-glow {
+      position: absolute;
+      top: -60px; right: -80px;
+      width: 260px; height: 260px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 68%);
+      pointer-events: none;
+      z-index: 0;
+    }
 
     /* Logo */
     .sidebar-logo {
@@ -233,10 +253,23 @@ interface NavItem {
       gap: 10px;
       padding: 20px 14px 16px;
       flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      margin-bottom: 4px;
+    }
+    .logo-mark-wrap {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(99,102,241,0.28), rgba(124,58,237,0.18));
+      border: 1px solid rgba(165,180,252,0.22);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 0 16px rgba(99,102,241,0.22);
     }
     .logo-mark {
-      width: 34px;
-      height: 34px;
+      width: 24px;
+      height: 24px;
       flex-shrink: 0;
       display: block;
     }
@@ -285,6 +318,8 @@ interface NavItem {
       display: flex;
       flex-direction: column;
       gap: 2px;
+      position: relative;
+      z-index: 1;
     }
     .sidebar-nav::-webkit-scrollbar { width: 3px; }
     .sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 3px; }
@@ -310,9 +345,10 @@ interface NavItem {
       text-decoration: none;
     }
     .nav-item--active {
-      background: var(--sidebar-active-bg) !important;
+      background: linear-gradient(90deg, rgba(99,102,241,0.24), rgba(124,58,237,0.10)) !important;
       color: var(--sidebar-text-active) !important;
       font-weight: 600;
+      box-shadow: inset 0 1px 0 rgba(165,180,252,0.10), inset 0 -1px 0 rgba(99,102,241,0.06);
     }
     .nav-item--active::before {
       content: '';
@@ -322,10 +358,11 @@ interface NavItem {
       transform: translateY(-50%);
       width: 3px;
       height: 60%;
-      background: var(--brand);
+      background: linear-gradient(180deg, #818cf8, #6366f1);
       border-radius: 0 3px 3px 0;
+      box-shadow: 0 0 8px rgba(99,102,241,0.6);
     }
-    .nav-item--active .nav-icon mat-icon { color: #818cf8; }
+    .nav-item--active .nav-icon mat-icon { color: #a5b4fc; }
 
     .nav-icon {
       width: 20px;
@@ -376,7 +413,7 @@ interface NavItem {
       width: 36px;
       height: 36px;
       border-radius: 50%;
-      background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+      background: linear-gradient(135deg, #6366f1, #7c3aed);
       color: white;
       font-size: 0.8rem;
       font-weight: 700;
@@ -384,6 +421,16 @@ interface NavItem {
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      position: relative;
+      box-shadow: 0 0 0 2px rgba(99,102,241,0.35), 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .status-dot {
+      position: absolute;
+      bottom: 0; right: 0;
+      width: 9px; height: 9px;
+      background: #10b981;
+      border-radius: 50%;
+      border: 2px solid #0d1629;
     }
     .user-info { display: flex; flex-direction: column; flex: 1; min-width: 0; }
     .user-name {
@@ -614,6 +661,8 @@ export class ShellComponent implements OnInit, OnDestroy {
     { label: 'Notifications', icon: 'notifications',  route: '/notifications' },
     { label: 'Audit Logs',    icon: 'history',        route: '/audit-logs',   roles: ['super_admin', 'admin'] },
     { label: 'Company',       icon: 'business',       route: '/company',      roles: ['super_admin', 'admin'] },
+    { label: 'Portfolio',     icon: 'corporate_fare', route: '/portfolio',    roles: ['super_admin'] },
+    { label: 'My Portal',     icon: 'person',         route: '/self-service', roles: ['employee', 'hr', 'accountant', 'auditor'] },
   ];
 
   visibleNavItems(): NavItem[] {
@@ -638,6 +687,8 @@ export class ShellComponent implements OnInit, OnDestroy {
       '/notifications': 'Notifications',
       '/audit-logs':    'Audit Logs',
       '/company':       'Company Settings',
+      '/portfolio':     'Portfolio',
+      '/self-service':  'My Portal',
     };
     const key = Object.keys(map).find(k => url.startsWith(k));
     return key ? map[key] : 'AuditShield';

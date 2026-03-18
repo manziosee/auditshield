@@ -10,5 +10,7 @@ urlpatterns = [
     # UUID-based endpoint used by frontend PATCH calls (companies/{id}/)
     path("<uuid:pk>/",       views.CompanyByIdView.as_view(),   name="company-by-id"),
     # Data export
-    path("export/",          views.CompanyExportView.as_view(), name="company-export"),
+    path("export/",          views.CompanyExportView.as_view(),    name="company-export"),
+    # Super-admin portfolio
+    path("portfolio/",       views.CompanyPortfolioView.as_view(), name="company-portfolio"),
 ]

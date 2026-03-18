@@ -200,3 +200,25 @@ class DocumentViewSet(ModelViewSet):
         """Return extracted text (for search / quick view)."""
         doc = self.get_object()
         return Response({"extracted_text": doc.extracted_text, "ocr_processed": doc.ocr_processed})
+
+    @extend_schema(
+        tags=["documents"],
+        summary="Get AI-extracted fields",
+        description=(
+            "Returns structured fields parsed from the document's OCR text by the "
+            "AI extraction pipeline.\n\n"
+            "Fields returned (when detected):\n"
+            "- **name**: Employee / candidate name\n"
+            "- **start_date**: Employment start / hire date\n"
+            "- **salary**: Gross salary amount\n"
+            "- **contract_end**: Contract expiry / end date\n\n"
+            "Returns an empty object if OCR has not yet completed or no fields were found."
+        ),
+        responses={200: OpenApiResponse(description="AI-extracted fields from document text")},
+    )
+    @action(detail=True, methods=["get"], url_path="extracted-fields")
+    def extracted_fields(self, request, pk=None):
+        """Return AI-extracted structured fields from document OCR text."""
+        doc = self.get_object()
+        metadata = doc.metadata or {}
+        return Response(metadata.get("ai_extracted", {}))

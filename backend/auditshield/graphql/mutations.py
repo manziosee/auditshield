@@ -9,7 +9,7 @@ import strawberry
 from strawberry.types import Info
 
 from .permissions import IsAuthenticated, IsCompanyAdmin, IsHROrAdmin
-from .types import ComplianceRecordType, EmployeeType, NotificationType
+from .types import CompanyType, ComplianceRecordType, EmployeeType, NotificationType
 
 
 # ── Input types ───────────────────────────────────────────────────────────────
@@ -57,11 +57,43 @@ class DepartmentInput:
     description: Optional[str] = None
 
 
+@strawberry.input
+class UpdateCompanyInput:
+    name: Optional[str] = None
+    phone: Optional[str] = None
+    email: Optional[str] = None
+    website: Optional[str] = None
+    address: Optional[str] = None
+    city: Optional[str] = None
+    state_province: Optional[str] = None
+    postal_code: Optional[str] = None
+    industry: Optional[str] = None
+    fiscal_year_start: Optional[int] = None
+    preferred_currency: Optional[str] = None
+    tax_identifier: Optional[str] = None
+    social_security_identifier: Optional[str] = None
+
+
+@strawberry.input
+class RunPayrollInput:
+    period_start: str   # ISO date
+    period_end: str
+    notes: Optional[str] = None
+
+
 # ── Result types ──────────────────────────────────────────────────────────────
 @strawberry.type
 class MutationResult:
     success: bool
     message: str
+
+
+@strawberry.type
+class PayrollRunResult:
+    success: bool
+    message: str
+    payroll_run_id: Optional[strawberry.ID] = None
+    employee_count: int = 0
 
 
 @strawberry.type
@@ -169,3 +201,63 @@ class Mutation:
             recipient=info.context.request.user, is_read=False
         ).update(is_read=True)
         return MutationResult(success=True, message=f"{count} notifications marked as read.")
+
+    # ── Company mutations ─────────────────────────────────────────────────────
+    @strawberry.mutation(permission_classes=[IsAuthenticated, IsCompanyAdmin])
+    def update_company(self, info: Info, input: UpdateCompanyInput) -> Optional[CompanyType]:
+        from apps.geography.models import Currency
+        company = info.context.request.user.company
+        if not company:
+            return None
+        scalar_fields = [
+            "name", "phone", "email", "website", "address",
+            "city", "state_province", "postal_code", "industry",
+            "fiscal_year_start", "tax_identifier", "social_security_identifier",
+        ]
+        update_fields = []
+        for field in scalar_fields:
+            val = getattr(input, field, None)
+            if val is not None:
+                setattr(company, field, val)
+                update_fields.append(field)
+        if input.preferred_currency:
+            try:
+                company.currency = Currency.objects.get(code=input.preferred_currency)
+                update_fields.append("currency")
+            except Currency.DoesNotExist:
+                pass
+        if update_fields:
+            company.save(update_fields=update_fields)
+        return company
+
+    # ── Payroll mutations ─────────────────────────────────────────────────────
+    @strawberry.mutation(permission_classes=[IsAuthenticated, IsCompanyAdmin])
+    def run_payroll(self, info: Info, input: RunPayrollInput) -> PayrollRunResult:
+        from datetime import date
+        from apps.payroll.models import PayrollRun
+        company = info.context.request.user.company
+        period_start = date.fromisoformat(input.period_start)
+        period_end   = date.fromisoformat(input.period_end)
+        if PayrollRun.objects.filter(
+            company=company, period_start=period_start, period_end=period_end
+        ).exists():
+            return PayrollRunResult(
+                success=False,
+                message="A payroll run already exists for this period.",
+                employee_count=0,
+            )
+        run = PayrollRun.objects.create(
+            company=company,
+            period_start=period_start,
+            period_end=period_end,
+            notes=input.notes or "",
+            status="draft",
+            created_by=info.context.request.user,
+        )
+        emp_count = company.employees.filter(is_active=True).count()
+        return PayrollRunResult(
+            success=True,
+            message=f"Payroll run created as draft for {emp_count} active employee(s).",
+            payroll_run_id=str(run.id),
+            employee_count=emp_count,
+        )

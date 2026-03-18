@@ -66,10 +66,10 @@ services:
       retries: 5
       start_period: 30s
 
-  # ── Celery Worker (async tasks: emails, PDF, OCR) ────────────────────────────
+  # ── Celery Worker (async tasks: emails, PDF, OCR, webhooks) ─────────────────
   celery_worker:
     <<: *backend-common
-    command: celery -A auditshield worker --loglevel=info --concurrency=4 -Q default,documents,reports,notifications
+    command: celery -A auditshield worker --loglevel=info --concurrency=4 -Q default,documents,reports,notifications,webhooks
     depends_on:
       redis:
         condition: service_healthy

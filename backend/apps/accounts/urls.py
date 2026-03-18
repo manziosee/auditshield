@@ -10,5 +10,6 @@ urlpatterns = [
     path("register/",        views.RegisterView.as_view(),        name="auth-register"),
     path("me/",              views.MeView.as_view(),              name="auth-me"),
     path("change-password/", views.ChangePasswordView.as_view(),  name="auth-change-password"),
+    path("toggle-2fa/",      views.Toggle2FAView.as_view(),       name="auth-toggle-2fa"),
     path("users/",           views.UserListView.as_view(),        name="user-list"),
 ]
