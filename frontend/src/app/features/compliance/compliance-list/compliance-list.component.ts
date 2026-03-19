@@ -306,8 +306,8 @@ import { DeadlineCalendarComponent } from '../deadline-calendar/deadline-calenda
   styles: [`
     .page-container { display:flex; flex-direction:column; gap:20px; }
     .page-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
-    .page-header h2 { margin:0 0 2px; font-size:1.5rem; font-weight:700; }
-    .subtitle { margin:0; color:#64748b; font-size:0.875rem; }
+    .page-header h2 { margin:0 0 2px; font-size:1.5rem; font-weight:800; color:var(--text-primary); font-family:'Outfit',sans-serif; letter-spacing:-0.03em; }
+    .subtitle { margin:0; color:var(--text-muted); font-size:0.875rem; }
     .header-actions { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
     .active-view-btn { background:var(--brand-subtle) !important; color:var(--brand) !important; border-color:var(--brand) !important; }
     /* Bulk toolbar */
@@ -319,11 +319,11 @@ import { DeadlineCalendarComponent } from '../deadline-calendar/deadline-calenda
     }
     .bulk-toolbar mat-icon { font-size:1.1rem; height:1.1rem; width:1.1rem; }
     .bulk-btn { border-radius:8px !important; font-size:0.8rem !important; }
-    .bulk-success { background:rgba(13,148,136,0.15) !important; color:#0d9488 !important; }
+    .bulk-success { background:rgba(34,197,94,0.15) !important; color:#22c55e !important; }
     .bulk-warning { background:rgba(245,158,11,0.12) !important; color:#d97706 !important; }
     /* Add panel */
     .add-panel { padding:20px !important; }
-    .add-panel-title { display:flex; align-items:center; gap:8px; font-size:1rem; font-weight:600; color:#1e293b; margin-bottom:16px; }
+    .add-panel-title { display:flex; align-items:center; gap:8px; font-size:1rem; font-weight:700; color:var(--text-primary); margin-bottom:16px; font-family:'Outfit',sans-serif; }
     .add-form-grid { display:flex; flex-direction:column; gap:8px; }
     .form-row { display:flex; gap:12px; flex-wrap:wrap; }
     .form-row mat-form-field { flex:1; min-width:150px; }
@@ -335,19 +335,19 @@ import { DeadlineCalendarComponent } from '../deadline-calendar/deadline-calenda
     .score-main { flex-direction:column; align-items:center; justify-content:center; min-width:130px; }
     .score-circle { display:flex; align-items:baseline; gap:4px; }
     .score-num { font-size:2.5rem; font-weight:800; }
-    .score-label { font-size:1rem; color:#64748b; }
-    .score-title { margin:4px 0 0; font-size:0.8rem; color:#64748b; text-transform:uppercase; letter-spacing:0.05em; }
-    .score-circle.green .score-num { color:#0d9488; }
+    .score-label { font-size:1rem; color:var(--text-muted); }
+    .score-title { margin:4px 0 0; font-size:0.8rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; }
+    .score-circle.green .score-num { color:#22c55e; }
     .score-circle.amber .score-num { color:#d97706; }
     .score-circle.red .score-num { color:#dc2626; }
     .sc-icon { font-size:2rem; height:2rem; width:2rem; }
     .sc-body { display:flex; flex-direction:column; }
-    .sc-num { font-size:1.6rem; font-weight:700; color:#1e293b; }
-    .sc-label { font-size:0.75rem; color:#64748b; text-transform:uppercase; letter-spacing:0.05em; }
-    .icon-success { color:#0d9488; }
+    .sc-num { font-size:1.6rem; font-weight:700; color:var(--text-primary); }
+    .sc-label { font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; }
+    .icon-success { color:#22c55e; }
     .icon-warning { color:#d97706; }
     .icon-danger { color:#dc2626; }
-    .icon-neutral { color:#8b5cf6; }
+    .icon-neutral { color:#22c55e; }
     /* Filters */
     .filters-card { padding:16px 20px !important; }
     .filters-row { display:flex; gap:12px; flex-wrap:wrap; }
@@ -358,28 +358,28 @@ import { DeadlineCalendarComponent } from '../deadline-calendar/deadline-calenda
     .table-wrapper { overflow-x:auto; }
     table { width:100%; }
     .req-name { font-weight:500; font-size:0.875rem; }
-    .req-sub { font-size:0.75rem; color:#64748b; }
-    .text-sm { font-size:0.8rem; color:#64748b; }
+    .req-sub { font-size:0.75rem; color:var(--text-muted); }
+    .text-sm { font-size:0.8rem; color:var(--text-muted); }
     .authority-badge { display:inline-block; padding:2px 8px; border-radius:4px; font-size:0.7rem; font-weight:700; letter-spacing:0.05em; }
     .auth-tax { background:#fef9c3; color:#854d0e; }
-    .auth-social { background:#dbeafe; color:#1e40af; }
-    .auth-labour { background:#dcfce7; color:#14532d; }
-    .auth-registry { background:#f3e8ff; color:#6b21a8; }
-    .auth-other { background:#f1f5f9; color:#475569; }
+    .auth-social { background:#dcfce7; color:#14532d; }
+    .auth-labour { background:rgba(34,197,94,0.12); color:#15803d; }
+    .auth-registry { background:rgba(0,0,0,0.06); color:var(--text-secondary); }
+    .auth-other { background:rgba(0,0,0,0.04); color:var(--text-muted); }
     .chip { display:inline-block; padding:2px 10px; border-radius:20px; font-size:0.75rem; font-weight:500; }
     .chip-success { background:#dcfce7; color:#16a34a; }
     .chip-warning { background:#fef9c3; color:#a16207; }
     .chip-danger { background:#fee2e2; color:#dc2626; }
-    .chip-neutral { background:#f1f5f9; color:#475569; }
-    .chip-info { background:#dbeafe; color:#1d4ed8; }
+    .chip-neutral { background:rgba(0,0,0,0.06); color:var(--text-muted); }
+    .chip-info { background:rgba(34,197,94,0.1); color:#15803d; }
     .text-danger { color:#dc2626; }
     .text-warn { color:#f59e0b; }
     .days-tag { font-size:0.75rem; }
-    .danger-item { color:#dc2626; }
+    .danger-item { color:var(--danger) !important; }
     .row-selected td { background:var(--brand-subtle) !important; }
-    .empty-state { text-align:center; padding:48px 24px; color:#64748b; }
+    .empty-state { text-align:center; padding:48px 24px; color:var(--text-muted); }
     .empty-state mat-icon { font-size:3rem; height:3rem; width:3rem; opacity:0.4; display:block; margin:0 auto 12px; }
-    .empty-state h3 { margin:0 0 8px; color:#1e293b; }
+    .empty-state h3 { margin:0 0 8px; color:var(--text-primary); }
     .empty-state p { margin:0 0 20px; }
     @media(max-width:900px){ .score-row{grid-template-columns:1fr 1fr;} }
     @media(max-width:600px){ .score-row{grid-template-columns:1fr 1fr;} .form-row{flex-direction:column;} }

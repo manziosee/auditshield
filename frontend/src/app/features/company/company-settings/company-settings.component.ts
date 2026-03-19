@@ -481,8 +481,8 @@ interface CurrencyOption { code: string; name: string; symbol: string; flag: str
     .danger-check-item mat-icon { font-size:1rem; width:1rem; height:1rem; color:var(--danger); }
 
     /* ── Security card ───────────────────────────────────────────────────────── */
-    .security-card { border-top:3px solid #6366f1 !important; }
-    .security-icon { color:#6366f1; }
+    .security-card { border-top:3px solid #22c55e !important; }
+    .security-icon { color:#22c55e; }
 
     .twofa-status-row {
       display:flex; gap:16px; align-items:flex-start;

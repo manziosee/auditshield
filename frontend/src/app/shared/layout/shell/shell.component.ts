@@ -56,7 +56,10 @@ interface NavItem {
 
         <!-- Navigation -->
         <nav class="sidebar-nav">
-          @for (item of visibleNavItems(); track item.route) {
+          @if (!sidebarCollapsed()) {
+            <div class="nav-section-label">Main</div>
+          }
+          @for (item of mainNavItems(); track item.route) {
             <a
               class="nav-item"
               [routerLink]="item.route"
@@ -77,6 +80,28 @@ interface NavItem {
                 }
               }
             </a>
+          }
+          @if (adminNavItems().length > 0) {
+            @if (!sidebarCollapsed()) {
+              <div class="nav-section-label" style="margin-top:12px">Management</div>
+            } @else {
+              <div class="nav-section-divider"></div>
+            }
+            @for (item of adminNavItems(); track item.route) {
+              <a
+                class="nav-item"
+                [routerLink]="item.route"
+                routerLinkActive="nav-item--active"
+                [title]="sidebarCollapsed() ? item.label : ''"
+              >
+                <div class="nav-icon">
+                  <mat-icon>{{ item.icon }}</mat-icon>
+                </div>
+                @if (!sidebarCollapsed()) {
+                  <span class="nav-label">{{ item.label }}</span>
+                }
+              </a>
+            }
           }
         </nav>
 
@@ -222,7 +247,7 @@ interface NavItem {
     .sidebar {
       width: 256px;
       min-width: 256px;
-      background: linear-gradient(180deg, #08101f 0%, #0d1629 55%, #130d2e 100%);
+      background: linear-gradient(180deg, #080c09 0%, #0b1009 50%, #0d1610 100%);
       display: flex;
       flex-direction: column;
       height: 100vh;
@@ -241,7 +266,7 @@ interface NavItem {
       top: -60px; right: -80px;
       width: 260px; height: 260px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 68%);
+      background: radial-gradient(circle, rgba(34,197,94,0.18) 0%, transparent 68%);
       pointer-events: none;
       z-index: 0;
     }
@@ -261,37 +286,33 @@ interface NavItem {
     .logo-mark-wrap {
       width: 36px; height: 36px;
       border-radius: 10px;
-      background: linear-gradient(135deg, rgba(99,102,241,0.28), rgba(124,58,237,0.18));
-      border: 1px solid rgba(165,180,252,0.22);
+      background: linear-gradient(135deg, rgba(34,197,94,0.28), rgba(22,163,74,0.18));
+      border: 1px solid rgba(74,222,128,0.22);
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
-      box-shadow: 0 0 16px rgba(99,102,241,0.22);
+      box-shadow: 0 0 0 1px rgba(34,197,94,0.3), 0 4px 16px rgba(34,197,94,0.2);
     }
     .logo-mark {
-      width: 24px;
-      height: 24px;
-      flex-shrink: 0;
-      display: block;
+      width: 22px; height: 22px;
+      flex-shrink: 0; display: block;
+      filter: drop-shadow(0 0 5px rgba(34,197,94,0.7)) brightness(1.4) saturate(1.8);
     }
     .logo-text-group {
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      flex: 1;
+      display: flex; flex-direction: column;
+      overflow: hidden; flex: 1;
     }
     .logo-name {
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: white;
-      letter-spacing: -0.5px;
-      white-space: nowrap;
+      font-size: 1.1rem; font-weight: 900; letter-spacing: -0.5px; white-space: nowrap;
+      background: linear-gradient(135deg, #ffffff 0%, #d1fae5 55%, #4ade80 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
     .logo-tagline {
-      font-size: 0.65rem;
-      color: rgba(255, 255, 255, 0.35);
+      font-size: 0.62rem;
+      color: rgba(74, 222, 128, 0.45);
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.09em;
       white-space: nowrap;
+      font-family: var(--font-display);
     }
     .collapse-btn {
       background: none;
@@ -345,10 +366,10 @@ interface NavItem {
       text-decoration: none;
     }
     .nav-item--active {
-      background: linear-gradient(90deg, rgba(99,102,241,0.24), rgba(124,58,237,0.10)) !important;
+      background: linear-gradient(90deg, rgba(34,197,94,0.18), rgba(34,197,94,0.06)) !important;
       color: var(--sidebar-text-active) !important;
       font-weight: 600;
-      box-shadow: inset 0 1px 0 rgba(165,180,252,0.10), inset 0 -1px 0 rgba(99,102,241,0.06);
+      box-shadow: inset 0 1px 0 rgba(74,222,128,0.10), inset 0 -1px 0 rgba(34,197,94,0.06);
     }
     .nav-item--active::before {
       content: '';
@@ -358,11 +379,27 @@ interface NavItem {
       transform: translateY(-50%);
       width: 3px;
       height: 60%;
-      background: linear-gradient(180deg, #818cf8, #6366f1);
+      background: linear-gradient(180deg, #4ade80, #22c55e);
       border-radius: 0 3px 3px 0;
-      box-shadow: 0 0 8px rgba(99,102,241,0.6);
+      box-shadow: 0 0 8px rgba(34,197,94,0.6);
     }
-    .nav-item--active .nav-icon mat-icon { color: #a5b4fc; }
+    .nav-item--active .nav-icon mat-icon { color: #4ade80; }
+
+    .nav-section-label {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.22);
+      padding: 4px 10px 6px;
+      margin-top: 4px;
+      font-family: var(--font-display);
+    }
+    .nav-section-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.07);
+      margin: 10px 6px;
+    }
 
     .nav-icon {
       width: 20px;
@@ -413,8 +450,8 @@ interface NavItem {
       width: 36px;
       height: 36px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #6366f1, #7c3aed);
-      color: white;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #052e16;
       font-size: 0.8rem;
       font-weight: 700;
       display: flex;
@@ -422,7 +459,7 @@ interface NavItem {
       justify-content: center;
       flex-shrink: 0;
       position: relative;
-      box-shadow: 0 0 0 2px rgba(99,102,241,0.35), 0 2px 8px rgba(0,0,0,0.3);
+      box-shadow: 0 0 0 2px #22c55e, 0 2px 8px rgba(0,0,0,0.3);
     }
     .status-dot {
       position: absolute;
@@ -430,7 +467,7 @@ interface NavItem {
       width: 9px; height: 9px;
       background: #10b981;
       border-radius: 50%;
-      border: 2px solid #0d1629;
+      border: 2px solid #0b1009;
     }
     .user-info { display: flex; flex-direction: column; flex: 1; min-width: 0; }
     .user-name {
@@ -472,16 +509,25 @@ interface NavItem {
       overflow: hidden;
     }
     .topbar {
-      height: 60px;
+      height: 62px;
       background: var(--topbar-bg);
       border-bottom: 1px solid var(--topbar-border);
       display: flex;
       align-items: center;
-      padding: 0 24px;
+      padding: 0 28px;
       gap: 12px;
       flex-shrink: 0;
-      box-shadow: var(--topbar-shadow);
       z-index: 10;
+      box-shadow: 0 1px 0 var(--topbar-border), 0 2px 8px rgba(0,0,0,0.04);
+      position: relative;
+    }
+    .topbar::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, rgba(34,197,94,0.15) 30%, rgba(34,197,94,0.3) 50%, rgba(34,197,94,0.15) 70%, transparent 100%);
+      pointer-events: none;
     }
     .mobile-menu-btn {
       display: none;
@@ -500,20 +546,24 @@ interface NavItem {
       flex: 1;
     }
     .breadcrumb-app {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: var(--text-faint);
       font-weight: 500;
+      letter-spacing: 0.01em;
     }
     .breadcrumb-sep {
-      font-size: 1rem !important;
-      width: 1rem !important;
-      height: 1rem !important;
+      font-size: 0.9rem !important;
+      width: 0.9rem !important;
+      height: 0.9rem !important;
       color: var(--border-color);
+      opacity: 0.6;
     }
     .breadcrumb-page {
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       color: var(--text-primary);
       font-weight: 700;
+      font-family: var(--font-display);
+      letter-spacing: -0.01em;
     }
     .topbar-right {
       display: flex;
@@ -522,64 +572,65 @@ interface NavItem {
     }
     .topbar-icon-btn {
       position: relative;
-      width: 36px;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 8px;
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 10px;
       color: var(--text-muted);
       cursor: pointer;
-      transition: background 0.15s, color 0.15s;
+      transition: background 0.15s, color 0.15s, transform 0.12s;
       text-decoration: none;
-      border: none;
+      border: 1px solid transparent;
       background: none;
     }
     .topbar-icon-btn:hover {
       background: var(--surface-hover);
       color: var(--text-primary);
+      border-color: var(--border-subtle);
       text-decoration: none;
+      transform: scale(1.05);
     }
-    .topbar-icon-btn mat-icon { font-size: 1.25rem; }
-    .topbar-icon-btn mat-icon.has-badge { color: var(--brand); }
+    .topbar-icon-btn mat-icon { font-size: 1.2rem; }
+    .topbar-icon-btn mat-icon.has-badge { color: #22c55e; }
 
-    .theme-toggle-btn:hover { color: var(--brand) !important; }
+    .theme-toggle-btn:hover { color: #22c55e !important; }
 
     .icon-badge {
       position: absolute;
-      top: 4px; right: 4px;
-      width: 16px; height: 16px;
+      top: 3px; right: 3px;
+      min-width: 16px; height: 16px;
       background: #ef4444;
       color: white;
-      font-size: 0.6rem;
-      font-weight: 700;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      font-size: 0.58rem;
+      font-weight: 800;
+      border-radius: 999px;
+      display: flex; align-items: center; justify-content: center;
+      padding: 0 3px;
+      box-shadow: 0 0 0 2px var(--topbar-bg);
     }
     .company-name {
-      font-size: 0.82rem;
-      font-weight: 600;
+      font-size: 0.78rem; font-weight: 600;
       color: var(--text-muted);
-      max-width: 160px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      max-width: 140px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      background: var(--surface-hover);
+      border: 1px solid var(--border-subtle);
+      padding: 4px 10px; border-radius: 999px;
     }
     .topbar-avatar {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--brand), var(--brand-dark));
-      color: white;
-      font-size: 0.78rem;
-      font-weight: 700;
-      border: none;
+      width: 34px; height: 34px; border-radius: 50%;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #052e16 !important;
+      font-size: 0.75rem; font-weight: 800;
+      font-family: var(--font-display);
+      border: 2px solid rgba(34,197,94,0.35);
       cursor: pointer;
-      transition: opacity 0.15s, transform 0.15s;
+      box-shadow: 0 0 0 2px rgba(34,197,94,0.15);
+      transition: transform 0.15s, box-shadow 0.15s;
     }
-    .topbar-avatar:hover { opacity: 0.9; transform: scale(1.05); }
+    .topbar-avatar:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 0 3px rgba(34,197,94,0.3);
+    }
 
     /* ═══════════════════════════════════════════════════════════════════════════
        CONTENT
@@ -668,6 +719,18 @@ export class ShellComponent implements OnInit, OnDestroy {
   visibleNavItems(): NavItem[] {
     const role = this.auth.userRole();
     return this.navItems.filter(item => !item.roles || (role && item.roles.includes(role)));
+  }
+
+  mainNavItems(): NavItem[] {
+    return this.visibleNavItems().filter(item =>
+      !['audit-logs', 'company', 'portfolio'].some(r => item.route.includes(r))
+    );
+  }
+
+  adminNavItems(): NavItem[] {
+    return this.visibleNavItems().filter(item =>
+      ['audit-logs', 'company', 'portfolio'].some(r => item.route.includes(r))
+    );
   }
 
   userInitials(): string {

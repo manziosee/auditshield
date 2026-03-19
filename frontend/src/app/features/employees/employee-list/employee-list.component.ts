@@ -263,8 +263,14 @@ import { Employee, Department } from '../../../core/models/employee.models';
     .page-container { display:flex; flex-direction:column; gap:20px; }
 
     /* ── Header ─────────────────────────────────────────────────────────────── */
-    .page-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
-    .page-header h2 { margin:0 0 2px; font-size:1.5rem; font-weight:700; color:var(--text-primary); }
+    .page-header {
+      display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;
+      background: linear-gradient(135deg, rgba(34,197,94,0.04), rgba(34,197,94,0.02));
+      border: 1px solid rgba(34,197,94,0.1);
+      border-radius: 16px;
+      padding: 20px 24px;
+    }
+    .page-header h2 { margin:0 0 2px; font-size:1.5rem; font-weight:800; color:var(--text-primary); font-family:'Outfit',sans-serif; letter-spacing:-0.03em; }
     .subtitle { margin:0; color:var(--text-muted); font-size:0.875rem; }
     .header-actions { display:flex; gap:8px; flex-wrap:wrap; }
     .active-btn { background:var(--brand-subtle) !important; border-color:var(--brand) !important; color:var(--brand) !important; }
@@ -563,7 +569,7 @@ export class EmployeeListComponent implements OnInit {
   }
 
   avatarColor(name: string): string {
-    const colors = ['#3b82f6','#8b5cf6','#ef4444','#10b981','#f59e0b','#06b6d4','#ec4899'];
+    const colors = ['#22c55e','#16a34a','#ef4444','#4ade80','#f59e0b','#15803d','#86efac'];
     return colors[(name?.charCodeAt(0) ?? 0) % colors.length];
   }
 

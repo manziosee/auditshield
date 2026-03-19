@@ -68,7 +68,7 @@ interface CalendarDay {
             [class.today]="cell.isToday"
             [class.has-deadlines]="cell.deadlines.length > 0"
             (click)="selectDay(cell)"
-            [class.selected]="selectedDay() !== null && selectedDay()!.date.toDateString() === cell.date.toDateString()"
+            [class.selected]="selectedDay() !== null && selectedDay()?.date?.toDateString() === cell.date.toDateString()"
           >
             <span class="day-num">{{ cell.dayNum }}</span>
             @if (cell.deadlines.length > 0) {

@@ -247,14 +247,14 @@ const COMPANY_TYPES = [
        LEFT PANEL
     ═══════════════════════════════════════════════════════════════════════════ */
     .panel-left {
-      background: linear-gradient(145deg, #060c18 0%, #0d1525 45%, #1a1060 100%);
+      background: linear-gradient(135deg, #030a04 0%, #071a0c 45%, #0a0a0a 100%);
       padding: 40px 44px;
       display: flex; flex-direction: column;
       position: relative; overflow: hidden;
     }
     .panel-left::before {
       content: ''; position: absolute; inset: 0;
-      background: radial-gradient(ellipse 500px 400px at 110% 60%, rgba(99,102,241,0.2), transparent);
+      background: radial-gradient(ellipse 500px 400px at 110% 60%, rgba(34,197,94,0.2), transparent);
       pointer-events: none;
     }
 
@@ -270,16 +270,25 @@ const COMPANY_TYPES = [
       padding: 32px 0 28px; position: relative; z-index: 1;
     }
     .brand-logo {
-      width: 56px; height: 56px; border-radius: 14px;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.1);
+      width: 72px; height: 72px;
+      background: linear-gradient(135deg, rgba(34,197,94,0.2), rgba(22,163,74,0.12));
+      border: 1px solid rgba(74,222,128,0.3);
+      border-radius: 20px;
       display: flex; align-items: center; justify-content: center;
-      margin-bottom: 16px; padding: 8px;
+      margin-bottom: 24px; padding: 12px;
+      box-shadow: 0 0 0 4px rgba(34,197,94,0.08), 0 8px 24px rgba(34,197,94,0.15);
+      animation: logoPulse 3.5s ease-in-out infinite;
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.3s;
     }
-    .brand-logo img { width: 40px; height: 40px; }
+    .brand-logo img {
+      width: 44px; height: 44px;
+      filter: drop-shadow(0 0 8px rgba(34,197,94,0.8)) brightness(1.4) saturate(1.8);
+    }
     .brand-block h1 {
-      font-size: 2.2rem; font-weight: 900; color: white;
-      margin: 0 0 10px; letter-spacing: -1px;
+      font-size: 3rem; font-weight: 900;
+      margin: 0 0 14px; letter-spacing: -2px; line-height: 1;
+      background: linear-gradient(135deg, #ffffff 0%, #d1fae5 50%, #4ade80 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
     .brand-block p { font-size: 0.9rem; color: rgba(255,255,255,0.5); line-height: 1.7; margin: 0; }
 
@@ -304,7 +313,7 @@ const COMPANY_TYPES = [
       color: rgba(255,255,255,0.45);
       font-size: 0.72rem; padding: 5px 10px; border-radius: 999px;
     }
-    .trust-item mat-icon { font-size: 0.85rem; width: 0.85rem; height: 0.85rem; color: #818cf8; }
+    .trust-item mat-icon { font-size: 0.85rem; width: 0.85rem; height: 0.85rem; color: #22c55e; }
 
     /* ═══════════════════════════════════════════════════════════════════════════
        RIGHT PANEL
@@ -318,48 +327,55 @@ const COMPANY_TYPES = [
     .form-card {
       width: 100%; max-width: 480px;
       background: var(--surface-card);
-      border-radius: 20px;
-      padding: 36px;
-      box-shadow: 0 4px 32px rgba(0,0,0,0.08);
-      border: 1px solid var(--border-color);
+      border-radius: 28px;
+      padding: 44px 40px 36px;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.14), 0 8px 24px rgba(0,0,0,0.08), 0 0 0 1px var(--border-color);
+      border-top: 3px solid #22c55e;
+      position: relative; overflow: hidden;
+    }
+    .form-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(ellipse 300px 200px at 100% 0%, rgba(34,197,94,0.05), transparent);
+      pointer-events: none;
     }
 
     /* Steps indicator */
-    .steps-indicator {
-      display: flex; align-items: center;
-      margin-bottom: 8px;
-    }
+    .steps-indicator { display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 8px; }
     .step-dot {
-      width: 32px; height: 32px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.82rem; font-weight: 700;
+      width: 36px; height: 36px; border-radius: 50%;
       background: var(--surface-hover);
-      color: var(--text-muted);
       border: 2px solid var(--border-color);
-      flex-shrink: 0;
-      transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem; font-weight: 700; color: var(--text-muted);
+      transition: all 0.3s ease;
+      font-family: 'Outfit', sans-serif;
     }
     .step-dot.active {
-      background: var(--brand); color: white;
-      border-color: var(--brand);
-      box-shadow: 0 0 0 4px var(--brand-subtle);
+      background: linear-gradient(135deg, #4ade80, #22c55e);
+      border-color: #22c55e;
+      color: #052e16;
+      box-shadow: 0 4px 12px rgba(34,197,94,0.4);
+      transform: scale(1.1);
     }
     .step-dot.done {
-      background: rgba(34,197,94,0.12); color: #22c55e;
-      border-color: #22c55e;
+      background: #22c55e;
+      border-color: #16a34a;
+      color: #052e16;
     }
-    .step-dot mat-icon { font-size: 1rem; width: 1rem; height: 1rem; }
+    .step-dot.done mat-icon { font-size: 1rem; width: 1rem; height: 1rem; }
     .step-line {
-      flex: 1; height: 2px; background: var(--border-color);
-      margin: 0 8px; transition: background 0.2s;
+      flex: 1; height: 2px; max-width: 80px;
+      background: var(--border-color);
+      transition: background 0.3s ease;
     }
-    .step-line.done { background: #22c55e; }
+    .step-line.done { background: linear-gradient(90deg, #22c55e, #4ade80); }
     .step-labels {
-      display: flex; justify-content: space-between;
-      margin-bottom: 24px;
+      display: flex; justify-content: space-around;
+      font-size: 0.75rem; color: var(--text-muted);
+      margin-bottom: 24px; font-weight: 500;
     }
-    .step-labels span { font-size: 0.72rem; color: var(--text-muted); font-weight: 500; }
-    .step-labels .active-label { color: var(--brand); font-weight: 700; }
+    .active-label { color: #22c55e !important; font-weight: 700; }
 
     .form-header { margin-bottom: 24px; }
     .form-header h2 {
@@ -382,14 +398,15 @@ const COMPANY_TYPES = [
     .input-wrap, .select-wrap {
       display: flex; align-items: center;
       border: 1.5px solid var(--border-color);
-      border-radius: 10px;
+      border-radius: 14px;
       background: var(--surface-input);
-      transition: border-color 0.15s, box-shadow 0.15s;
+      transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
       overflow: hidden;
+      height: 52px;
     }
     .input-wrap:focus-within, .select-wrap:focus-within {
-      border-color: var(--brand);
-      box-shadow: 0 0 0 3px var(--brand-subtle);
+      border-color: #22c55e;
+      box-shadow: 0 0 0 4px rgba(34,197,94,0.10);
       background: var(--surface-card);
     }
     .input-wrap.input-error, .select-wrap.input-error { border-color: var(--danger); }
@@ -442,21 +459,33 @@ const COMPANY_TYPES = [
     .error-alert mat-icon { font-size: 1.1rem; width: 1.1rem; height: 1.1rem; flex-shrink: 0; }
 
     .submit-btn {
-      width: 100%; height: 48px;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      background: linear-gradient(135deg, var(--brand), var(--brand-dark));
-      color: white; border: none; border-radius: 12px;
-      font-size: 0.92rem; font-weight: 700; cursor: pointer;
-      transition: opacity 0.15s, transform 0.1s, box-shadow 0.15s;
-      box-shadow: 0 4px 16px var(--brand-glow);
-      margin-top: 8px; font-family: inherit;
+      width: 100%; height: 54px;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      background: linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #16a34a 100%);
+      background-size: 200% 100%; background-position: 0% 50%;
+      color: #052e16 !important; border: none; border-radius: 14px;
+      font-size: 1rem; font-weight: 800; cursor: pointer;
+      transition: background-position 0.4s, transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 6px 20px rgba(34,197,94,0.4), 0 1px 0 rgba(255,255,255,0.3) inset;
+      margin-top: 8px;
+      font-family: 'Outfit', sans-serif;
+      letter-spacing: -0.01em;
+      position: relative; overflow: hidden;
     }
     .submit-btn:hover:not(:disabled) {
-      opacity: 0.92; transform: translateY(-1px);
-      box-shadow: 0 8px 24px var(--brand-glow);
+      background-position: 100% 50%;
+      transform: translateY(-2px) scale(1.01);
+      box-shadow: 0 10px 28px rgba(34,197,94,0.55), 0 1px 0 rgba(255,255,255,0.3) inset;
     }
+    .submit-btn:active:not(:disabled) { transform: translateY(0) scale(0.99); }
     .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
     .submit-btn mat-icon { font-size: 1.2rem; width: 1.2rem; height: 1.2rem; }
+    .submit-btn::before {
+      content: '';
+      position: absolute; top: 0; left: -100%; width: 55%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.20), transparent);
+      animation: shimmer 2.5s ease-in-out infinite;
+    }
     .submit-btn--flex { flex: 1; width: auto; }
 
     .step2-actions { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
@@ -498,8 +527,8 @@ const COMPANY_TYPES = [
       70%       { transform: translate(45px, -25px) scale(0.88); }
     }
     @keyframes logoPulse {
-      0%, 100% { box-shadow: 0 0 0 0   rgba(99,102,241,0);    }
-      50%       { box-shadow: 0 0 0 10px rgba(99,102,241,0.12); }
+      0%, 100% { box-shadow: 0 0 0 0   rgba(34,197,94,0);    }
+      50%       { box-shadow: 0 0 0 10px rgba(34,197,94,0.12); }
     }
     @keyframes stepPop {
       0%   { transform: scale(1);    }
@@ -511,7 +540,7 @@ const COMPANY_TYPES = [
     .panel-left::after {
       content: ''; position: absolute;
       width: 340px; height: 340px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(99,102,241,0.13), transparent 70%);
+      background: radial-gradient(circle, rgba(34,197,94,0.13), transparent 70%);
       bottom: -80px; right: -100px;
       animation: orbDrift 12s ease-in-out infinite;
       pointer-events: none;
@@ -534,7 +563,7 @@ const COMPANY_TYPES = [
     }
     .brand-logo:hover {
       transform: scale(1.12) rotate(8deg);
-      border-color: rgba(165,180,252,0.5);
+      border-color: rgba(74,222,128,0.5);
       animation-play-state: paused;
     }
 
@@ -554,7 +583,7 @@ const COMPANY_TYPES = [
     .trust-item { transition: all 0.22s ease; }
     .trust-item:hover {
       background: rgba(255,255,255,0.09) !important;
-      border-color: rgba(165,180,252,0.22) !important;
+      border-color: rgba(74,222,128,0.22) !important;
       color: rgba(255,255,255,0.72) !important;
       transform: translateY(-3px) scale(1.04);
     }
@@ -669,10 +698,10 @@ export class RegisterComponent {
   }
 
   readonly benefits = [
-    { icon: 'folder_special',    title: 'Secure Document Vault',    desc: 'AES-256 encrypted storage for all HR and compliance documents.', bg: 'rgba(99,102,241,0.15)',  color: '#818cf8' },
+    { icon: 'folder_special',    title: 'Secure Document Vault',    desc: 'AES-256 encrypted storage for all HR and compliance documents.', bg: 'rgba(34,197,94,0.15)',  color: '#4ade80' },
     { icon: 'checklist_rtl',     title: 'Compliance Checklists',    desc: 'Real-time tracking of regulatory filings and deadlines.', bg: 'rgba(34,197,94,0.15)',   color: '#4ade80' },
     { icon: 'notifications_active', title: 'Smart Deadline Alerts', desc: 'Get notified weeks before expiry — never miss a filing.', bg: 'rgba(245,158,11,0.15)',  color: '#fbbf24' },
-    { icon: 'description',       title: 'One-Click Audit Reports',  desc: 'Generate PDF audit packs for inspectors in seconds.',    bg: 'rgba(59,130,246,0.15)',   color: '#60a5fa' },
+    { icon: 'description',       title: 'One-Click Audit Reports',  desc: 'Generate PDF audit packs for inspectors in seconds.',    bg: 'rgba(10,10,10,0.12)',   color: '#1c1f26' },
   ];
 
   nextStep(): void {
