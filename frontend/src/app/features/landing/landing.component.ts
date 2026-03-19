@@ -20,18 +20,24 @@ interface PricingPlan  {
   template: `
     <!-- ══ NAVBAR ═══════════════════════════════════════════════════════════ -->
     <nav class="nav">
-      <a routerLink="/landing" class="nav-brand">
-        <img src="logo.svg" class="brand-shield" alt="AuditShield" />
-        <span class="brand-name">AuditShield</span>
-      </a>
-      <div class="nav-center">
-        <a href="#features"     class="nav-link">Features</a>
-        <a href="#how-it-works" class="nav-link">How It Works</a>
-        <a href="#pricing"      class="nav-link">Pricing</a>
-      </div>
-      <div class="nav-end">
-        <a routerLink="/auth/login"    class="btn-ghost">Sign In</a>
-        <a routerLink="/auth/register" class="btn-primary">Get Started Free</a>
+      <div class="nav-inner">
+        <a routerLink="/landing" class="nav-brand">
+          <div class="brand-icon-wrap">
+            <img src="logo.svg" class="brand-shield" alt="AuditShield" />
+          </div>
+          <span class="brand-name">AuditShield</span>
+        </a>
+        <div class="nav-center">
+          <a href="#features"     class="nav-link">Features</a>
+          <a href="#how-it-works" class="nav-link">How It Works</a>
+          <a href="#pricing"      class="nav-link">Pricing</a>
+        </div>
+        <div class="nav-end">
+          <a routerLink="/auth/login"    class="btn-ghost">Sign In</a>
+          <a routerLink="/auth/register" class="btn-primary">
+            <mat-icon>rocket_launch</mat-icon> Get Started Free
+          </a>
+        </div>
       </div>
     </nav>
 
@@ -174,7 +180,7 @@ interface PricingPlan  {
         </div>
         <div class="feat-hero-right">
           <svg viewBox="0 0 160 160" class="feat-score-svg">
-            <circle cx="80" cy="80" r="68" fill="none" stroke="rgba(99,102,241,0.12)" stroke-width="12"/>
+            <circle cx="80" cy="80" r="68" fill="none" stroke="rgba(34,197,94,0.12)" stroke-width="12"/>
             <circle cx="80" cy="80" r="68" fill="none" stroke="url(#sg)" stroke-width="12"
                     stroke-linecap="round"
                     stroke-dasharray="427.3" stroke-dashoffset="25.6"
@@ -182,12 +188,12 @@ interface PricingPlan  {
                     style="transition:stroke-dashoffset 1s ease"/>
             <defs>
               <linearGradient id="sg" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stop-color="#a5b4fc"/>
-                <stop offset="100%" stop-color="#6366f1"/>
+                <stop offset="0%" stop-color="#4ade80"/>
+                <stop offset="100%" stop-color="#22c55e"/>
               </linearGradient>
             </defs>
             <text x="80" y="72" text-anchor="middle" dominant-baseline="middle"
-                  fill="#6366f1" style="font-size:28px;font-weight:900;font-family:Inter,sans-serif">94%</text>
+                  fill="#22c55e" style="font-size:28px;font-weight:900;font-family:Inter,sans-serif">94%</text>
             <text x="80" y="95" text-anchor="middle" dominant-baseline="middle"
                   fill="#94a3b8" style="font-size:9px;font-family:Inter,sans-serif;letter-spacing:0.06em">COMPLIANCE SCORE</text>
           </svg>
@@ -347,20 +353,37 @@ interface PricingPlan  {
 
     <!-- ══ FOOTER ═════════════════════════════════════════════════════════════ -->
     <footer class="footer">
-      <div class="footer-top">
-        <div class="footer-brand">
-          <img src="logo.svg" class="footer-shield" alt="AuditShield" />
-          <div>
-            <div class="footer-name">AuditShield</div>
-            <div class="footer-desc">The Global SME Digital Records &amp; Compliance Platform</div>
+      <!-- Green glow bar at top -->
+      <div class="footer-glow-bar"></div>
+
+      <div class="footer-inner">
+        <!-- Brand column -->
+        <div class="footer-brand-col">
+          <div class="footer-brand">
+            <div class="footer-logo-wrap">
+              <img src="logo.svg" class="footer-shield" alt="AuditShield" />
+            </div>
+            <span class="footer-name">AuditShield</span>
           </div>
+          <p class="footer-tagline">
+            The global compliance platform that keeps SMEs audit-ready — wherever they operate.
+          </p>
+          <div class="footer-trust-chips">
+            <span class="footer-chip"><mat-icon>lock</mat-icon>AES-256 Encrypted</span>
+            <span class="footer-chip"><mat-icon>public</mat-icon>Multi-jurisdiction</span>
+          </div>
+          <a routerLink="/auth/register" class="btn-primary footer-cta-btn">
+            <mat-icon>rocket_launch</mat-icon> Start for Free
+          </a>
         </div>
+
+        <!-- Link columns -->
         <div class="footer-cols">
           <div class="footer-col">
             <div class="footer-col-title">Product</div>
             <a href="#features">Features</a>
             <a href="#pricing">Pricing</a>
-            <a href="#demo">Live Demo</a>
+            <a href="#how-it-works">How It Works</a>
             <a routerLink="/auth/register">Get Started</a>
           </div>
           <div class="footer-col">
@@ -368,7 +391,7 @@ interface PricingPlan  {
             <a routerLink="/auth/login">Sign In</a>
             <a href="#">API Docs</a>
             <a href="#">Security</a>
-            <a href="#">Status</a>
+            <a href="#">System Status</a>
           </div>
           <div class="footer-col">
             <div class="footer-col-title">Support</div>
@@ -379,9 +402,19 @@ interface PricingPlan  {
           </div>
         </div>
       </div>
+
+      <div class="footer-divider"></div>
+
       <div class="footer-bottom">
-        <span>© 2026 AuditShield · Global Compliance Platform</span>
-        <span>Built by Osee Manzi · All rights reserved</span>
+        <div class="footer-bottom-left">
+          <span class="footer-copy">© 2026 AuditShield — Global Compliance Platform</span>
+          <span class="footer-sep">·</span>
+          <span class="footer-author">Built by Osee Manzi</span>
+        </div>
+        <div class="footer-bottom-right">
+          <span class="footer-status-dot"></span>
+          <span class="footer-status-text">All systems operational</span>
+        </div>
       </div>
     </footer>
   `,
@@ -393,60 +426,153 @@ interface PricingPlan  {
     /* ═══ SHARED BUTTONS ═══════════════════════════════════════════════════ */
     .btn-primary {
       display: inline-flex; align-items: center; gap: 8px;
-      background: #6366f1; color: white;
-      border: none; border-radius: 10px;
-      padding: 10px 22px;
-      font-size: 0.9rem; font-weight: 700;
+      background: linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #16a34a 100%);
+      background-size: 200% 100%; background-position: 0% 50%;
+      color: #052e16 !important;
+      border: none; border-radius: 12px;
+      padding: 11px 24px;
+      font-size: 0.875rem; font-weight: 700;
+      font-family: 'Outfit', sans-serif;
+      letter-spacing: -0.01em;
       cursor: pointer; text-decoration: none;
-      transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
-      box-shadow: 0 4px 14px rgba(99,102,241,0.4);
+      transition: background-position 0.4s, transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 20px rgba(34,197,94,0.4), 0 1px 0 rgba(255,255,255,0.3) inset;
+      position: relative; overflow: hidden;
     }
-    .btn-primary:hover { background: #4f46e5; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(99,102,241,0.5); text-decoration: none; }
+    .btn-primary::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.22) 50%, transparent 60%);
+      transform: translateX(-100%);
+      transition: transform 0.5s;
+    }
+    .btn-primary:hover {
+      background-position: 100% 50%;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(34,197,94,0.55), 0 1px 0 rgba(255,255,255,0.3) inset;
+      text-decoration: none;
+    }
+    .btn-primary:hover::after { transform: translateX(100%); }
     .btn-ghost {
       display: inline-flex; align-items: center; gap: 6px;
-      color: rgba(255,255,255,0.75); background: none; border: none;
-      padding: 8px 16px; border-radius: 8px;
+      color: rgba(255,255,255,0.7); background: transparent;
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 10px 20px; border-radius: 12px;
       font-size: 0.875rem; font-weight: 500;
+      font-family: 'Outfit', sans-serif;
       cursor: pointer; text-decoration: none;
-      transition: color 0.15s, background 0.15s;
+      transition: all 0.15s;
     }
-    .btn-ghost:hover { color: white; background: rgba(255,255,255,0.08); text-decoration: none; }
+    .btn-ghost:hover {
+      color: white; background: rgba(255,255,255,0.07);
+      border-color: rgba(255,255,255,0.18);
+      text-decoration: none;
+    }
     .btn-outline-white {
       display: inline-flex; align-items: center; gap: 8px;
-      color: white; background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.22); border-radius: 10px;
-      padding: 10px 22px; font-size: 0.9rem; font-weight: 600;
+      color: rgba(255,255,255,0.9) !important;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.18); border-radius: 12px;
+      padding: 11px 24px; font-size: 0.875rem; font-weight: 600;
+      font-family: 'Outfit', sans-serif; letter-spacing: -0.01em;
       cursor: pointer; text-decoration: none;
-      transition: background 0.15s, transform 0.15s;
+      transition: all 0.2s;
+      box-shadow: 0 1px 0 rgba(255,255,255,0.06) inset;
     }
-    .btn-outline-white:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); text-decoration: none; }
-    .btn-lg { height: 52px; padding: 0 28px; font-size: 1rem; border-radius: 12px; }
+    .btn-outline-white:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.28);
+      transform: translateY(-2px);
+      text-decoration: none;
+    }
+    .btn-lg { height: 54px; padding: 0 32px; font-size: 1rem; border-radius: 14px; }
+    .btn-primary mat-icon, .btn-outline-white mat-icon { font-size: 1.1rem; width: 1.1rem; height: 1.1rem; }
 
     /* ═══ NAVBAR ═══════════════════════════════════════════════════════════ */
     .nav {
       position: sticky; top: 0; z-index: 100;
-      display: flex; align-items: center;
-      padding: 0 56px; height: 68px;
-      background: rgba(9,11,21,0.96);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 12px 24px;
+      background: transparent;
     }
-    .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; margin-right: 32px; }
-    .brand-shield { width: 30px; height: 30px; display: block; }
-    .brand-name { font-size: 1.25rem; font-weight: 900; color: white; letter-spacing: -0.5px; }
-    .nav-center { display: flex; gap: 4px; flex: 1; }
+    .nav-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 16px;
+      background: rgba(10,17,12,0.88);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      backdrop-filter: blur(24px) saturate(180%);
+      border: 1px solid rgba(34,197,94,0.14);
+      border-top-color: rgba(34,197,94,0.28);
+      border-radius: 18px;
+      padding: 0 24px;
+      height: 58px;
+      box-shadow:
+        0 8px 32px rgba(0,0,0,0.45),
+        0 1px 0 rgba(34,197,94,0.15) inset;
+      position: relative;
+      overflow: hidden;
+    }
+    .nav-inner::before {
+      content: '';
+      position: absolute; top: 0; left: 15%; right: 15%; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(34,197,94,0.55), transparent);
+      pointer-events: none;
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none; flex-shrink: 0;
+    }
+    .brand-icon-wrap {
+      width: 32px; height: 32px; border-radius: 9px;
+      background: linear-gradient(135deg, rgba(34,197,94,0.25), rgba(22,163,74,0.15));
+      border: 1px solid rgba(74,222,128,0.25);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 12px rgba(34,197,94,0.25);
+      flex-shrink: 0;
+    }
+    .brand-shield {
+      width: 20px; height: 20px; display: block;
+      filter: drop-shadow(0 0 6px rgba(34,197,94,0.8)) brightness(1.4) saturate(1.8) hue-rotate(10deg);
+    }
+    .brand-name {
+      font-size: 1.15rem; font-weight: 900; letter-spacing: -0.5px; white-space: nowrap;
+      background: linear-gradient(135deg, #ffffff 0%, #d1fae5 50%, #4ade80 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .nav-center {
+      display: flex; gap: 2px;
+      justify-content: center;
+      align-items: center;
+    }
     .nav-link {
-      color: rgba(255,255,255,0.6); text-decoration: none;
-      font-size: 0.875rem; padding: 7px 14px; border-radius: 8px;
-      transition: all 0.15s;
+      color: rgba(255,255,255,0.52); text-decoration: none;
+      font-size: 0.85rem; font-weight: 500;
+      padding: 7px 16px; border-radius: 10px;
+      transition: all 0.18s; white-space: nowrap;
+      position: relative;
     }
-    .nav-link:hover { color: white; background: rgba(255,255,255,0.08); text-decoration: none; }
-    .nav-end { display: flex; align-items: center; gap: 10px; }
+    .nav-link::after {
+      content: '';
+      position: absolute; bottom: 2px; left: 50%; right: 50%;
+      height: 1.5px;
+      background: #4ade80;
+      transition: left 0.2s, right 0.2s;
+      border-radius: 999px;
+    }
+    .nav-link:hover {
+      color: #d1fae5; background: rgba(34,197,94,0.06);
+      text-decoration: none;
+    }
+    .nav-link:hover::after { left: 16px; right: 16px; }
+    .nav-end { display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
 
     /* ═══ HERO ══════════════════════════════════════════════════════════════ */
     .hero {
       min-height: 100vh;
-      background: linear-gradient(145deg, #090b15 0%, #0f172a 40%, #1e1b4b 100%);
+      background: linear-gradient(135deg, #030a04 0%, #071a0c 40%, #0a0a0a 100%);
       display: flex; align-items: center;
       padding: 80px 56px; gap: 64px;
       position: relative; overflow: hidden;
@@ -454,16 +580,16 @@ interface PricingPlan  {
     .hero::before {
       content: ''; position: absolute; inset: 0;
       background:
-        radial-gradient(ellipse 700px 600px at 20% 60%, rgba(99,102,241,0.14), transparent),
-        radial-gradient(ellipse 500px 400px at 80% 20%, rgba(99,102,241,0.1), transparent),
-        radial-gradient(ellipse 300px 300px at 60% 80%, rgba(139,92,246,0.08), transparent);
+        radial-gradient(ellipse 700px 600px at 20% 60%, rgba(34,197,94,0.14), transparent),
+        radial-gradient(ellipse 500px 400px at 80% 20%, rgba(34,197,94,0.10), transparent),
+        radial-gradient(ellipse 300px 300px at 60% 80%, rgba(22,163,74,0.08), transparent);
       pointer-events: none;
     }
     .hero-inner { flex: 1; max-width: 540px; position: relative; }
     .hero-label {
       display: inline-flex; align-items: center; gap: 7px;
-      background: rgba(99,102,241,0.18); border: 1px solid rgba(99,102,241,0.35);
-      color: #a5b4fc; border-radius: 999px;
+      background: rgba(34,197,94,0.18); border: 1px solid rgba(34,197,94,0.35);
+      color: #4ade80; border-radius: 999px;
       padding: 7px 18px; font-size: 0.82rem; font-weight: 600; margin-bottom: 28px;
     }
     .hero-label mat-icon { font-size: 1rem; width: 1rem; height: 1rem; }
@@ -473,7 +599,7 @@ interface PricingPlan  {
     }
     .hero-h1 em {
       font-style: normal;
-      background: linear-gradient(135deg, #a5b4fc, #6366f1);
+      background: linear-gradient(135deg, #4ade80, #22c55e);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
     .hero-p { font-size: 1.1rem; color: rgba(255,255,255,0.62); line-height: 1.75; margin: 0 0 36px; }
@@ -484,7 +610,7 @@ interface PricingPlan  {
       background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
       color: rgba(255,255,255,0.5); font-size: 0.78rem; padding: 5px 12px; border-radius: 999px;
     }
-    .chip mat-icon { font-size: 0.9rem; width: 0.9rem; height: 0.9rem; color: #6366f1; }
+    .chip mat-icon { font-size: 0.9rem; width: 0.9rem; height: 0.9rem; color: #22c55e; }
 
     /* Mockup */
     .mockup-wrap { flex: 1; max-width: 600px; position: relative; display: flex; justify-content: center; }
@@ -508,20 +634,20 @@ interface PricingPlan  {
     .m-logo { font-size: 1.4rem; margin-bottom: 10px; }
     .m-nav-item { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 8px; color: rgba(255,255,255,0.35); }
     .m-nav-item mat-icon { font-size: 1.1rem; width: 1.1rem; height: 1.1rem; }
-    .m-active { background: rgba(99,102,241,0.25); color: #818cf8 !important; }
+    .m-active { background: rgba(34,197,94,0.25); color: #4ade80 !important; }
     .m-content { flex: 1; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
     .m-topbar { display: flex; justify-content: space-between; align-items: center; padding: 2px 0; }
     .m-greeting { font-size: 0.65rem; font-weight: 700; color: #0f172a; }
     .m-company-chip {
       display: flex; align-items: center; gap: 3px;
-      background: #ede9fe; color: #6366f1;
+      background: #dcfce7; color: #16a34a;
       font-size: 0.58rem; font-weight: 700;
       padding: 2px 7px; border-radius: 999px;
     }
     .m-company-chip mat-icon { font-size: 0.65rem; width: 0.65rem; height: 0.65rem; }
     .m-kpi-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; }
     .m-kpi { padding: 8px; border-radius: 8px; }
-    .m-kpi.indigo { background: #ede9fe; } .m-kpi.purple { background: #f5f3ff; }
+    .m-kpi.indigo { background: #f0fdf4; } .m-kpi.purple { background: #dcfce7; }
     .m-kpi.green  { background: #f0fdf4; } .m-kpi.amber  { background: #fffbeb; }
     .m-kv { font-size: 1.2rem; font-weight: 800; color: #0f172a; }
     .m-kl { font-size: 0.6rem; color: #64748b; }
@@ -530,13 +656,13 @@ interface PricingPlan  {
     .m-card-title { font-size: 0.65rem; font-weight: 700; color: #1e293b; margin-bottom: 8px; }
     .m-score-ring {
       width: 48px; height: 48px; border-radius: 50%;
-      border: 5px solid #6366f1;
+      border: 5px solid #22c55e;
       display: flex; align-items: center; justify-content: center;
       margin: 0 auto 8px; font-size: 0.78rem; font-weight: 800; color: #0f172a;
     }
     .m-bar-row { display: flex; align-items: center; gap: 5px; }
     .m-bar { flex: 1; height: 5px; background: #e2e8f0; border-radius: 3px; overflow: hidden; }
-    .m-bar-fill { height: 100%; background: #6366f1; border-radius: 3px; }
+    .m-bar-fill { height: 100%; background: #22c55e; border-radius: 3px; }
     .m-bar-label { font-size: 0.6rem; color: #64748b; white-space: nowrap; }
     .m-deadline { display: flex; align-items: center; gap: 6px; font-size: 0.65rem; color: #475569; margin-bottom: 5px; }
     .m-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
@@ -544,7 +670,7 @@ interface PricingPlan  {
     .m-activity { margin-top: 2px; }
     .m-act-item { display: flex; align-items: center; gap: 6px; font-size: 0.62rem; color: #475569; margin-bottom: 4px; }
     .m-act-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-    .m-act-dot.green { background: #22c55e; } .m-act-dot.indigo { background: #6366f1; }
+    .m-act-dot.green { background: #22c55e; } .m-act-dot.indigo { background: #22c55e; }
     .hero-notif {
       position: absolute; bottom: -20px; left: -20px;
       background: white; border-radius: 14px;
@@ -552,19 +678,19 @@ interface PricingPlan  {
       box-shadow: 0 20px 50px rgba(0,0,0,0.25);
       border: 1px solid #e2e8f0; min-width: 220px;
     }
-    .hero-notif mat-icon { color: #6366f1; font-size: 1.4rem; width: 1.4rem; height: 1.4rem; flex-shrink: 0; }
+    .hero-notif mat-icon { color: #22c55e; font-size: 1.4rem; width: 1.4rem; height: 1.4rem; flex-shrink: 0; }
     .notif-title { font-size: 0.82rem; font-weight: 700; color: #0f172a; }
     .notif-sub   { font-size: 0.72rem; color: #64748b; margin-top: 2px; }
 
     /* ═══ STATS BAR ═════════════════════════════════════════════════════════ */
     .stats-bar {
       display: flex; justify-content: center; flex-wrap: wrap;
-      background: #0f172a; padding: 48px;
+      background: #060810; padding: 48px;
       border-top: 1px solid rgba(255,255,255,0.05);
     }
     .stat { text-align: center; padding: 0 56px; }
     .stat + .stat { border-left: 1px solid rgba(255,255,255,0.08); }
-    .stat-icon { color: #6366f1 !important; font-size: 1.6rem !important; width: 1.6rem !important; height: 1.6rem !important; margin-bottom: 8px; display: block; }
+    .stat-icon { color: #22c55e !important; font-size: 1.6rem !important; width: 1.6rem !important; height: 1.6rem !important; margin-bottom: 8px; display: block; }
     .stat-val { font-size: 3rem; font-weight: 900; color: white; letter-spacing: -2px; }
     .stat-label { font-size: 0.875rem; color: rgba(255,255,255,0.45); margin-top: 4px; }
 
@@ -573,11 +699,11 @@ interface PricingPlan  {
     .section--dark { background: #0f172a; }
     .section--alt  { background: #f1f5f9; }
     .section-tag {
-      display: inline-block; background: #ede9fe; color: #6366f1;
+      display: inline-block; background: #dcfce7; color: #16a34a;
       font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
       padding: 5px 16px; border-radius: 999px; margin-bottom: 16px;
     }
-    .section-tag--light { background: rgba(99,102,241,0.18); color: #a5b4fc; }
+    .section-tag--light { background: rgba(34,197,94,0.18); color: #4ade80; }
     .section-h2 { font-size: clamp(1.8rem,3.5vw,2.6rem); font-weight: 900; color: #0f172a; margin: 0 0 14px; letter-spacing: -1px; }
     .section-h2--light { color: white; }
     .section-p { color: #64748b; font-size: 1rem; line-height: 1.75; max-width: 560px; margin: 0 auto 56px; }
@@ -586,23 +712,23 @@ interface PricingPlan  {
     /* ═══ FEATURES — hero card ══════════════════════════════════════════════ */
     .feat-hero {
       max-width: 1080px; margin: 0 auto 48px;
-      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 60%, #312e81 100%);
+      background: linear-gradient(135deg, #030a04 0%, #071a0c 60%, #0a0a0a 100%);
       border-radius: 24px; padding: 48px;
       display: grid; grid-template-columns: 1fr auto;
       gap: 48px; align-items: center; text-align: left;
       position: relative; overflow: hidden;
-      border: 1px solid rgba(99,102,241,0.2);
-      box-shadow: 0 24px 64px rgba(99,102,241,0.15);
+      border: 1px solid rgba(34,197,94,0.2);
+      box-shadow: 0 24px 64px rgba(34,197,94,0.15);
     }
     .feat-hero::before {
       content: ''; position: absolute; inset: 0;
-      background: radial-gradient(ellipse 600px 400px at 80% -20%, rgba(99,102,241,0.18), transparent);
+      background: radial-gradient(ellipse 600px 400px at 80% -20%, rgba(34,197,94,0.18), transparent);
       pointer-events: none;
     }
     .feat-hero-eyebrow {
       display: inline-flex; align-items: center; gap: 6px;
-      background: rgba(99,102,241,0.2); border: 1px solid rgba(99,102,241,0.35);
-      color: #a5b4fc; border-radius: 999px;
+      background: rgba(34,197,94,0.2); border: 1px solid rgba(34,197,94,0.35);
+      color: #4ade80; border-radius: 999px;
       padding: 5px 14px; font-size: 0.75rem; font-weight: 700;
       text-transform: uppercase; letter-spacing: 0.08em;
       margin-bottom: 18px;
@@ -644,7 +770,7 @@ interface PricingPlan  {
     .feat-card {
       background: white; border-radius: 18px; padding: 26px;
       border: 1px solid #e8eaf0;
-      border-top: 3px solid var(--fa, #6366f1);
+      border-top: 3px solid var(--fa, #22c55e);
       display: flex; flex-direction: column;
       transition: box-shadow 0.22s, transform 0.22s, border-color 0.22s;
       position: relative; overflow: hidden;
@@ -653,11 +779,11 @@ interface PricingPlan  {
       content: '';
       position: absolute; top: -30px; right: -30px;
       width: 100px; height: 100px; border-radius: 50%;
-      background: radial-gradient(ellipse, color-mix(in srgb, var(--fa, #6366f1) 8%, transparent), transparent 70%);
+      background: radial-gradient(ellipse, color-mix(in srgb, var(--fa, #22c55e) 8%, transparent), transparent 70%);
       pointer-events: none;
     }
     .feat-card:hover {
-      box-shadow: 0 16px 40px color-mix(in srgb, var(--fa, #6366f1) 12%, rgba(0,0,0,0.05));
+      box-shadow: 0 16px 40px color-mix(in srgb, var(--fa, #22c55e) 12%, rgba(0,0,0,0.05));
       transform: translateY(-5px);
     }
     .feat-icon {
@@ -690,8 +816,8 @@ interface PricingPlan  {
       padding: 10px 18px; font-size: 0.82rem; font-weight: 600; color: #1e293b;
       transition: border-color 0.15s, box-shadow 0.15s;
     }
-    .auth-badge:hover { border-color: #c7d2fe; box-shadow: 0 4px 12px rgba(99,102,241,0.1); }
-    .auth-badge mat-icon { color: #6366f1; font-size: 1.1rem; width: 1.1rem; height: 1.1rem; }
+    .auth-badge:hover { border-color: #86efac; box-shadow: 0 4px 12px rgba(34,197,94,0.1); }
+    .auth-badge mat-icon { color: #22c55e; font-size: 1.1rem; width: 1.1rem; height: 1.1rem; }
 
     /* ═══ HOW IT WORKS — timeline ════════════════════════════════════════════ */
     .steps-timeline {
@@ -706,26 +832,26 @@ interface PricingPlan  {
     .step-icon-circle {
       width: 80px; height: 80px; flex-shrink: 0;
       border-radius: 50%;
-      background: rgba(99,102,241,0.15);
-      border: 2px solid rgba(99,102,241,0.3);
+      background: rgba(34,197,94,0.15);
+      border: 2px solid rgba(34,197,94,0.3);
       display: flex; align-items: center; justify-content: center;
       position: relative;
     }
     .step-num-chip {
       position: absolute; top: -6px; right: -6px;
       width: 26px; height: 26px; border-radius: 50%;
-      background: linear-gradient(135deg, #6366f1, #4f46e5);
-      color: white; font-size: 0.75rem; font-weight: 900;
+      background: linear-gradient(135deg, #4ade80, #22c55e);
+      color: #052e16; font-size: 0.75rem; font-weight: 900;
       display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 4px 10px rgba(99,102,241,0.4);
+      box-shadow: 0 4px 10px rgba(34,197,94,0.4);
     }
     .step-big-icon {
       font-size: 2rem !important; width: 2rem !important; height: 2rem !important;
-      color: #818cf8 !important;
+      color: #4ade80 !important;
     }
     .step-connector-line {
       flex: 1; height: 2px;
-      background: linear-gradient(90deg, rgba(99,102,241,0.4), rgba(99,102,241,0.1));
+      background: linear-gradient(90deg, rgba(34,197,94,0.4), rgba(34,197,94,0.1));
       margin: 0 8px;
     }
     .step-body { text-align: left; }
@@ -754,18 +880,18 @@ interface PricingPlan  {
       display: flex; flex-direction: column; gap: 16px;
       transition: box-shadow 0.2s, transform 0.2s;
     }
-    .testimonial-card:hover { box-shadow: 0 12px 32px rgba(99,102,241,0.1); transform: translateY(-3px); }
+    .testimonial-card:hover { box-shadow: 0 12px 32px rgba(34,197,94,0.1); transform: translateY(-3px); }
     .testimonial-stars { color: #f59e0b; font-size: 1rem; letter-spacing: 2px; }
     .testimonial-quote { font-size: 0.95rem; color: #334155; line-height: 1.7; margin: 0; font-style: italic; flex: 1; }
     .testimonial-author { display: flex; align-items: center; gap: 12px; }
     .testimonial-avatar {
       width: 44px; height: 44px; border-radius: 50%;
-      background: linear-gradient(135deg, #6366f1, #4f46e5);
+      background: linear-gradient(135deg, #22c55e, #16a34a);
       color: white; font-size: 1.4rem;
       display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
     .testimonial-name    { font-size: 0.9rem; font-weight: 700; color: #0f172a; }
-    .testimonial-role    { font-size: 0.78rem; color: #6366f1; font-weight: 600; }
+    .testimonial-role    { font-size: 0.78rem; color: #16a34a; font-weight: 600; }
     .testimonial-company { font-size: 0.78rem; color: #94a3b8; }
 
     /* ═══ PRICING ════════════════════════════════════════════════════════════ */
@@ -784,7 +910,7 @@ interface PricingPlan  {
       position: relative; transition: background 0.25s;
       padding: 0;
     }
-    .toggle-pill.is-annual { background: #6366f1; }
+    .toggle-pill.is-annual { background: #22c55e; }
     .toggle-thumb {
       position: absolute; top: 3px; left: 3px;
       width: 22px; height: 22px; border-radius: 50%;
@@ -808,20 +934,20 @@ interface PricingPlan  {
       border: 1px solid #e8eaf0; display: flex; flex-direction: column;
       position: relative; transition: box-shadow 0.2s, transform 0.2s;
     }
-    .plan-card:hover { box-shadow: 0 16px 40px rgba(99,102,241,0.1); transform: translateY(-4px); }
+    .plan-card:hover { box-shadow: 0 16px 40px rgba(34,197,94,0.1); transform: translateY(-4px); }
     .plan-highlight {
-      background: linear-gradient(145deg, #0f172a, #1e1b4b);
-      border-color: rgba(99,102,241,0.4);
-      box-shadow: 0 24px 60px rgba(99,102,241,0.25);
+      background: linear-gradient(145deg, #030a04, #071a0c);
+      border-color: rgba(34,197,94,0.4);
+      box-shadow: 0 24px 60px rgba(34,197,94,0.25);
     }
     .plan-badge {
       position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
-      background: linear-gradient(135deg, #6366f1, #4f46e5); color: white;
+      background: linear-gradient(135deg, #4ade80, #22c55e); color: #052e16;
       font-size: 0.7rem; font-weight: 700; padding: 4px 16px; border-radius: 999px;
       white-space: nowrap;
     }
-    .plan-name { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #6366f1; margin-bottom: 14px; }
-    .plan-highlight .plan-name { color: #a5b4fc; }
+    .plan-name { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #16a34a; margin-bottom: 14px; }
+    .plan-highlight .plan-name { color: #4ade80; }
     .plan-price-row { display: flex; align-items: baseline; gap: 4px; margin-bottom: 4px; }
     .plan-price { font-size: 2.8rem; font-weight: 900; color: #0f172a; letter-spacing: -2px; transition: all 0.3s; }
     .plan-highlight .plan-price { color: white; }
@@ -848,34 +974,112 @@ interface PricingPlan  {
     }
     .plan-cta:hover { background: #e2e8f0; text-decoration: none; }
     .plan-cta-primary {
-      background: linear-gradient(135deg, #6366f1, #4f46e5); color: white;
-      border: none; box-shadow: 0 8px 24px rgba(99,102,241,0.4);
+      background: linear-gradient(135deg, #4ade80, #22c55e); color: #052e16;
+      border: none; box-shadow: 0 8px 24px rgba(34,197,94,0.4);
     }
     .plan-cta-primary:hover { opacity: 0.92; transform: translateY(-1px); }
     .pricing-note {
       display: flex; align-items: center; justify-content: center; gap: 7px;
       font-size: 0.8rem; color: #94a3b8; max-width: 600px; margin: 0 auto;
     }
-    .pricing-note mat-icon { font-size: 1rem; width: 1rem; height: 1rem; color: #6366f1; flex-shrink: 0; }
+    .pricing-note mat-icon { font-size: 1rem; width: 1rem; height: 1rem; color: #22c55e; flex-shrink: 0; }
 
     /* ═══ DEMO CTA ════════════════════════════════════════════════════════════ */
     /* ═══ FOOTER ══════════════════════════════════════════════════════════════ */
-    .footer { background: #090b15; padding: 56px 56px 32px; }
-    .footer-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 48px; gap: 40px; }
-    .footer-brand { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
-    .footer-shield { width: 40px; height: 40px; display: block; }
-    .footer-name { font-size: 1.1rem; font-weight: 800; color: white; }
-    .footer-desc { font-size: 0.8rem; color: rgba(255,255,255,0.35); margin-top: 3px; max-width: 200px; }
-    .footer-cols { display: flex; gap: 56px; }
-    .footer-col { display: flex; flex-direction: column; gap: 10px; }
-    .footer-col-title { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.5); margin-bottom: 4px; }
-    .footer-col a { color: rgba(255,255,255,0.4); font-size: 0.875rem; text-decoration: none; transition: color 0.15s; }
-    .footer-col a:hover { color: white; }
-    .footer-bottom {
-      border-top: 1px solid rgba(255,255,255,0.06); padding-top: 20px;
-      display: flex; justify-content: space-between;
-      font-size: 0.78rem; color: rgba(255,255,255,0.25);
+    .footer {
+      background: #060810;
+      position: relative;
+      overflow: hidden;
     }
+    .footer::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 500px 300px at 10% 100%, rgba(34,197,94,0.07), transparent),
+        radial-gradient(ellipse 400px 300px at 90% 0%, rgba(34,197,94,0.05), transparent);
+      pointer-events: none;
+    }
+    .footer-glow-bar {
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, rgba(34,197,94,0.4) 30%, rgba(34,197,94,0.7) 50%, rgba(34,197,94,0.4) 70%, transparent 100%);
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 56px 32px 40px;
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 64px;
+      align-items: flex-start;
+      position: relative; z-index: 1;
+    }
+    .footer-brand-col { display: flex; flex-direction: column; gap: 20px; }
+    .footer-brand { display: flex; align-items: center; gap: 12px; }
+    .footer-logo-wrap {
+      width: 38px; height: 38px; border-radius: 10px;
+      background: linear-gradient(135deg, rgba(34,197,94,0.25), rgba(22,163,74,0.15));
+      border: 1px solid rgba(74,222,128,0.22);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 14px rgba(34,197,94,0.2);
+    }
+    .footer-shield {
+      width: 22px; height: 22px; display: block;
+      filter: drop-shadow(0 0 6px rgba(34,197,94,0.8)) brightness(1.4) saturate(1.8) hue-rotate(10deg);
+    }
+    .footer-name {
+      font-size: 1.25rem; font-weight: 900; letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #ffffff 0%, #d1fae5 50%, #4ade80 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .footer-tagline { font-size: 0.875rem; color: rgba(255,255,255,0.4); line-height: 1.7; margin: 0; max-width: 300px; }
+    .footer-trust-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .footer-chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.18);
+      color: rgba(74,222,128,0.8); font-size: 0.73rem; font-weight: 600;
+      padding: 4px 12px; border-radius: 999px;
+    }
+    .footer-chip mat-icon { font-size: 0.85rem; width: 0.85rem; height: 0.85rem; }
+    .footer-cta-btn { align-self: flex-start; }
+    .footer-cols { display: flex; gap: 48px; justify-content: flex-end; padding-top: 4px; }
+    .footer-col { display: flex; flex-direction: column; gap: 12px; min-width: 120px; }
+    .footer-col-title {
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.1em; color: rgba(255,255,255,0.55);
+      margin-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 10px;
+    }
+    .footer-col a {
+      color: rgba(255,255,255,0.38); font-size: 0.875rem;
+      text-decoration: none; transition: color 0.15s, padding-left 0.15s;
+    }
+    .footer-col a:hover { color: #4ade80; padding-left: 4px; }
+    .footer-divider {
+      max-width: 1200px; margin: 0 auto;
+      height: 1px; background: rgba(255,255,255,0.05);
+      position: relative; z-index: 1;
+    }
+    .footer-bottom {
+      max-width: 1200px; margin: 0 auto;
+      padding: 20px 32px;
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 16px; flex-wrap: wrap;
+      position: relative; z-index: 1;
+    }
+    .footer-bottom-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .footer-copy, .footer-author { font-size: 0.78rem; color: rgba(255,255,255,0.22); }
+    .footer-sep { color: rgba(255,255,255,0.12); }
+    .footer-bottom-right { display: flex; align-items: center; gap: 8px; }
+    .footer-status-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 6px rgba(34,197,94,0.6);
+      animation: status-pulse 2s ease-in-out infinite;
+    }
+    @keyframes status-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .footer-status-text { font-size: 0.75rem; color: rgba(255,255,255,0.3); }
 
     /* ═══ RESPONSIVE ══════════════════════════════════════════════════════════ */
     @media (max-width: 1024px) {
@@ -890,13 +1094,16 @@ interface PricingPlan  {
       .demo-inner { grid-template-columns: 1fr; gap: 40px; }
       .steps-timeline { grid-template-columns: 1fr; gap: 32px; }
       .step-connector-line { display: none; }
-      .footer-top { flex-direction: column; gap: 32px; }
-      .footer-cols { gap: 32px; flex-wrap: wrap; }
+      .footer-inner { grid-template-columns: 1fr; gap: 40px; }
+      .footer-cols { gap: 32px; flex-wrap: wrap; justify-content: flex-start; }
     }
     @media (max-width: 768px) {
-      .nav { padding: 0 20px; }
+      .nav { padding: 8px 12px; }
       .nav-center { display: none; }
-      .hero, .section, .demo-section, .footer { padding: 60px 24px; }
+      .hero, .section, .demo-section { padding: 60px 24px; }
+      .footer-inner { padding: 40px 20px 28px; }
+      .footer-bottom { padding: 16px 20px; }
+      .nav-inner { padding: 0 16px; }
       .stats-bar { padding: 32px 24px; }
       .stat { padding: 16px 24px; }
       .stat + .stat { border-left: none; border-top: 1px solid rgba(255,255,255,0.08); }
@@ -918,12 +1125,12 @@ export class LandingComponent {
   toggleBilling() { this.isAnnual.update(v => !v); }
 
   readonly features: Feature[] = [
-    { icon: 'folder_special',       title: 'Secure Document Vault',       desc: 'AES-256 encrypted storage for contracts, payslips, and compliance files. Decrypt only on authorized download.', accent: '#6366f1' },
+    { icon: 'folder_special',       title: 'Secure Document Vault',       desc: 'AES-256 encrypted storage for contracts, payslips, and compliance files. Decrypt only on authorized download.', accent: '#22c55e' },
     { icon: 'checklist_rtl',        title: 'Multi-Authority Compliance',   desc: 'Live checklists for payroll tax, VAT, social security, and labour law. Real-time compliance score.', accent: '#22c55e' },
-    { icon: 'group',                title: 'Employee Records',             desc: 'Complete profiles with tax identifiers, social insurance numbers, salary history, contracts, and role access.', accent: '#3b82f6' },
+    { icon: 'group',                title: 'Employee Records',             desc: 'Complete profiles with tax identifiers, social insurance numbers, salary history, contracts, and role access.', accent: '#16a34a' },
     { icon: 'notifications_active', title: 'Smart Deadline Alerts',        desc: 'Get notified weeks before documents expire or filing deadlines pass — not hours. Zero last-minute panic.', accent: '#f59e0b' },
-    { icon: 'description',          title: 'One-Click Audit Reports',      desc: 'Generate PDF reports for any regulatory inspector in seconds. Full audit trail included automatically.', accent: '#8b5cf6' },
-    { icon: 'upload_file',          title: 'Excel / CSV Import',           desc: 'Bulk-import your existing employee data from spreadsheets in minutes. Smart column mapping included.', accent: '#06b6d4' },
+    { icon: 'description',          title: 'One-Click Audit Reports',      desc: 'Generate PDF reports for any regulatory inspector in seconds. Full audit trail included automatically.', accent: '#0a0a0a' },
+    { icon: 'upload_file',          title: 'Excel / CSV Import',           desc: 'Bulk-import your existing employee data from spreadsheets in minutes. Smart column mapping included.', accent: '#16a34a' },
     { icon: 'manage_accounts',      title: 'Role-Based Access Control',    desc: 'Admin, HR, Accountant, Auditor, Employee — everyone sees exactly what they should, nothing more.', accent: '#ec4899' },
     { icon: 'history',              title: 'Immutable Audit Trail',        desc: 'Every action logged permanently. Show inspectors who changed what, when, and from which IP address.', accent: '#ef4444' },
   ];

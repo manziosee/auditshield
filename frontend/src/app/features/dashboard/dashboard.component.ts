@@ -143,6 +143,37 @@ interface ActivityItem {
         }
       </div>
 
+      <!-- ── Health Pulse + AI Insights strip ───────────────────────────────── -->
+      <div class="pulse-strip">
+        <div class="pulse-card">
+          <div class="pulse-icon">
+            <mat-icon>favorite</mat-icon>
+          </div>
+          <div class="pulse-content">
+            <div class="pulse-title">Compliance Health Pulse</div>
+            <div class="pulse-sub">System monitoring active — <span class="pulse-live"><span class="live-dot"></span>Live</span></div>
+          </div>
+          <div class="pulse-score" [class.pulse-green]="stats().compliance_score >= 80"
+               [class.pulse-amber]="stats().compliance_score >= 50 && stats().compliance_score < 80"
+               [class.pulse-red]="stats().compliance_score < 50">
+            {{ stats().compliance_score >= 80 ? 'Healthy' : stats().compliance_score >= 50 ? 'At Risk' : 'Critical' }}
+          </div>
+          <a routerLink="/compliance" class="pulse-cta">View Pulse <mat-icon>chevron_right</mat-icon></a>
+        </div>
+        <div class="ai-card">
+          <div class="ai-icon">
+            <mat-icon>auto_awesome</mat-icon>
+          </div>
+          <div class="ai-content">
+            <div class="ai-title">AI Document Extraction</div>
+            <div class="ai-sub">Automatically extracts key fields from uploaded documents using OCR + AI</div>
+          </div>
+          <a routerLink="/documents" class="btn-green" style="white-space:nowrap;font-size:0.8rem;padding:8px 16px">
+            <mat-icon style="font-size:16px;width:16px;height:16px">upload_file</mat-icon> Try Now
+          </a>
+        </div>
+      </div>
+
       <!-- ── Main grid ────────────────────────────────────────────────────────── -->
       <div class="main-grid">
 
@@ -178,7 +209,7 @@ interface ActivityItem {
                 <div class="chart-card-sub">Monthly documents uploaded vs. expired</div>
               </div>
               <div class="chart-legend">
-                <span class="legend-dot" style="background:#6366f1"></span><span>Uploaded</span>
+                <span class="legend-dot" style="background:#22c55e"></span><span>Uploaded</span>
                 <span class="legend-dot" style="background:#ef4444;margin-left:12px"></span><span>Expired</span>
               </div>
             </div>
@@ -423,32 +454,35 @@ interface ActivityItem {
 
     /* ── Welcome banner ─────────────────────────────────────────────────────── */
     .welcome-banner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: linear-gradient(135deg, #0d0f2e 0%, #1e1b4b 35%, #312e81 65%, #1e3a5f 100%);
-      border-radius: 16px;
-      padding: 24px 28px;
-      gap: 16px;
-      flex-wrap: wrap;
-      position: relative;
-      overflow: hidden;
+      background: linear-gradient(135deg, #040d05 0%, #07150a 35%, #0b1f10 65%, #040d05 100%);
+      border-radius: 24px;
+      padding: 32px 36px;
+      margin-bottom: 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 24px; flex-wrap: wrap;
+      position: relative; overflow: hidden;
+      border: 1px solid rgba(34,197,94,0.18);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
     }
     .welcome-banner::before {
       content: '';
       position: absolute; inset: 0;
       background:
-        radial-gradient(ellipse 500px 350px at 90% -20%, rgba(6,182,212,0.18), transparent),
-        radial-gradient(ellipse 300px 300px at 5% 110%, rgba(99,102,241,0.18), transparent),
-        radial-gradient(ellipse 200px 200px at 50% 50%, rgba(124,58,237,0.08), transparent);
+        radial-gradient(ellipse 500px 300px at 100% -20%, rgba(34,197,94,0.15), transparent),
+        radial-gradient(ellipse 300px 200px at 0% 100%, rgba(34,197,94,0.08), transparent);
+      pointer-events: none;
+    }
+    .welcome-banner::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(34,197,94,0.3), transparent);
       pointer-events: none;
     }
     .welcome-greeting {
-      font-size: 1.4rem;
-      font-weight: 800;
-      color: white;
-      letter-spacing: -0.5px;
-      margin-bottom: 8px;
+      font-size: 1.6rem; font-weight: 900; letter-spacing: -0.04em;
+      font-family: 'Outfit', sans-serif; margin-bottom: 8px;
+      background: linear-gradient(135deg, #ffffff 0%, #d1fae5 60%, #4ade80 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
     .welcome-sub { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
     .company-chip, .date-chip {
@@ -463,17 +497,25 @@ interface ActivityItem {
       font-size: 0.85rem; width: 0.85rem; height: 0.85rem;
     }
     .welcome-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-    .action-btn-outline {
-      color: rgba(255,255,255,0.85) !important;
-      border-color: rgba(255,255,255,0.3) !important;
-      font-weight: 600 !important;
-    }
     .action-btn-primary {
-      background: white !important;
-      color: #4f46e5 !important;
-      font-weight: 700 !important;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.2) !important;
+      background: linear-gradient(135deg, #4ade80, #22c55e) !important;
+      color: #052e16 !important;
+      border: none !important; border-radius: 12px !important;
+      padding: 10px 22px !important;
+      font-weight: 700 !important; font-family: 'Outfit', sans-serif !important;
+      box-shadow: 0 4px 16px rgba(34,197,94,0.4) !important;
+      transition: transform 0.15s, box-shadow 0.15s !important;
     }
+    .action-btn-primary:hover { transform: translateY(-2px) !important; box-shadow: 0 8px 24px rgba(34,197,94,0.55) !important; }
+    .action-btn-outline {
+      border: 1.5px solid rgba(74,222,128,0.3) !important;
+      color: #4ade80 !important; border-radius: 12px !important;
+      padding: 10px 20px !important;
+      font-weight: 600 !important; font-family: 'Outfit', sans-serif !important;
+      background: rgba(34,197,94,0.06) !important;
+      transition: all 0.15s !important;
+    }
+    .action-btn-outline:hover { background: rgba(34,197,94,0.12) !important; border-color: rgba(74,222,128,0.5) !important; }
 
     /* ── KPI Grid ────────────────────────────────────────────────────────────── */
     .kpi-grid {
@@ -505,8 +547,9 @@ interface ActivityItem {
     }
     .kpi-card:hover {
       box-shadow: 0 12px 32px -6px color-mix(in srgb, var(--qc, var(--brand)) 18%, rgba(0,0,0,0.1));
-      transform: translateY(-3px);
+      transform: translateY(-4px);
       border-color: color-mix(in srgb, var(--qc, var(--brand)) 50%, var(--border-color));
+      box-shadow: 0 12px 40px rgba(0,0,0,0.12), 0 0 0 1px rgba(34,197,94,0.12);
     }
     .kpi-card.kpi-danger  { border-top-color: var(--danger);  --qc: #ef4444; }
     .kpi-card.kpi-warning { border-top-color: var(--warning); --qc: #f59e0b; }
@@ -536,6 +579,7 @@ interface ActivityItem {
       font-size: 2.25rem; font-weight: 800;
       color: var(--text-primary);
       line-height: 1; letter-spacing: -0.03em;
+      font-variant-numeric: tabular-nums;
     }
     .kpi-label {
       font-size: 0.67rem; color: var(--text-muted);
@@ -619,18 +663,21 @@ interface ActivityItem {
     .chart-card {
       background: var(--surface-card);
       border: 1px solid var(--border-color);
-      border-radius: 14px;
-      padding: 22px;
+      border-radius: 20px; padding: 24px;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow 0.2s, transform 0.2s;
+      position: relative; overflow: hidden;
     }
+    .chart-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
     .chart-card-header {
       display: flex; justify-content: space-between; align-items: flex-start;
       margin-bottom: 20px; gap: 12px;
     }
     .chart-card-title {
-      font-size: 0.95rem; font-weight: 700;
-      color: var(--text-primary); margin-bottom: 3px;
+      font-size: 1rem; font-weight: 800; color: var(--text-primary);
+      font-family: 'Outfit', sans-serif; letter-spacing: -0.02em;
     }
-    .chart-card-sub { font-size: 0.75rem; color: var(--text-muted); }
+    .chart-card-sub { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
     .chart-badge {
       display: inline-flex; align-items: center; gap: 4px;
       font-size: 0.72rem; font-weight: 700;
@@ -800,8 +847,8 @@ interface ActivityItem {
       flex-shrink: 0;
     }
     .deadline-icon mat-icon { font-size: 1.1rem; width: 1.1rem; height: 1.1rem; }
-    .dl-type-tax     { background: rgba(99,102,241,0.1);  color: #6366f1; }
-    .dl-type-social  { background: rgba(59,130,246,0.1);  color: #3b82f6; }
+    .dl-type-tax     { background: rgba(34,197,94,0.1);  color: #22c55e; }
+    .dl-type-social  { background: rgba(22,163,74,0.1);  color: #16a34a; }
     .dl-type-hr      { background: rgba(34,197,94,0.1);   color: #22c55e; }
     .dl-type-legal   { background: rgba(245,158,11,0.1);  color: #f59e0b; }
     .deadline-info { flex: 1; min-width: 0; }
@@ -871,6 +918,85 @@ interface ActivityItem {
     @media (max-width: 480px) {
       .kpi-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
     }
+
+    /* ── Health Pulse + AI Insights strip ────────────────────────────────────── */
+    .pulse-strip {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .pulse-card, .ai-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--surface-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 18px 24px;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .pulse-card:hover, .ai-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+    .pulse-icon, .ai-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .pulse-icon {
+      background: rgba(34,197,94,0.12);
+      color: #22c55e;
+    }
+    .ai-icon {
+      background: rgba(34,197,94,0.12);
+      color: var(--brand);
+    }
+    .pulse-content, .ai-content { flex: 1; min-width: 0; }
+    .pulse-title, .ai-title {
+      font-size: 0.9rem; font-weight: 700;
+      font-family: var(--font-display);
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+    }
+    .pulse-sub, .ai-sub {
+      font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;
+    }
+    .pulse-live {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-weight: 600; color: #22c55e;
+    }
+    .live-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 0 2px rgba(34,197,94,0.3);
+      animation: pulse-blink 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse-blink {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 2px rgba(34,197,94,0.3); }
+      50% { opacity: 0.6; box-shadow: 0 0 0 4px rgba(34,197,94,0.1); }
+    }
+    .pulse-score {
+      font-size: 0.8rem; font-weight: 700;
+      font-family: var(--font-display);
+      padding: 5px 12px; border-radius: 999px;
+    }
+    .pulse-green { background: rgba(34,197,94,0.12); color: #15803d; }
+    .pulse-amber { background: rgba(245,158,11,0.12); color: #92400e; }
+    .pulse-red   { background: rgba(239,68,68,0.12);  color: #991b1b; }
+    .pulse-cta {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 0.8rem; font-weight: 600; color: var(--brand);
+      white-space: nowrap; text-decoration: none;
+      font-family: var(--font-display);
+    }
+    .pulse-cta:hover { text-decoration: underline; }
+    @media (max-width: 700px) {
+      .pulse-strip { grid-template-columns: 1fr; }
+    }
   `],
 })
 export class DashboardComponent implements OnInit {
@@ -901,23 +1027,23 @@ export class DashboardComponent implements OnInit {
     datasets: [{
       label: 'Compliance %',
       data: [],
-      borderColor: '#06b6d4',
-      backgroundColor: 'rgba(6,182,212,0.08)',
+      borderColor: '#22c55e',
+      backgroundColor: 'rgba(34,197,94,0.15)',
       fill: true,
-      tension: 0.42,
-      pointBackgroundColor: '#06b6d4',
-      pointBorderColor: 'white',
+      tension: 0.45,
+      pointBackgroundColor: '#22c55e',
+      pointBorderColor: '#fff',
       pointBorderWidth: 2,
-      pointRadius: 5,
-      pointHoverRadius: 7,
+      pointRadius: 4,
+      pointHoverRadius: 6,
     }],
   };
 
   docActivityData: ChartData<'bar'> = {
     labels: [],
     datasets: [
-      { label: 'Uploaded', data: [], backgroundColor: 'rgba(99,102,241,0.88)', borderRadius: 7, borderSkipped: false },
-      { label: 'Expired',  data: [], backgroundColor: 'rgba(239,68,68,0.72)',  borderRadius: 7, borderSkipped: false },
+      { label: 'Uploaded', data: [], backgroundColor: 'rgba(34,197,94,0.85)',  borderRadius: 7, borderSkipped: false },
+      { label: 'Expired',  data: [], backgroundColor: 'rgba(239,68,68,0.72)', borderRadius: 7, borderSkipped: false },
     ],
   };
 
@@ -927,10 +1053,10 @@ export class DashboardComponent implements OnInit {
       label: 'Employees',
       data: [],
       backgroundColor: [
-        'rgba(245,158,11,0.8)', 'rgba(59,130,246,0.8)',
-        'rgba(34,197,94,0.8)',  'rgba(99,102,241,0.8)',
-        'rgba(236,72,153,0.8)', 'rgba(239,68,68,0.8)',
-        'rgba(168,85,247,0.8)',
+        'rgba(34,197,94,0.85)', 'rgba(74,222,128,0.85)',
+        'rgba(22,163,74,0.85)', 'rgba(187,247,208,0.85)',
+        'rgba(134,239,172,0.85)', 'rgba(240,253,244,0.8)',
+        'rgba(16,185,129,0.85)',
       ],
       borderRadius: 6,
       borderSkipped: false,
@@ -941,9 +1067,9 @@ export class DashboardComponent implements OnInit {
     labels: ['Permanent', 'Fixed-Term', 'Internship', 'Consultant', 'Part-Time'],
     datasets: [{
       data: [0, 0, 0, 0, 0],
-      backgroundColor: ['#6366f1', '#06b6d4', '#10b981', '#f59e0b', '#7c3aed'],
-      borderColor: 'transparent',
-      borderWidth: 0,
+      backgroundColor: ['#0a0a0a', '#22c55e', '#f59e0b', '#ef4444', '#1c1f26'],
+      borderColor: 'var(--surface-card)',
+      borderWidth: 3,
       hoverOffset: 8,
     }],
   };
@@ -961,8 +1087,9 @@ export class DashboardComponent implements OnInit {
     labels: ['Active', 'Probation', 'On Leave', 'Terminated'],
     datasets: [{
       data: [0, 0, 0, 0],
-      backgroundColor: ['#22c55e', '#f59e0b', '#3b82f6', '#ef4444'],
-      borderColor: 'transparent',
+      backgroundColor: ['#22c55e', '#f59e0b', '#ef4444', '#252830'],
+      borderColor: 'var(--surface-card)',
+      borderWidth: 3,
       hoverOffset: 8,
     }],
   };
@@ -1001,9 +1128,9 @@ export class DashboardComponent implements OnInit {
 
   // ── Quick actions ──────────────────────────────────────────────────────────
   readonly quickActions = [
-    { label: 'Add Employee',    icon: 'person_add',   route: '/employees/new',      color: '#3b82f6' },
-    { label: 'Upload Document', icon: 'upload_file',  route: '/documents/upload',   color: '#8b5cf6' },
-    { label: 'Compliance',      icon: 'checklist',    route: '/compliance',         color: '#22c55e' },
+    { label: 'Add Employee',    icon: 'person_add',   route: '/employees/new',      color: '#22c55e' },
+    { label: 'Upload Document', icon: 'upload_file',  route: '/documents/upload',   color: '#0a0a0a' },
+    { label: 'Compliance',      icon: 'checklist',    route: '/compliance',         color: '#16a34a' },
     { label: 'New Report',      icon: 'description',  route: '/reports/new',        color: '#f59e0b' },
   ];
 
@@ -1164,8 +1291,8 @@ export class DashboardComponent implements OnInit {
     return [
       {
         label: 'Active Employees', value: s.employee_count, icon: 'group',
-        gradientBg: 'rgba(59,130,246,0.12)', iconColor: '#3b82f6',
-        sub: `${s.employee_count} total`, subIcon: 'people', subColor: '#3b82f6',
+        gradientBg: 'rgba(34,197,94,0.12)', iconColor: '#22c55e',
+        sub: `${s.employee_count} total`, subIcon: 'people', subColor: '#22c55e',
         sparkline: Array(7).fill(s.employee_count),
         meta: [
           { label: 'On Leave',    value: s.on_leave_count },
@@ -1175,9 +1302,9 @@ export class DashboardComponent implements OnInit {
       },
       {
         label: 'Total Documents', value: s.document_count, icon: 'folder_open',
-        gradientBg: 'rgba(139,92,246,0.12)', iconColor: '#8b5cf6',
+        gradientBg: 'rgba(10,10,10,0.12)', iconColor: '#111318',
         sub: s.document_count > 0 ? `${s.document_count} on file` : 'No documents yet',
-        subIcon: 'folder', subColor: '#8b5cf6',
+        subIcon: 'folder', subColor: '#111318',
         sparkline: Array(7).fill(s.document_count),
         meta: [
           { label: 'Expired',     value: s.expired_docs },
@@ -1304,13 +1431,13 @@ export class DashboardComponent implements OnInit {
       },
       scales: {
         x: {
-          grid:  { color: c.gridColor, drawTicks: false },
+          grid:  { display: false },
           ticks: { color: c.tickColor, font: { family: 'Inter', size: 11 } },
           border: { display: false },
         },
         y: {
           min: 0, max: 100,
-          grid:  { color: c.gridColor, drawTicks: false },
+          grid:  { color: 'rgba(0,0,0,0.04)', drawTicks: false },
           ticks: { color: c.tickColor, font: { family: 'Inter', size: 11 }, callback: (v) => `${v}%` },
           border: { display: false },
         },
@@ -1406,9 +1533,9 @@ export class DashboardComponent implements OnInit {
           borderWidth: 1, cornerRadius: 10, padding: 10,
         },
       },
-      animation: { duration: 700, easing: 'easeInOutQuart' },
-      // @ts-ignore — cutout is a valid doughnut option not in the generic type
+      // @ts-ignore — cutout + animateRotate are valid doughnut options not in the generic type
       cutout: '72%',
+      animation: { duration: 1000, easing: 'easeInOutQuart', animateRotate: true },
     } as ChartConfiguration['options'];
   }
 }

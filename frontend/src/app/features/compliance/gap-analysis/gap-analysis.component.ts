@@ -197,7 +197,7 @@ interface GapAnalysisResult {
     /* Header */
     .page-header { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
     .header-left { display: flex; align-items: center; gap: 8px; }
-    .back-btn { color: #4f46e5 !important; }
+    .back-btn { color: #22c55e !important; }
     .header-text h2 { margin: 0 0 2px; font-size: 1.5rem; font-weight: 700; }
     .subtitle { margin: 0; color: #64748b; font-size: 0.875rem; }
 
@@ -217,7 +217,7 @@ interface GapAnalysisResult {
     .donut-svg { width: 100%; height: 100%; transform: rotate(-90deg); }
     .donut-track { fill: none; stroke: #e2e8f0; stroke-width: 4; }
     .donut-fill {
-      fill: none; stroke: #4f46e5; stroke-width: 4;
+      fill: none; stroke: #22c55e; stroke-width: 4;
       stroke-linecap: round;
       transition: stroke-dasharray 0.6s ease;
     }
@@ -234,7 +234,7 @@ interface GapAnalysisResult {
     .stat-body { display: flex; flex-direction: column; }
     .stat-num { font-size: 1.7rem; font-weight: 800; color: #1e293b; }
     .stat-label { font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; }
-    .icon-neutral { color: #8b5cf6; }
+    .icon-neutral { color: #0a0a0a; }
     .icon-critical { color: #ef4444; }
     .icon-high { color: #f59e0b; }
 
@@ -250,8 +250,8 @@ interface GapAnalysisResult {
       background: transparent; color: #64748b; font-size: 0.8rem; font-weight: 500;
       cursor: pointer; transition: all 0.15s;
     }
-    .filter-chip:hover { border-color: #4f46e5; color: #4f46e5; background: rgba(79,70,229,0.06); }
-    .filter-chip--active { border-color: #4f46e5; color: #4f46e5; background: rgba(79,70,229,0.1); font-weight: 700; }
+    .filter-chip:hover { border-color: #22c55e; color: #22c55e; background: rgba(34,197,94,0.06); }
+    .filter-chip--active { border-color: #22c55e; color: #22c55e; background: rgba(34,197,94,0.1); font-weight: 700; }
 
     /* Gap list */
     .gap-list { display: flex; flex-direction: column; gap: 12px; }

@@ -31,7 +31,7 @@ import { NotificationService } from '../../../core/services/notification.service
         <!-- Floating stat cards -->
         <div class="stat-cards">
           <div class="stat-card">
-            <div class="stat-icon" style="background:rgba(99,102,241,0.2);color:#818cf8">
+            <div class="stat-icon" style="background:rgba(34,197,94,0.2);color:#4ade80">
               <mat-icon>verified_user</mat-icon>
             </div>
             <div>
@@ -169,7 +169,7 @@ import { NotificationService } from '../../../core/services/notification.service
        LEFT PANEL — always dark
     ═══════════════════════════════════════════════════════════════════════════ */
     .panel-left {
-      background: linear-gradient(145deg, #060c18 0%, #0d1525 45%, #1a1060 100%);
+      background: linear-gradient(135deg, #030a04 0%, #071a0c 50%, #0a0a0a 100%);
       padding: 40px 48px;
       display: flex;
       flex-direction: column;
@@ -180,8 +180,8 @@ import { NotificationService } from '../../../core/services/notification.service
       content: '';
       position: absolute; inset: 0;
       background:
-        radial-gradient(ellipse 500px 400px at 110% 70%, rgba(99,102,241,0.2), transparent),
-        radial-gradient(ellipse 300px 200px at -10% 20%, rgba(99,102,241,0.1), transparent);
+        radial-gradient(ellipse 500px 400px at 110% 70%, rgba(34,197,94,0.2), transparent),
+        radial-gradient(ellipse 300px 200px at -10% 20%, rgba(34,197,94,0.1), transparent);
       pointer-events: none;
     }
 
@@ -199,18 +199,25 @@ import { NotificationService } from '../../../core/services/notification.service
       justify-content: center; position: relative; z-index: 1;
     }
     .brand-logo {
-      width: 64px; height: 64px;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 16px;
+      width: 72px; height: 72px;
+      background: linear-gradient(135deg, rgba(34,197,94,0.2), rgba(22,163,74,0.12));
+      border: 1px solid rgba(74,222,128,0.3);
+      border-radius: 20px;
       display: flex; align-items: center; justify-content: center;
-      margin-bottom: 20px;
-      padding: 10px;
+      margin-bottom: 24px; padding: 12px;
+      box-shadow: 0 0 0 4px rgba(34,197,94,0.08), 0 8px 24px rgba(34,197,94,0.15);
+      animation: logoPulse 3.5s ease-in-out infinite;
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.3s;
     }
-    .brand-logo img { width: 44px; height: 44px; }
+    .brand-logo img {
+      width: 44px; height: 44px;
+      filter: drop-shadow(0 0 8px rgba(34,197,94,0.8)) brightness(1.4) saturate(1.8);
+    }
     .brand-block h1 {
-      font-size: 2.8rem; font-weight: 900; color: white;
-      margin: 0 0 12px; letter-spacing: -1.5px; line-height: 1;
+      font-size: 3rem; font-weight: 900;
+      margin: 0 0 14px; letter-spacing: -2px; line-height: 1;
+      background: linear-gradient(135deg, #ffffff 0%, #d1fae5 50%, #4ade80 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
     .brand-block p {
       font-size: 1rem; color: rgba(255,255,255,0.5);
@@ -251,8 +258,8 @@ import { NotificationService } from '../../../core/services/notification.service
     .testimonial-author { display: flex; align-items: center; gap: 12px; }
     .ta-avatar {
       width: 36px; height: 36px; border-radius: 50%;
-      background: linear-gradient(135deg, #6366f1, #4f46e5);
-      color: white; font-size: 0.75rem; font-weight: 700;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #052e16; font-size: 0.75rem; font-weight: 700;
       display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
     .ta-name  { font-size: 0.82rem; font-weight: 700; color: white; }
@@ -266,7 +273,7 @@ import { NotificationService } from '../../../core/services/notification.service
       color: rgba(255,255,255,0.45);
       font-size: 0.75rem; padding: 5px 12px; border-radius: 999px;
     }
-    .lchip mat-icon { font-size: 0.85rem; width: 0.85rem; height: 0.85rem; color: #818cf8; }
+    .lchip mat-icon { font-size: 0.85rem; width: 0.85rem; height: 0.85rem; color: #22c55e; }
 
     /* ═══════════════════════════════════════════════════════════════════════════
        RIGHT PANEL — theme-aware
@@ -279,28 +286,39 @@ import { NotificationService } from '../../../core/services/notification.service
       padding: 40px 32px;
     }
     .form-card {
-      width: 100%; max-width: 440px;
+      width: 100%; max-width: 460px;
       background: var(--surface-card);
-      border-radius: 20px;
-      padding: 36px;
-      box-shadow: 0 4px 32px rgba(0,0,0,0.08);
-      border: 1px solid var(--border-color);
+      border-radius: 28px;
+      padding: 44px 40px 36px;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.14), 0 8px 24px rgba(0,0,0,0.08), 0 0 0 1px var(--border-color);
+      border-top: 3px solid #22c55e;
+      position: relative; overflow: hidden;
+      animation: slideUpFade 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+    .form-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(ellipse 300px 200px at 100% 0%, rgba(34,197,94,0.05), transparent);
+      pointer-events: none;
     }
 
     /* Header */
     .form-header { margin-bottom: 24px; text-align: center; }
     .form-header-icon {
-      width: 52px; height: 52px; border-radius: 14px;
-      background: var(--brand-subtle);
-      color: var(--brand);
+      width: 60px; height: 60px; border-radius: 18px;
+      background: linear-gradient(135deg, rgba(34,197,94,0.15), rgba(34,197,94,0.08));
+      color: #22c55e;
+      border: 1px solid rgba(34,197,94,0.25);
       display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 16px;
+      margin: 0 auto 18px;
+      box-shadow: 0 4px 16px rgba(34,197,94,0.15);
     }
-    .form-header-icon mat-icon { font-size: 1.6rem; }
+    .form-header-icon mat-icon { font-size: 1.8rem; width: 1.8rem; height: 1.8rem; }
     .form-header h2 {
-      font-size: 1.6rem; font-weight: 800;
+      font-size: 1.75rem; font-weight: 900;
       color: var(--text-primary);
-      margin: 0 0 6px; letter-spacing: -0.5px;
+      margin: 0 0 6px; letter-spacing: -0.04em;
+      font-family: 'Outfit', sans-serif;
     }
     .form-header p { font-size: 0.875rem; color: var(--text-muted); margin: 0; }
 
@@ -320,14 +338,15 @@ import { NotificationService } from '../../../core/services/notification.service
     .input-wrap {
       display: flex; align-items: center;
       border: 1.5px solid var(--border-color);
-      border-radius: 10px;
+      border-radius: 14px;
       background: var(--surface-input);
-      transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+      transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
       overflow: hidden;
+      height: 52px;
     }
     .input-wrap.input-focused {
-      border-color: var(--brand);
-      box-shadow: 0 0 0 3px var(--brand-subtle);
+      border-color: #22c55e;
+      box-shadow: 0 0 0 4px rgba(34,197,94,0.10);
       background: var(--surface-card);
     }
     .input-wrap.input-error { border-color: var(--danger); }
@@ -377,20 +396,25 @@ import { NotificationService } from '../../../core/services/notification.service
 
     /* Submit button */
     .submit-btn {
-      width: 100%; height: 50px;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      background: linear-gradient(135deg, var(--brand), var(--brand-dark));
-      color: white; border: none; border-radius: 12px;
-      font-size: 0.95rem; font-weight: 700; cursor: pointer;
-      transition: opacity 0.15s, transform 0.1s, box-shadow 0.15s;
-      box-shadow: 0 4px 16px var(--brand-glow);
+      width: 100%; height: 54px;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      background: linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #16a34a 100%);
+      background-size: 200% 100%; background-position: 0% 50%;
+      color: #052e16 !important; border: none; border-radius: 14px;
+      font-size: 1rem; font-weight: 800; cursor: pointer;
+      transition: background-position 0.4s, transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 6px 20px rgba(34,197,94,0.4), 0 1px 0 rgba(255,255,255,0.3) inset;
       margin-bottom: 20px;
-      font-family: inherit;
+      font-family: 'Outfit', sans-serif;
+      letter-spacing: -0.01em;
+      position: relative; overflow: hidden;
     }
     .submit-btn:hover:not(:disabled) {
-      opacity: 0.92; transform: translateY(-1px);
-      box-shadow: 0 8px 24px var(--brand-glow);
+      background-position: 100% 50%;
+      transform: translateY(-2px) scale(1.01);
+      box-shadow: 0 10px 28px rgba(34,197,94,0.55), 0 1px 0 rgba(255,255,255,0.3) inset;
     }
+    .submit-btn:active:not(:disabled) { transform: translateY(0) scale(0.99); }
     .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
     .submit-btn mat-icon { font-size: 1.2rem; width: 1.2rem; height: 1.2rem; }
 
@@ -417,8 +441,8 @@ import { NotificationService } from '../../../core/services/notification.service
       50%       { transform: translateY(-7px); }
     }
     @keyframes logoPulse {
-      0%, 100% { box-shadow: 0 0 0 0   rgba(99,102,241,0);    }
-      50%       { box-shadow: 0 0 0 10px rgba(99,102,241,0.12); }
+      0%, 100% { box-shadow: 0 0 0 0   rgba(34,197,94,0);    }
+      50%       { box-shadow: 0 0 0 10px rgba(34,197,94,0.12); }
     }
     @keyframes orbA {
       0%, 100% { transform: translate(0,   0  ) scale(1);    opacity: 0.6; }
@@ -435,7 +459,7 @@ import { NotificationService } from '../../../core/services/notification.service
     .panel-left::after {
       content: ''; position: absolute;
       width: 380px; height: 380px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(99,102,241,0.13), transparent 70%);
+      background: radial-gradient(circle, rgba(34,197,94,0.13), transparent 70%);
       bottom: -100px; right: -120px;
       animation: orbA 11s ease-in-out infinite;
       pointer-events: none; z-index: 0;
@@ -458,7 +482,7 @@ import { NotificationService } from '../../../core/services/notification.service
     }
     .brand-logo:hover {
       transform: scale(1.12) rotate(8deg);
-      border-color: rgba(165,180,252,0.5);
+      border-color: rgba(74,222,128,0.5);
       animation-play-state: paused;
     }
 
@@ -468,7 +492,7 @@ import { NotificationService } from '../../../core/services/notification.service
     .stat-card:nth-child(2) { animation: statFloat 4.5s ease-in-out 1.2s infinite; }
     .stat-card:hover {
       background: rgba(255,255,255,0.09) !important;
-      border-color: rgba(165,180,252,0.25) !important;
+      border-color: rgba(74,222,128,0.25) !important;
       transform: translateY(-5px) scale(1.03);
       animation-play-state: paused;
     }
@@ -478,7 +502,7 @@ import { NotificationService } from '../../../core/services/notification.service
     .testimonial { transition: all 0.3s ease; }
     .testimonial:hover {
       background: rgba(255,255,255,0.07) !important;
-      border-color: rgba(165,180,252,0.18) !important;
+      border-color: rgba(74,222,128,0.18) !important;
       transform: translateY(-3px);
       box-shadow: 0 8px 32px rgba(0,0,0,0.25);
     }
@@ -489,8 +513,8 @@ import { NotificationService } from '../../../core/services/notification.service
       cursor: default;
     }
     .lchip:hover {
-      background: rgba(165,180,252,0.12) !important;
-      border-color: rgba(165,180,252,0.25) !important;
+      background: rgba(74,222,128,0.12) !important;
+      border-color: rgba(74,222,128,0.25) !important;
       color: rgba(255,255,255,0.75) !important;
       transform: translateY(-3px) scale(1.04);
     }
@@ -510,20 +534,11 @@ import { NotificationService } from '../../../core/services/notification.service
     }
 
     /* ── Submit button: shimmer sweep ────────────────────────────────────── */
-    .submit-btn { position: relative; overflow: hidden; }
     .submit-btn::before {
-      content: ''; position: absolute; top: 0; left: -100%;
-      width: 55%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.28), transparent);
-      animation: shimmer 2.8s ease-in-out infinite;
-    }
-    .submit-btn:hover:not(:disabled) {
-      transform: translateY(-2px) scale(1.015) !important;
-      box-shadow: 0 14px 36px var(--brand-glow) !important;
-    }
-    .submit-btn:active:not(:disabled) {
-      transform: translateY(0) scale(0.98) !important;
-      transition: transform 0.1s;
+      content: '';
+      position: absolute; top: 0; left: -100%; width: 55%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.20), transparent);
+      animation: shimmer 2.5s ease-in-out infinite;
     }
 
     /* ── Demo banner: hover glow ─────────────────────────────────────────── */

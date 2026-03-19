@@ -163,11 +163,11 @@ import { Document as Doc } from '../../../core/models/document.models';
     }
     .scale-label { font-size: 0.7rem; color: var(--text-faint); font-weight: 600; white-space: nowrap; }
     .scale-expired { color: #dc2626; }
-    .scale-safe { color: #0d9488; }
+    .scale-safe { color: #22c55e; }
     .scale-track {
       flex: 1;
       height: 2px;
-      background: linear-gradient(to right, #dc2626, #f59e0b 30%, #0d9488);
+      background: linear-gradient(to right, #dc2626, #f59e0b 30%, #22c55e);
       border-radius: 2px;
       position: relative;
     }
@@ -226,7 +226,7 @@ import { Document as Doc } from '../../../core/models/document.models';
       transition: width 0.4s ease;
       position: relative;
     }
-    .tl-bar-green  { background: linear-gradient(90deg, #0d9488, #2dd4bf); }
+    .tl-bar-green  { background: linear-gradient(90deg, #22c55e, #4ade80); }
     .tl-bar-amber  { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
     .tl-bar-red    { background: linear-gradient(90deg, #ef4444, #f87171); }
     .tl-bar-expired { background: repeating-linear-gradient(
