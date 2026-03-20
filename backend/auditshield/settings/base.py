@@ -58,6 +58,17 @@ LOCAL_APPS = [
     "apps.audit_logs",
     "apps.payroll",
     "apps.webhooks",
+    # New feature apps
+    "apps.signatures",
+    "apps.onboarding",
+    "apps.training",
+    "apps.policies",
+    "apps.incidents",
+    "apps.approvals",
+    "apps.vendors",
+    "apps.forms",
+    "apps.partners",
+    "apps.integrations",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
