@@ -182,7 +182,7 @@ import { Document as Doc } from '../../../core/models/document.models';
     .page-container { display:flex; flex-direction:column; gap:20px; }
     .page-header { display:flex; justify-content:space-between; align-items:center; }
     .page-header h2 { margin:0 0 2px; font-size:1.5rem; font-weight:700; }
-    .subtitle { margin:0; color:#64748b; font-size:0.875rem; }
+    .subtitle { margin:0; color: var(--text-muted); font-size:0.875rem; }
     .filters-card { padding:16px 20px !important; }
     .filters-row { display:flex; gap:12px; flex-wrap:wrap; }
     .search-field { flex:1; min-width:220px; }
@@ -191,23 +191,23 @@ import { Document as Doc } from '../../../core/models/document.models';
     .table-wrapper { overflow-x:auto; }
     table { width:100%; }
     .doc-name { font-weight:500; font-size:0.875rem; }
-    .doc-sub { font-size:0.75rem; color:#64748b; }
+    .doc-sub { font-size:0.75rem; color: var(--text-muted); }
     .chip { display:inline-block; padding:2px 10px; border-radius:20px; font-size:0.75rem; font-weight:500; }
-    .chip-neutral { background:#f1f5f9; color:#475569; }
-    .chip-success { background:#dcfce7; color:#16a34a; }
-    .chip-warning { background:#fef9c3; color:#a16207; }
-    .chip-danger { background:#fee2e2; color:#dc2626; }
-    .chip-info { background:#dbeafe; color:#1d4ed8; }
+    .chip-neutral { background: var(--surface-2); color: var(--text-secondary); }
+    .chip-success { background:rgba(34,197,94,0.12); color:#4ade80; }
+    .chip-warning { background:rgba(234,179,8,0.12); color:#fbbf24; }
+    .chip-danger { background:rgba(239,68,68,0.12); color:#f87171; }
+    .chip-info { background:rgba(59,130,246,0.12); color:#60a5fa; }
     .text-danger { color:#dc2626; }
     .text-warn { color:#f59e0b; }
-    .text-muted { color:#94a3b8; }
+    .text-muted { color: var(--text-faint); }
     .days-tag { font-size:0.7rem; }
     .clickable-row { cursor:pointer; }
-    .clickable-row:hover { background:#f8fafc; }
+    .clickable-row:hover { background: var(--surface-2); }
     .danger-item { color:#dc2626; }
-    .empty-state { text-align:center; padding:48px 24px; color:#64748b; }
+    .empty-state { text-align:center; padding:48px 24px; color: var(--text-muted); }
     .empty-state mat-icon { font-size:3rem; height:3rem; width:3rem; opacity:0.4; display:block; margin:0 auto 12px; }
-    .empty-state h3 { margin:0 0 8px; color:#1e293b; }
+    .empty-state h3 { margin:0 0 8px; color: var(--text-primary); }
     .empty-state p { margin:0 0 20px; }
     .icon-pdf { color:#ef4444; }
     .icon-image { color:#3b82f6; }

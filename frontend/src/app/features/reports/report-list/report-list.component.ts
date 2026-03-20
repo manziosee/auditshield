@@ -156,7 +156,7 @@ import { Report } from '../../../core/models/report.models';
     .page-container { display:flex; flex-direction:column; gap:20px; }
     .page-header { display:flex; justify-content:space-between; align-items:center; }
     .page-header h2 { margin:0 0 2px; font-size:1.5rem; font-weight:700; }
-    .subtitle { margin:0; color:#64748b; font-size:0.875rem; }
+    .subtitle { margin:0; color: var(--text-muted); font-size:0.875rem; }
     .filters-card { padding:16px 20px !important; }
     .filters-row { display:flex; gap:12px; flex-wrap:wrap; }
     .table-card { overflow:hidden; padding:0 !important; position:relative; }
@@ -165,16 +165,16 @@ import { Report } from '../../../core/models/report.models';
     table { width:100%; }
     .report-icon { color:#8b5cf6; font-size:1.5rem; height:1.5rem; width:1.5rem; }
     .rep-name { font-weight:500; font-size:0.875rem; }
-    .rep-sub { font-size:0.75rem; color:#64748b; }
-    .text-sm { font-size:0.8rem; color:#64748b; }
-    .text-muted { color:#94a3b8; }
+    .rep-sub { font-size:0.75rem; color: var(--text-muted); }
+    .text-sm { font-size:0.8rem; color: var(--text-muted); }
+    .text-muted { color: var(--text-faint); }
     .chip { display:inline-flex; align-items:center; gap:4px; padding:2px 10px; border-radius:20px; font-size:0.75rem; font-weight:500; }
-    .chip-success { background:#dcfce7; color:#16a34a; }
-    .chip-warning { background:#fef9c3; color:#a16207; }
+    .chip-success { background:rgba(34,197,94,0.12); color:#4ade80; }
+    .chip-warning { background:rgba(234,179,8,0.12); color:#fbbf24; }
     .danger-item { color:#dc2626; }
-    .empty-state { text-align:center; padding:48px 24px; color:#64748b; }
+    .empty-state { text-align:center; padding:48px 24px; color: var(--text-muted); }
     .empty-state mat-icon { font-size:3rem; height:3rem; width:3rem; opacity:0.4; display:block; margin:0 auto 12px; }
-    .empty-state h3 { margin:0 0 8px; color:#1e293b; }
+    .empty-state h3 { margin:0 0 8px; color: var(--text-primary); }
     .empty-state p { margin:0 0 20px; }
   `],
 })

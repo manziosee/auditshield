@@ -43,6 +43,11 @@
   --surface-hover:  #eef6ee;
   --surface-input:  #f9fbf9;
 
+  // Aliases used by feature components
+  --surface-1:      #ffffff;
+  --surface-2:      #eef6ee;
+  --surface-3:      #e6f2e7;
+
   // Sidebar (always dark-ish — gradient applied inline)
   --sidebar-bg:         #060810;
   --sidebar-hover:      rgba(255, 255, 255, 0.05);
@@ -122,6 +127,11 @@ html.dark-theme {
   --surface-card:   #0d1610;
   --surface-hover:  #131f16;
   --surface-input:  #0a100d;
+
+  // Aliases used by feature components
+  --surface-1:      #0d1610;
+  --surface-2:      #131f16;
+  --surface-3:      #1a2b1e;
 
   // Sidebar (deep black with green undertone)
   --sidebar-bg:         #050908;
@@ -928,6 +938,93 @@ mat-divider, .mat-divider { border-top-color: var(--border-color) !important; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-faint); }
+
+// ── Dark-mode: override hardcoded light-only colors in feature components ──────
+// Fixes gray/black text invisible on dark backgrounds
+html.dark-theme {
+  // Any element using hardcoded slate/stone colors
+  [style*="color: #64748b"], [style*="color:#64748b"],
+  [style*="color: #475569"], [style*="color:#475569"],
+  [style*="color: #94a3b8"], [style*="color:#94a3b8"] {
+    color: var(--text-muted) !important;
+  }
+  [style*="color: #1e293b"], [style*="color:#1e293b"],
+  [style*="color: #0f172a"], [style*="color:#0f172a"] {
+    color: var(--text-primary) !important;
+  }
+
+  // Light-bg chips used inside dark surfaces
+  .freq-chip, .auth-other {
+    background: var(--surface-2) !important;
+    color: var(--text-secondary) !important;
+    border-color: var(--border-color) !important;
+  }
+
+  // Create panels / inline forms
+  .create-panel, .inline-form {
+    background: var(--surface-2) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+  }
+
+  // Page headers with hardcoded dark text
+  h1, h2, h3, h4, h5 { color: var(--text-primary); }
+
+  // Labels in custom form fields
+  label, .field-label, .form-label {
+    color: var(--text-muted) !important;
+  }
+
+  // Generic subtitle/description paragraphs
+  .subtitle, .description, .page-subtitle,
+  .subtext, .sub-title, .card-subtitle {
+    color: var(--text-muted) !important;
+  }
+
+  // Empty states
+  .empty-state, .no-data, .zero-state {
+    background: var(--surface-1) !important;
+    border-color: var(--border-color) !important;
+    h3 { color: var(--text-primary) !important; }
+    p  { color: var(--text-muted)   !important; }
+  }
+
+  // Stats
+  .stat-num, .kpi-value, .metric-value {
+    color: var(--text-primary) !important;
+  }
+  .stat-label, .kpi-label, .metric-label {
+    color: var(--text-muted) !important;
+  }
+
+  // Filter chips
+  .filter-chip {
+    border-color: var(--border-color) !important;
+    color: var(--text-muted) !important;
+    background: transparent !important;
+    &:hover, &.filter-chip--active {
+      border-color: var(--brand) !important;
+      color: var(--brand) !important;
+      background: var(--brand-subtle) !important;
+    }
+  }
+
+  // Section labels
+  .section-label, .nav-section-label {
+    color: rgba(255,255,255,0.22) !important;
+  }
+
+  // Input placeholders
+  input::placeholder, textarea::placeholder {
+    color: var(--text-faint) !important;
+  }
+
+  // Chip input (Material)
+  .mat-mdc-chip {
+    background: var(--surface-3) !important;
+    color: var(--text-primary) !important;
+  }
+}
 
 // ── Print ──────────────────────────────────────────────────────────────────────
 @media print {

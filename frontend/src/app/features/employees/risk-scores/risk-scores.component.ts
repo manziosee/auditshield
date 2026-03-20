@@ -126,7 +126,7 @@ interface RiskDistribution {
               <th mat-header-cell *matHeaderCellDef>Employee</th>
               <td mat-cell *matCellDef="let e">
                 <div class="emp-cell">
-                  <div class="emp-avatar" [style.background]="riskGradient(e.risk_level)">{{ e.employee_name[0] }}</div>
+                  <div class="emp-avatar" [style.background]="riskGradient(e.risk_level)">{{ (e.employee_name || '?')[0] }}</div>
                   <div>
                     <div class="emp-name">{{ e.employee_name }}</div>
                     <div class="emp-dept">{{ e.department }}</div>
@@ -219,7 +219,7 @@ interface RiskDistribution {
     .table-wrapper { overflow-x:auto; }
     table { width:100%; }
     .emp-cell { display:flex; align-items:center; gap:10px; }
-    .emp-avatar { width:36px; height:36px; border-radius:50%; color:#052e16; font-size:0.8rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .emp-avatar { width:36px; height:36px; border-radius:50%; color: var(--brand-mid); font-size:0.8rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
     .emp-name { font-weight:600; font-size:0.875rem; }
     .emp-dept { font-size:0.75rem; color:var(--text-muted); }
     .score-cell { display:flex; align-items:center; gap:10px; min-width:140px; }
@@ -227,10 +227,10 @@ interface RiskDistribution {
     .score-bar-bg { flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden; }
     .score-bar-fill { height:100%; border-radius:3px; transition:width 0.3s; }
     .level-badge { display:inline-block; padding:2px 8px; border-radius:8px; font-size:0.75rem; font-weight:700; }
-    .level-low { background:#dcfce7; color:#16a34a; }
-    .level-medium { background:#fef9c3; color:#a16207; }
+    .level-low { background:rgba(34,197,94,0.12); color:#4ade80; }
+    .level-medium { background:rgba(234,179,8,0.12); color:#fbbf24; }
     .level-high { background:#ffedd5; color:#ea580c; }
-    .level-critical { background:#fee2e2; color:#dc2626; }
+    .level-critical { background:rgba(239,68,68,0.12); color:#f87171; }
     .flags-row { display:flex; flex-wrap:wrap; gap:4px; max-width:200px; }
     .flag-chip { background:rgba(0,0,0,0.08); color:var(--text-secondary); padding:1px 6px; border-radius:8px; font-size:0.72rem; }
     .flag-more { background:rgba(34,197,94,0.1); color:#16a34a; padding:1px 6px; border-radius:8px; font-size:0.72rem; font-weight:600; }
@@ -291,8 +291,17 @@ export class RiskScoresComponent implements OnInit {
     this.loading.set(true);
     this.api.get<{ results: EmployeeRisk[]; distribution: RiskDistribution }>('employees/risk-scores/').subscribe({
       next: (res) => {
-        const list = (res as { results: EmployeeRisk[] }).results ?? (Array.isArray(res) ? res : []);
-        this.employees.set(list as EmployeeRisk[]);
+        const raw = (res as { results: EmployeeRisk[] }).results ?? (Array.isArray(res) ? res : []);
+        // Normalise: backend may return first_name/last_name instead of employee_name
+        const list = (raw as any[]).map(e => ({
+          ...e,
+          employee_name: e.employee_name || `${e.first_name ?? ''} ${e.last_name ?? ''}`.trim() || 'Unknown',
+          risk_level: e.risk_level || 'low',
+          risk_score: e.risk_score ?? 0,
+          department: e.department_name || e.department || '—',
+          flags: Array.isArray(e.flags) ? e.flags : [],
+        })) as EmployeeRisk[];
+        this.employees.set(list);
         const dist = (res as { distribution?: RiskDistribution }).distribution;
         if (dist) {
           this.distribution.set(dist);

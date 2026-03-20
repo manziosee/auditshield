@@ -125,12 +125,12 @@ interface PolicyDetail {
     .header-meta { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
     .version-badge { background:rgba(0,0,0,0.08); color:var(--text-secondary); padding:2px 8px; border-radius:10px; font-size:0.75rem; }
     .status-badge { padding:2px 8px; border-radius:10px; font-size:0.75rem; font-weight:600; }
-    .status-active { background:#dcfce7; color:#16a34a; }
-    .status-draft { background:#fef9c3; color:#a16207; }
+    .status-active { background:rgba(34,197,94,0.12); color:#4ade80; }
+    .status-draft { background:rgba(234,179,8,0.12); color:#fbbf24; }
     .status-archived { background:rgba(0,0,0,0.06); color:var(--text-muted); }
     .updated-at { font-size:0.75rem; color:var(--text-muted); }
-    .btn-brand { background:linear-gradient(135deg,#22c55e,#16a34a) !important; color:#052e16 !important; font-weight:700 !important; }
-    .acked-badge { display:flex; align-items:center; gap:6px; background:#dcfce7; color:#16a34a; padding:8px 16px; border-radius:10px; font-weight:600; font-size:0.875rem; }
+    .btn-brand { background:linear-gradient(135deg,#22c55e,#16a34a) !important; color: var(--brand-mid) !important; font-weight:700 !important; }
+    .acked-badge { display:flex; align-items:center; gap:6px; background:rgba(34,197,94,0.12); color:#4ade80; padding:8px 16px; border-radius:10px; font-weight:600; font-size:0.875rem; }
     .acked-badge mat-icon { font-size:1.1rem; height:1.1rem; width:1.1rem; }
     .tabs { background:var(--surface-1); border-radius:16px; border:1px solid var(--border-color); overflow:hidden; }
     .content-card { padding:28px !important; margin:20px; border-radius:12px !important; border:1px solid var(--border-color) !important; }
@@ -141,7 +141,7 @@ interface PolicyDetail {
     .table-wrapper { overflow-x:auto; }
     table { width:100%; }
     .emp-cell { display:flex; align-items:center; gap:8px; }
-    .emp-dot { width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,#22c55e,#16a34a); color:#052e16; font-size:0.75rem; font-weight:700; display:flex; align-items:center; justify-content:center; }
+    .emp-dot { width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,#22c55e,#16a34a); color: var(--brand-mid); font-size:0.75rem; font-weight:700; display:flex; align-items:center; justify-content:center; }
     .ip-code { font-family:monospace; font-size:0.8rem; background:rgba(0,0,0,0.06); padding:2px 6px; border-radius:4px; }
   `],
 })

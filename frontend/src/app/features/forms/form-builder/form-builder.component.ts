@@ -160,7 +160,7 @@ interface FieldPaletteItem {
     .page-title { margin:0 0 2px; font-size:1.5rem; font-weight:800; font-family:'Outfit',sans-serif; color:var(--text-primary); letter-spacing:-0.03em; }
     .subtitle { margin:0; color:var(--text-muted); font-size:0.875rem; }
     .header-actions { display:flex; gap:10px; }
-    .btn-brand { background:linear-gradient(135deg,#22c55e,#16a34a) !important; color:#052e16 !important; font-weight:700 !important; }
+    .btn-brand { background:linear-gradient(135deg,#22c55e,#16a34a) !important; color: var(--brand-mid) !important; font-weight:700 !important; }
     .meta-card { padding:16px 20px !important; }
     .meta-row { display:flex; gap:16px; flex-wrap:wrap; }
     .title-field { flex:2; min-width:220px; }

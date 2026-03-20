@@ -165,7 +165,7 @@ interface AuditPrepResult {
     .page-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
     .page-title { margin:0 0 2px; font-size:1.5rem; font-weight:800; font-family:'Outfit',sans-serif; color:var(--text-primary); letter-spacing:-0.03em; }
     .subtitle { margin:0; color:var(--text-muted); font-size:0.875rem; }
-    .btn-brand { background:linear-gradient(135deg,#22c55e,#16a34a) !important; color:#052e16 !important; font-weight:700 !important; }
+    .btn-brand { background:linear-gradient(135deg,#22c55e,#16a34a) !important; color: var(--brand-mid) !important; font-weight:700 !important; }
     .date-card { padding:20px !important; }
     .date-row { display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
     .date-field { min-width:240px; }
@@ -198,7 +198,7 @@ interface AuditPrepResult {
     .cat-icon { font-size:1.1rem; height:1.1rem; width:1.1rem; color:#22c55e; }
     .cat-name { font-weight:700; font-size:0.9rem; color:var(--text-primary); flex:1; font-family:'Outfit',sans-serif; }
     .cat-count { font-size:0.75rem; color:var(--text-muted); }
-    .cat-issues { font-size:0.75rem; background:#fee2e2; color:#dc2626; padding:2px 8px; border-radius:10px; font-weight:600; }
+    .cat-issues { font-size:0.75rem; background:rgba(239,68,68,0.12); color:#f87171; padding:2px 8px; border-radius:10px; font-weight:600; }
     .items-list { padding:8px 0; }
     .prep-item { display:flex; align-items:flex-start; gap:12px; padding:12px 20px; border-bottom:1px solid rgba(255,255,255,0.03); transition:background 0.1s; }
     .prep-item:last-child { border-bottom:none; }
@@ -213,10 +213,10 @@ interface AuditPrepResult {
     .item-desc { font-size:0.875rem; color:var(--text-primary); margin-bottom:6px; }
     .item-meta { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
     .sev-badge { display:inline-block; padding:1px 8px; border-radius:8px; font-size:0.7rem; font-weight:700; }
-    .sev-critical { background:#fee2e2; color:#dc2626; }
+    .sev-critical { background:rgba(239,68,68,0.12); color:#f87171; }
     .sev-high { background:#ffedd5; color:#ea580c; }
-    .sev-medium { background:#fef9c3; color:#a16207; }
-    .sev-low { background:#dcfce7; color:#16a34a; }
+    .sev-medium { background:rgba(234,179,8,0.12); color:#fbbf24; }
+    .sev-low { background:rgba(34,197,94,0.12); color:#4ade80; }
     .deadline { display:flex; align-items:center; gap:3px; font-size:0.75rem; color:var(--text-muted); }
     .tiny { font-size:0.8rem; height:0.8rem; width:0.8rem; }
     .item-right { flex-shrink:0; margin-left:8px; }

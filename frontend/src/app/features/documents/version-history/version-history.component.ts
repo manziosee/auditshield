@@ -137,7 +137,7 @@ interface DocumentVersion {
     .page-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
     .page-title { margin:0 0 2px; font-size:1.5rem; font-weight:800; font-family:'Outfit',sans-serif; color:var(--text-primary); letter-spacing:-0.03em; }
     .subtitle { margin:0; color:var(--text-muted); font-size:0.875rem; }
-    .btn-brand { background:linear-gradient(135deg,#22c55e,#16a34a) !important; color:#052e16 !important; font-weight:700 !important; }
+    .btn-brand { background:linear-gradient(135deg,#22c55e,#16a34a) !important; color: var(--brand-mid) !important; font-weight:700 !important; }
     .upload-card { padding:20px !important; }
     .upload-title { display:flex; align-items:center; gap:8px; font-size:1rem; font-weight:700; color:var(--text-primary); margin-bottom:14px; font-family:'Outfit',sans-serif; }
     .upload-title mat-icon { color:#22c55e; }
@@ -152,7 +152,7 @@ interface DocumentVersion {
     .version-item { display:flex; gap:16px; padding-bottom:0; }
     .version-item::before { display:none; }
     .version-badge { width:40px; min-width:40px; height:40px; border-radius:50%; background:var(--surface-2); border:2px solid var(--border-color); display:flex; align-items:center; justify-content:center; font-size:0.72rem; font-weight:700; color:var(--text-muted); flex-shrink:0; margin-top:20px; position:relative; z-index:1; }
-    .current-badge { background:linear-gradient(135deg,#22c55e,#16a34a); border-color:#22c55e; color:#052e16; }
+    .current-badge { background:linear-gradient(135deg,#22c55e,#16a34a); border-color:#22c55e; color: var(--brand-mid); }
     .version-content { flex:1; padding-bottom:16px; border-left:2px solid var(--border-color); margin-left:-20px; padding-left:20px; }
     .version-item:last-child .version-content { border-left-color:transparent; }
     .version-card { padding:16px !important; border-radius:12px !important; border:1px solid var(--border-color) !important; margin-left:12px; }
@@ -160,7 +160,7 @@ interface DocumentVersion {
     .version-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
     .version-meta { display:flex; flex-direction:column; gap:2px; }
     .version-label { font-weight:700; font-size:0.875rem; color:var(--text-primary); display:flex; align-items:center; gap:6px; }
-    .current-chip { background:#22c55e; color:#052e16; padding:1px 8px; border-radius:10px; font-size:0.7rem; font-weight:700; }
+    .current-chip { background:#22c55e; color: var(--brand-mid); padding:1px 8px; border-radius:10px; font-size:0.7rem; font-weight:700; }
     .version-date { font-size:0.75rem; color:var(--text-muted); }
     .version-actions { display:flex; align-items:center; gap:6px; }
     .restore-btn { font-size:0.78rem !important; color:#22c55e !important; border-color:rgba(34,197,94,0.3) !important; }

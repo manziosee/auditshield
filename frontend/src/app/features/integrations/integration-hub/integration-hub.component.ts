@@ -125,7 +125,7 @@ interface Integration {
     .card-top { display:flex; align-items:center; justify-content:space-between; }
     .integration-emoji { font-size:2.2rem; line-height:1; }
     .status-badge { display:flex; align-items:center; gap:4px; padding:3px 8px; border-radius:10px; font-size:0.72rem; font-weight:600; }
-    .connected-badge { background:#dcfce7; color:#16a34a; }
+    .connected-badge { background:rgba(34,197,94,0.12); color:#4ade80; }
     .disconnected-badge { background:rgba(0,0,0,0.06); color:var(--text-muted); }
     .status-dot-icon { font-size:0.7rem; height:0.7rem; width:0.7rem; }
     .integration-name { font-weight:700; font-size:1rem; color:var(--text-primary); font-family:'Outfit',sans-serif; }
@@ -134,7 +134,7 @@ interface Integration {
     .last-sync { display:flex; align-items:center; gap:4px; font-size:0.75rem; color:var(--text-muted); }
     .sync-icon { font-size:0.9rem; height:0.9rem; width:0.9rem; }
     .card-actions { display:flex; gap:8px; flex-wrap:wrap; }
-    .btn-brand { background:linear-gradient(135deg,#22c55e,#16a34a) !important; color:#052e16 !important; font-weight:700 !important; font-size:0.8rem !important; }
+    .btn-brand { background:linear-gradient(135deg,#22c55e,#16a34a) !important; color: var(--brand-mid) !important; font-weight:700 !important; font-size:0.8rem !important; }
     .sync-btn { color:#22c55e !important; border-color:rgba(34,197,94,0.3) !important; font-size:0.8rem !important; }
     .disconnect-btn { color:#dc2626 !important; border-color:rgba(220,38,38,0.2) !important; font-size:0.8rem !important; }
     .config-panel { border-top:1px solid var(--border-color); padding-top:14px; display:flex; flex-direction:column; gap:10px; margin-top:4px; }

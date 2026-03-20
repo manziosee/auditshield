@@ -7,6 +7,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { ApiService } from '../../../core/services/api.service';
 import { NotificationService } from '../../../core/services/notification.service';
 
@@ -37,6 +40,7 @@ interface OnboardingTemplate {
     CommonModule, RouterLink,
     MatButtonModule, MatIconModule, MatCardModule,
     MatTabsModule, MatProgressBarModule, MatProgressSpinnerModule,
+    MatFormFieldModule, MatInputModule, MatSelectModule,
   ],
   template: `
     <div class="page-container">
@@ -45,10 +49,40 @@ interface OnboardingTemplate {
           <h2 class="page-title">Onboarding</h2>
           <p class="subtitle">Track new hire compliance tasks</p>
         </div>
-        <button mat-raised-button class="btn-brand">
+        <button mat-raised-button class="btn-brand" (click)="showCreate.set(true)">
           <mat-icon>add</mat-icon> Start Onboarding
         </button>
       </div>
+
+      @if (showCreate()) {
+        <div class="create-panel">
+          <h3 class="create-panel-title">Start New Onboarding</h3>
+          <div class="create-form">
+            <mat-form-field appearance="outline" class="create-field">
+              <mat-label>Employee Name or Email</mat-label>
+              <input matInput [value]="newEmployeeId()" (input)="newEmployeeId.set($any($event.target).value)" placeholder="Search employee...">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="create-field">
+              <mat-label>Template</mat-label>
+              <mat-select [value]="newTemplateId()" (valueChange)="newTemplateId.set($event)">
+                @for (tpl of templates(); track tpl.id) {
+                  <mat-option [value]="tpl.id">{{ tpl.name }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="create-field">
+              <mat-label>Start Date</mat-label>
+              <input matInput type="date" [value]="newStartDate()" (input)="newStartDate.set($any($event.target).value)">
+            </mat-form-field>
+          </div>
+          <div class="create-actions">
+            <button mat-stroked-button (click)="showCreate.set(false)">Cancel</button>
+            <button mat-raised-button class="btn-brand" (click)="startOnboarding()" [disabled]="creating() || !newEmployeeId().trim()">
+              <mat-icon>rocket_launch</mat-icon> {{ creating() ? 'Starting...' : 'Start Onboarding' }}
+            </button>
+          </div>
+        </div>
+      }
 
       <mat-tab-group class="tabs" animationDuration="200ms">
         <!-- Active Tab -->
@@ -157,22 +191,22 @@ interface OnboardingTemplate {
     .page-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
     .page-title { margin:0 0 2px; font-size:1.5rem; font-weight:800; font-family:'Outfit',sans-serif; color:var(--text-primary); letter-spacing:-0.03em; }
     .subtitle { margin:0; color:var(--text-muted); font-size:0.875rem; }
-    .btn-brand { background:linear-gradient(135deg,#22c55e,#16a34a) !important; color:#052e16 !important; font-weight:700 !important; }
+    .btn-brand { background:linear-gradient(135deg,#22c55e,#16a34a) !important; color: var(--brand-mid) !important; font-weight:700 !important; }
     .tabs { background:var(--surface-1); border-radius:16px; border:1px solid var(--border-color); overflow:hidden; }
     .center-spin { display:flex; justify-content:center; padding:60px; }
     .cards-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px; padding:20px; }
     .onboard-card { padding:20px !important; border-radius:16px !important; border:1px solid var(--border-color) !important; background:var(--surface-1) !important; display:flex; flex-direction:column; gap:12px; }
     .onboard-card--done { opacity:0.75; }
     .card-top { display:flex; align-items:center; gap:12px; }
-    .emp-avatar { width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg,#22c55e,#16a34a); color:#052e16; font-size:0.85rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .emp-avatar { width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg,#22c55e,#16a34a); color: var(--brand-mid); font-size:0.85rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
     .emp-avatar--done { background:linear-gradient(135deg,#6b7280,#4b5563); color:white; }
     .emp-info { flex:1; }
     .emp-name { font-weight:600; font-size:0.9rem; color:var(--text-primary); }
     .emp-dept { font-size:0.78rem; color:var(--text-muted); }
     .chip { display:inline-block; padding:2px 8px; border-radius:12px; font-size:0.72rem; font-weight:600; }
-    .chip-green { background:#dcfce7; color:#16a34a; }
-    .chip-amber { background:#fef9c3; color:#a16207; }
-    .chip-red { background:#fee2e2; color:#dc2626; }
+    .chip-green { background:rgba(34,197,94,0.12); color:#4ade80; }
+    .chip-amber { background:rgba(234,179,8,0.12); color:#fbbf24; }
+    .chip-red { background:rgba(239,68,68,0.12); color:#f87171; }
     .card-meta { display:flex; align-items:center; gap:6px; font-size:0.8rem; color:var(--text-muted); }
     .meta-icon { font-size:1rem; height:1rem; width:1rem; }
     .progress-section { display:flex; flex-direction:column; gap:6px; }
@@ -198,6 +232,12 @@ interface OnboardingTemplate {
     .empty-state mat-icon { font-size:2.5rem; height:2.5rem; width:2.5rem; opacity:0.3; display:block; margin:0 auto 8px; }
     .empty-state p { margin:0; }
     @media(max-width:600px) { .cards-grid { grid-template-columns:1fr; } }
+    .create-panel { background:var(--surface-1); border:1px solid var(--brand); border-radius:16px; padding:24px; animation:slideDown 0.2s ease; }
+    .create-panel-title { font-family:'Outfit',sans-serif; font-size:18px; font-weight:600; color:var(--text-primary); margin:0 0 16px; }
+    .create-form { display:flex; flex-direction:column; gap:12px; }
+    .create-field { width:100%; }
+    .create-actions { display:flex; gap:12px; justify-content:flex-end; margin-top:16px; }
+    @keyframes slideDown { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
   `],
 })
 export class OnboardingListComponent implements OnInit {
@@ -210,6 +250,12 @@ export class OnboardingListComponent implements OnInit {
 
   active    = signal<OnboardingRecord[]>([]);
   completed = signal<OnboardingRecord[]>([]);
+
+  showCreate    = signal(false);
+  creating      = signal(false);
+  newEmployeeId = signal('');
+  newTemplateId = signal('');
+  newStartDate  = signal('');
 
   ngOnInit(): void { this.load(); }
 
@@ -231,6 +277,27 @@ export class OnboardingListComponent implements OnInit {
         this.templates.set(list);
       },
       error: () => {},
+    });
+  }
+
+  startOnboarding(): void {
+    if (!this.newEmployeeId().trim()) return;
+    this.creating.set(true);
+    this.api.post('onboarding/employee/', {
+      employee_id: this.newEmployeeId(),
+      template_id: this.newTemplateId() || null,
+      start_date: this.newStartDate() || null,
+    }).subscribe({
+      next: () => {
+        this.showCreate.set(false);
+        this.newEmployeeId.set('');
+        this.newTemplateId.set('');
+        this.newStartDate.set('');
+        this.creating.set(false);
+        this.load();
+        this.notify.success('Onboarding started.');
+      },
+      error: () => { this.creating.set(false); this.notify.error('Failed to start onboarding.'); },
     });
   }
 

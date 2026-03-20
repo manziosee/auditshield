@@ -8,6 +8,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { ApiService } from '../../../core/services/api.service';
 import { NotificationService } from '../../../core/services/notification.service';
 
@@ -36,6 +38,7 @@ interface SignatureStats {
     CommonModule, RouterLink,
     MatTableModule, MatButtonModule, MatIconModule,
     MatCardModule, MatMenuModule, MatProgressSpinnerModule, MatTooltipModule,
+    MatFormFieldModule, MatInputModule,
   ],
   template: `
     <div class="page-container">
@@ -44,10 +47,32 @@ interface SignatureStats {
           <h2 class="page-title">E-Signatures</h2>
           <p class="subtitle">Manage document signature requests</p>
         </div>
-        <button mat-raised-button class="btn-brand" routerLink="/signatures/new">
+        <button mat-raised-button class="btn-brand" (click)="showCreate.set(true)">
           <mat-icon>add</mat-icon> New Request
         </button>
       </div>
+
+      @if (showCreate()) {
+        <div class="create-panel">
+          <h3 class="create-panel-title">New Signature Request</h3>
+          <div class="create-form">
+            <mat-form-field appearance="outline" class="create-field">
+              <mat-label>Request Title</mat-label>
+              <input matInput [value]="newTitle()" (input)="newTitle.set($any($event.target).value)" placeholder="e.g. Employment Contract — John Doe">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="create-field">
+              <mat-label>Message (optional)</mat-label>
+              <textarea matInput rows="2" [value]="newMessage()" (input)="newMessage.set($any($event.target).value)" placeholder="Please review and sign..."></textarea>
+            </mat-form-field>
+          </div>
+          <div class="create-actions">
+            <button mat-stroked-button (click)="showCreate.set(false)">Cancel</button>
+            <button mat-raised-button class="btn-brand" (click)="createRequest()" [disabled]="creating() || !newTitle().trim()">
+              <mat-icon>send</mat-icon> {{ creating() ? 'Creating...' : 'Create Request' }}
+            </button>
+          </div>
+        </div>
+      }
 
       <!-- Stats -->
       <div class="stats-row">
@@ -160,7 +185,7 @@ interface SignatureStats {
       background: linear-gradient(135deg, #fff 0%, #d1fae5 60%, #22c55e 100%);
       -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
     .subtitle { margin:0; color:var(--text-muted); font-size:0.875rem; }
-    .btn-brand { background:linear-gradient(135deg,#22c55e,#16a34a) !important; color:#052e16 !important; font-weight:700 !important; }
+    .btn-brand { background:linear-gradient(135deg,#22c55e,#16a34a) !important; color: var(--brand-mid) !important; font-weight:700 !important; }
     .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
     .stat-card { padding:20px !important; display:flex; align-items:center; gap:14px; }
     .stat-icon { font-size:2rem; height:2rem; width:2rem; }
@@ -183,10 +208,10 @@ interface SignatureStats {
     .doc-icon { font-size:1rem; height:1rem; width:1rem; color:#22c55e; }
     .signers-badge { background:rgba(34,197,94,0.12); color:#16a34a; padding:2px 8px; border-radius:12px; font-size:0.8rem; font-weight:600; }
     .chip { display:inline-block; padding:2px 10px; border-radius:20px; font-size:0.75rem; font-weight:500; }
-    .chip-amber { background:#fef9c3; color:#a16207; }
-    .chip-blue { background:#dbeafe; color:#1d4ed8; }
-    .chip-green { background:#dcfce7; color:#16a34a; }
-    .chip-red { background:#fee2e2; color:#dc2626; }
+    .chip-amber { background:rgba(234,179,8,0.12); color:#fbbf24; }
+    .chip-blue { background:rgba(59,130,246,0.12); color:#60a5fa; }
+    .chip-green { background:rgba(34,197,94,0.12); color:#4ade80; }
+    .chip-red { background:rgba(239,68,68,0.12); color:#f87171; }
     .chip-neutral { background:rgba(0,0,0,0.06); color:var(--text-muted); }
     .clickable-row { cursor:pointer; }
     .clickable-row:hover td { background:var(--surface-2) !important; }
@@ -196,15 +221,25 @@ interface SignatureStats {
     .empty-state h3 { margin:0; color:var(--text-primary); font-size:1.1rem; }
     .empty-state p { margin:0; font-size:0.875rem; }
     @media(max-width:768px) { .stats-row { grid-template-columns:repeat(2,1fr); } }
+    .create-panel { background:var(--surface-1); border:1px solid var(--brand); border-radius:16px; padding:24px; margin-bottom:24px; animation:slideDown 0.2s ease; }
+    .create-panel-title { font-family:'Outfit',sans-serif; font-size:18px; font-weight:600; color:var(--text-primary); margin:0 0 16px; }
+    .create-form { display:flex; flex-direction:column; gap:12px; }
+    .create-field { width:100%; }
+    .create-actions { display:flex; gap:12px; justify-content:flex-end; margin-top:16px; }
+    @keyframes slideDown { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
   `],
 })
 export class SignatureListComponent implements OnInit {
   private readonly api    = inject(ApiService);
   private readonly notify = inject(NotificationService);
 
-  requests = signal<SignatureRequest[]>([]);
-  loading  = signal(false);
-  stats    = signal<SignatureStats>({ total: 0, pending: 0, completed: 0, expired: 0 });
+  requests   = signal<SignatureRequest[]>([]);
+  loading    = signal(false);
+  stats      = signal<SignatureStats>({ total: 0, pending: 0, completed: 0, expired: 0 });
+  showCreate = signal(false);
+  creating   = signal(false);
+  newTitle   = signal('');
+  newMessage = signal('');
 
   columns = ['title', 'document', 'signers', 'status', 'expires', 'actions'];
 
@@ -225,6 +260,24 @@ export class SignatureListComponent implements OnInit {
         this.loading.set(false);
       },
       error: () => { this.loading.set(false); this.notify.error('Failed to load signature requests.'); },
+    });
+  }
+
+  createRequest(): void {
+    if (!this.newTitle().trim()) return;
+    this.creating.set(true);
+    this.api.post('signatures/requests/', {
+      title: this.newTitle(),
+      message: this.newMessage(),
+    }).subscribe({
+      next: () => {
+        this.showCreate.set(false);
+        this.newTitle.set('');
+        this.newMessage.set('');
+        this.creating.set(false);
+        this.load();
+      },
+      error: () => this.creating.set(false),
     });
   }
 

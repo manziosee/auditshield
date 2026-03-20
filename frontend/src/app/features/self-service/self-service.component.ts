@@ -273,7 +273,7 @@ interface EmployeeProfile {
       padding:3px 12px; border-radius:20px; font-size:0.72rem; font-weight:700;
       text-transform:uppercase; letter-spacing:0.05em;
     }
-    .status-active { background:rgba(13,148,136,0.12); color:#0d9488; }
+    .status-active { background:rgba(13,148,136,0.12); color: var(--brand); }
     .status-inactive { background:rgba(239,68,68,0.12); color:#dc2626; }
     .status-on_leave { background:rgba(245,158,11,0.12); color:#d97706; }
     .empty-profile { text-align:center; padding:24px; color:var(--text-muted); }
@@ -298,7 +298,7 @@ interface EmployeeProfile {
     }
     .ring-num { font-size:1.4rem; font-weight:800; color:var(--text-primary); }
     .ring-pct { font-size:0.8rem; color:var(--text-muted); margin-top:6px; }
-    .compliance-ok { display:flex; align-items:center; gap:8px; color:#0d9488; font-size:0.8rem; font-weight:600; text-align:center; }
+    .compliance-ok { display:flex; align-items:center; gap:8px; color: var(--brand); font-size:0.8rem; font-weight:600; text-align:center; }
     .compliance-warn { display:flex; align-items:center; gap:8px; color:#d97706; font-size:0.8rem; font-weight:600; text-align:center; }
     /* Docs */
     .docs-card { padding:24px !important; }
@@ -316,10 +316,10 @@ interface EmployeeProfile {
     .doc-status-chip {
       padding:2px 8px; border-radius:20px; font-size:0.7rem; font-weight:700;
     }
-    .chip-active  { background:rgba(13,148,136,0.12); color:#0d9488; }
+    .chip-active  { background:rgba(13,148,136,0.12); color: var(--brand); }
     .chip-pending { background:rgba(245,158,11,0.12); color:#d97706; }
     .chip-expired { background:rgba(239,68,68,0.12); color:#dc2626; }
-    .chip-archived { background:rgba(148,163,184,0.12); color:#64748b; }
+    .chip-archived { background:rgba(148,163,184,0.12); color: var(--text-muted); }
     .icon-pdf { color:#ef4444; }
     .icon-image { color:#3b82f6; }
     .icon-excel { color:#16a34a; }

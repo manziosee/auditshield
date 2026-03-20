@@ -9,6 +9,9 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { ApiService } from '../../../core/services/api.service';
 import { NotificationService } from '../../../core/services/notification.service';
 
@@ -36,6 +39,7 @@ interface VendorStats {
     CommonModule, RouterLink,
     MatButtonModule, MatIconModule, MatCardModule, MatTableModule,
     MatProgressBarModule, MatProgressSpinnerModule, MatMenuModule, MatTooltipModule,
+    MatFormFieldModule, MatInputModule, MatSelectModule,
   ],
   template: `
     <div class="page-container">
@@ -44,10 +48,46 @@ interface VendorStats {
           <h2 class="page-title">Vendors & Contractors</h2>
           <p class="subtitle">Manage vendor compliance and documentation</p>
         </div>
-        <button mat-raised-button class="btn-brand">
+        <button mat-raised-button class="btn-brand" (click)="showCreate.set(true)">
           <mat-icon>add</mat-icon> Add Vendor
         </button>
       </div>
+
+      @if (showCreate()) {
+        <div class="create-panel">
+          <h3 class="create-panel-title">Add Vendor</h3>
+          <div class="create-form">
+            <mat-form-field appearance="outline" class="create-field">
+              <mat-label>Vendor Name</mat-label>
+              <input matInput [value]="newVendorName()" (input)="newVendorName.set($any($event.target).value)" placeholder="e.g. Acme Corp">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="create-field">
+              <mat-label>Vendor Type</mat-label>
+              <mat-select [value]="newVendorType()" (valueChange)="newVendorType.set($event)">
+                <mat-option value="supplier">Supplier</mat-option>
+                <mat-option value="contractor">Contractor</mat-option>
+                <mat-option value="consultant">Consultant</mat-option>
+                <mat-option value="service_provider">Service Provider</mat-option>
+                <mat-option value="other">Other</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="create-field">
+              <mat-label>Contact Name</mat-label>
+              <input matInput [value]="newContactName()" (input)="newContactName.set($any($event.target).value)" placeholder="Primary contact">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="create-field">
+              <mat-label>Contact Email</mat-label>
+              <input matInput type="email" [value]="newContactEmail()" (input)="newContactEmail.set($any($event.target).value)" placeholder="contact@vendor.com">
+            </mat-form-field>
+          </div>
+          <div class="create-actions">
+            <button mat-stroked-button (click)="showCreate.set(false)">Cancel</button>
+            <button mat-raised-button class="btn-brand" (click)="addVendor()" [disabled]="creating() || !newVendorName().trim()">
+              <mat-icon>business_center</mat-icon> {{ creating() ? 'Saving...' : 'Add Vendor' }}
+            </button>
+          </div>
+        </div>
+      }
 
       <!-- Stats -->
       <div class="stats-row">
@@ -164,7 +204,7 @@ interface VendorStats {
     .page-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
     .page-title { margin:0 0 2px; font-size:1.5rem; font-weight:800; font-family:'Outfit',sans-serif; color:var(--text-primary); letter-spacing:-0.03em; }
     .subtitle { margin:0; color:var(--text-muted); font-size:0.875rem; }
-    .btn-brand { background:linear-gradient(135deg,#22c55e,#16a34a) !important; color:#052e16 !important; font-weight:700 !important; }
+    .btn-brand { background:linear-gradient(135deg,#22c55e,#16a34a) !important; color: var(--brand-mid) !important; font-weight:700 !important; }
     .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
     .stat-card { padding:18px 20px !important; display:flex; align-items:center; gap:14px; }
     .score-card { gap:12px; }
@@ -181,7 +221,7 @@ interface VendorStats {
     .table-wrapper { overflow-x:auto; }
     table { width:100%; }
     .vendor-cell { display:flex; align-items:center; gap:10px; }
-    .vendor-dot { width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,#22c55e,#16a34a); color:#052e16; font-size:0.85rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .vendor-dot { width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,#22c55e,#16a34a); color: var(--brand-mid); font-size:0.85rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
     .vendor-name { font-weight:600; font-size:0.875rem; }
     .vendor-contact { font-size:0.75rem; color:var(--text-muted); }
     .type-chip { background:rgba(34,197,94,0.1); color:#16a34a; padding:2px 8px; border-radius:10px; font-size:0.75rem; font-weight:500; }
@@ -192,9 +232,9 @@ interface VendorStats {
     .score-amber { --mdc-linear-progress-active-indicator-color:#d97706; }
     .score-red { --mdc-linear-progress-active-indicator-color:#dc2626; }
     .chip { display:inline-block; padding:2px 10px; border-radius:20px; font-size:0.75rem; font-weight:500; }
-    .chip-green { background:#dcfce7; color:#16a34a; }
-    .chip-red { background:#fee2e2; color:#dc2626; }
-    .chip-amber { background:#fef9c3; color:#a16207; }
+    .chip-green { background:rgba(34,197,94,0.12); color:#4ade80; }
+    .chip-red { background:rgba(239,68,68,0.12); color:#f87171; }
+    .chip-amber { background:rgba(234,179,8,0.12); color:#fbbf24; }
     .clickable-row { cursor:pointer; }
     .clickable-row:hover td { background:var(--surface-2) !important; }
     .danger-item { color:#dc2626 !important; }
@@ -203,15 +243,27 @@ interface VendorStats {
     .empty-state h3 { margin:0 0 8px; color:var(--text-primary); }
     .empty-state p { margin:0; }
     @media(max-width:768px) { .stats-row { grid-template-columns:repeat(2,1fr); } }
+    .create-panel { background:var(--surface-1); border:1px solid var(--brand); border-radius:16px; padding:24px; animation:slideDown 0.2s ease; }
+    .create-panel-title { font-family:'Outfit',sans-serif; font-size:18px; font-weight:600; color:var(--text-primary); margin:0 0 16px; }
+    .create-form { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .create-field { width:100%; }
+    .create-actions { display:flex; gap:12px; justify-content:flex-end; margin-top:16px; }
+    @keyframes slideDown { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
   `],
 })
 export class VendorListComponent implements OnInit {
   private readonly api    = inject(ApiService);
   private readonly notify = inject(NotificationService);
 
-  vendors = signal<Vendor[]>([]);
-  loading = signal(false);
-  stats   = signal<VendorStats>({ total: 0, active: 0, suspended: 0, avg_score: 0 });
+  vendors         = signal<Vendor[]>([]);
+  loading         = signal(false);
+  stats           = signal<VendorStats>({ total: 0, active: 0, suspended: 0, avg_score: 0 });
+  showCreate      = signal(false);
+  creating        = signal(false);
+  newVendorName   = signal('');
+  newVendorType   = signal('');
+  newContactName  = signal('');
+  newContactEmail = signal('');
 
   columns = ['name', 'type', 'contact', 'score', 'status', 'actions'];
 
@@ -233,6 +285,29 @@ export class VendorListComponent implements OnInit {
         this.loading.set(false);
       },
       error: () => { this.loading.set(false); this.notify.error('Failed to load vendors.'); },
+    });
+  }
+
+  addVendor(): void {
+    if (!this.newVendorName().trim()) return;
+    this.creating.set(true);
+    this.api.post('vendors/', {
+      name: this.newVendorName(),
+      vendor_type: this.newVendorType() || 'other',
+      contact_name: this.newContactName(),
+      contact_email: this.newContactEmail(),
+    }).subscribe({
+      next: () => {
+        this.showCreate.set(false);
+        this.newVendorName.set('');
+        this.newVendorType.set('');
+        this.newContactName.set('');
+        this.newContactEmail.set('');
+        this.creating.set(false);
+        this.load();
+        this.notify.success('Vendor added.');
+      },
+      error: () => { this.creating.set(false); this.notify.error('Failed to add vendor.'); },
     });
   }
 

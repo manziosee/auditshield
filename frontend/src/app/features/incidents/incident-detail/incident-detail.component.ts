@@ -154,18 +154,18 @@ interface IncidentDetail {
     .header-badges { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
     .sev-badge { display:flex; align-items:center; gap:4px; padding:3px 10px; border-radius:8px; font-size:0.8rem; font-weight:700; }
     .badge-icon { font-size:0.9rem; height:0.9rem; width:0.9rem; }
-    .sev-critical { background:#fee2e2; color:#dc2626; }
+    .sev-critical { background:rgba(239,68,68,0.12); color:#f87171; }
     .sev-high { background:#ffedd5; color:#ea580c; }
-    .sev-medium { background:#fef9c3; color:#a16207; }
-    .sev-low { background:#dcfce7; color:#16a34a; }
+    .sev-medium { background:rgba(234,179,8,0.12); color:#fbbf24; }
+    .sev-low { background:rgba(34,197,94,0.12); color:#4ade80; }
     .chip { display:inline-block; padding:2px 10px; border-radius:20px; font-size:0.75rem; font-weight:500; }
-    .chip-amber { background:#fef9c3; color:#a16207; }
-    .chip-blue { background:#dbeafe; color:#1d4ed8; }
-    .chip-green { background:#dcfce7; color:#16a34a; }
+    .chip-amber { background:rgba(234,179,8,0.12); color:#fbbf24; }
+    .chip-blue { background:rgba(59,130,246,0.12); color:#60a5fa; }
+    .chip-green { background:rgba(34,197,94,0.12); color:#4ade80; }
     .chip-neutral { background:rgba(0,0,0,0.06); color:var(--text-muted); }
     .date-label { font-size:0.8rem; color:var(--text-muted); }
-    .btn-resolve { background:linear-gradient(135deg,#22c55e,#16a34a) !important; color:#052e16 !important; font-weight:700 !important; }
-    .btn-brand { background:linear-gradient(135deg,#22c55e,#16a34a) !important; color:#052e16 !important; font-weight:700 !important; }
+    .btn-resolve { background:linear-gradient(135deg,#22c55e,#16a34a) !important; color: var(--brand-mid) !important; font-weight:700 !important; }
+    .btn-brand { background:linear-gradient(135deg,#22c55e,#16a34a) !important; color: var(--brand-mid) !important; font-weight:700 !important; }
     .two-col { display:grid; grid-template-columns:1fr 280px; gap:20px; align-items:start; }
     .main-col, .side-col { display:flex; flex-direction:column; gap:16px; }
     .detail-card { padding:20px !important; }

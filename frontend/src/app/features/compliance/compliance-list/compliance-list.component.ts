@@ -361,15 +361,15 @@ import { DeadlineCalendarComponent } from '../deadline-calendar/deadline-calenda
     .req-sub { font-size:0.75rem; color:var(--text-muted); }
     .text-sm { font-size:0.8rem; color:var(--text-muted); }
     .authority-badge { display:inline-block; padding:2px 8px; border-radius:4px; font-size:0.7rem; font-weight:700; letter-spacing:0.05em; }
-    .auth-tax { background:#fef9c3; color:#854d0e; }
-    .auth-social { background:#dcfce7; color:#14532d; }
+    .auth-tax { background:rgba(234,179,8,0.12); color:#fbbf24; }
+    .auth-social { background:rgba(34,197,94,0.12); color:#4ade80; }
     .auth-labour { background:rgba(34,197,94,0.12); color:#15803d; }
     .auth-registry { background:rgba(0,0,0,0.06); color:var(--text-secondary); }
     .auth-other { background:rgba(0,0,0,0.04); color:var(--text-muted); }
     .chip { display:inline-block; padding:2px 10px; border-radius:20px; font-size:0.75rem; font-weight:500; }
-    .chip-success { background:#dcfce7; color:#16a34a; }
-    .chip-warning { background:#fef9c3; color:#a16207; }
-    .chip-danger { background:#fee2e2; color:#dc2626; }
+    .chip-success { background:rgba(34,197,94,0.12); color:#4ade80; }
+    .chip-warning { background:rgba(234,179,8,0.12); color:#fbbf24; }
+    .chip-danger { background:rgba(239,68,68,0.12); color:#f87171; }
     .chip-neutral { background:rgba(0,0,0,0.06); color:var(--text-muted); }
     .chip-info { background:rgba(34,197,94,0.1); color:#15803d; }
     .text-danger { color:#dc2626; }

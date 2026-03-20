@@ -124,15 +124,15 @@ interface EmployeeSuggestion {
     .dialog-title mat-icon { color:#22c55e; }
     .dialog-body { padding:16px 20px; display:flex; flex-direction:column; gap:14px; }
     .full-width { width:100%; }
-    .chip-avatar { width:20px; height:20px; border-radius:50%; background:#22c55e; color:#052e16; font-size:0.65rem; font-weight:700; display:inline-flex; align-items:center; justify-content:center; margin-right:4px; }
+    .chip-avatar { width:20px; height:20px; border-radius:50%; background:#22c55e; color: var(--brand-mid); font-size:0.65rem; font-weight:700; display:inline-flex; align-items:center; justify-content:center; margin-right:4px; }
     .suggestion-row { display:flex; align-items:center; gap:10px; }
-    .sugg-avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#22c55e,#16a34a); color:#052e16; font-size:0.8rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .sugg-avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#22c55e,#16a34a); color: var(--brand-mid); font-size:0.8rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
     .sugg-name { font-size:0.875rem; font-weight:600; color:var(--text-primary); }
     .sugg-email { font-size:0.75rem; color:var(--text-muted); }
     .assign-summary { display:flex; align-items:flex-start; gap:8px; padding:12px 14px; background:rgba(34,197,94,0.08); border:1px solid rgba(34,197,94,0.2); border-radius:10px; font-size:0.85rem; color:var(--text-secondary); line-height:1.5; }
     .assign-summary mat-icon { font-size:1rem; height:1rem; width:1rem; flex-shrink:0; margin-top:2px; }
     .dialog-footer { display:flex; justify-content:flex-end; gap:10px; padding:0 20px 20px; }
-    .btn-brand { background:linear-gradient(135deg,#22c55e,#16a34a) !important; color:#052e16 !important; font-weight:700 !important; }
+    .btn-brand { background:linear-gradient(135deg,#22c55e,#16a34a) !important; color: var(--brand-mid) !important; font-weight:700 !important; }
     @media(max-width:600px) { .dialog-container { min-width:auto; } }
   `],
 })
@@ -159,7 +159,7 @@ export class BulkAssignDialogComponent {
     if (this.searchTimer) clearTimeout(this.searchTimer);
     if (!this.empSearch.trim()) { this.suggestions.set([]); return; }
     this.searchTimer = setTimeout(() => {
-      this.api.get<{ results: EmployeeSuggestion[] }>('employees/', { search: this.empSearch, page_size: '10' }).subscribe({
+      this.api.get<{ results: EmployeeSuggestion[] }>('employees/', { search: this.empSearch, page_size: 10 }).subscribe({
         next: (res) => this.suggestions.set(res.results ?? []),
         error: () => {},
       });

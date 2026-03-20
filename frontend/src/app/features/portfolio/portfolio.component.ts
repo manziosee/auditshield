@@ -194,25 +194,25 @@ interface PortfolioResult {
     /* Header */
     .page-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
     .page-header h2 { margin: 0 0 2px; font-size: 1.5rem; font-weight: 700; }
-    .subtitle { margin: 0; color: #64748b; font-size: 0.875rem; }
+    .subtitle { margin: 0; color: var(--text-muted); font-size: 0.875rem; }
 
     /* Loading */
     .loading-state {
       display: flex; flex-direction: column; align-items: center;
       justify-content: center; gap: 16px; padding: 80px 24px;
-      color: #64748b;
+      color: var(--text-muted);
     }
 
     /* Stats row */
     .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
     .stat-card { padding: 20px !important; display: flex; align-items: center; gap: 16px; }
     .stat-icon { font-size: 2rem; height: 2rem; width: 2rem; }
-    .icon-brand   { color: #4f46e5; }
-    .icon-success { color: #10b981; }
+    .icon-brand   { color: var(--brand); }
+    .icon-success { color: var(--brand); }
     .icon-danger  { color: #ef4444; }
     .stat-body { display: flex; flex-direction: column; }
-    .stat-num { font-size: 1.7rem; font-weight: 800; color: #1e293b; }
-    .stat-label { font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; }
+    .stat-num { font-size: 1.7rem; font-weight: 800; color: var(--text-primary); }
+    .stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
 
     /* Table */
     .table-card { overflow: hidden; padding: 0 !important; }
@@ -228,21 +228,21 @@ interface PortfolioResult {
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
     }
-    .company-name-text { font-weight: 600; font-size: 0.875rem; color: #1e293b; }
+    .company-name-text { font-weight: 600; font-size: 0.875rem; color: var(--text-primary); }
 
-    .text-secondary { color: #64748b; font-size: 0.875rem; }
-    .text-success { color: #10b981; font-weight: 600; }
+    .text-secondary { color: var(--text-muted); font-size: 0.875rem; }
+    .text-success { color: var(--brand); font-weight: 600; }
 
     .industry-chip {
       display: inline-block; padding: 2px 10px; border-radius: 20px;
-      background: #f1f5f9; color: #475569;
+      background: var(--surface-2); color: var(--text-secondary);
       font-size: 0.75rem; font-weight: 500;
     }
 
     /* Score column */
     .score-cell { display: flex; align-items: center; gap: 10px; min-width: 160px; }
     .score-bar-wrap {
-      flex: 1; height: 8px; background: #e2e8f0;
+      flex: 1; height: 8px; background: var(--border-color);
       border-radius: 99px; overflow: hidden;
     }
     .score-bar-fill {
@@ -253,7 +253,7 @@ interface PortfolioResult {
     .score-bar-fill.amber  { background: #f59e0b; }
     .score-bar-fill.red    { background: #ef4444; }
     .score-value { font-size: 0.8rem; font-weight: 700; flex-shrink: 0; width: 36px; text-align: right; }
-    .score-value.text-green { color: #10b981; }
+    .score-value.text-green { color: var(--brand); }
     .score-value.text-amber { color: #f59e0b; }
     .score-value.text-red   { color: #ef4444; }
 
@@ -265,9 +265,9 @@ interface PortfolioResult {
     }
 
     /* Empty state */
-    .empty-state { text-align: center; padding: 60px 24px; color: #64748b; }
+    .empty-state { text-align: center; padding: 60px 24px; color: var(--text-muted); }
     .empty-state mat-icon { font-size: 3rem; height: 3rem; width: 3rem; opacity: 0.35; display: block; margin: 0 auto 12px; }
-    .empty-state h3 { margin: 0 0 8px; color: #1e293b; }
+    .empty-state h3 { margin: 0 0 8px; color: var(--text-primary); }
     .empty-state p { margin: 0 0 20px; }
 
     @media (max-width: 768px) { .stats-row { grid-template-columns: 1fr 1fr; } }

@@ -136,18 +136,18 @@ import { Employee } from '../../../core/models/employee.models';
     .page-container { display:flex; flex-direction:column; gap:20px; }
     .page-header { display:flex; align-items:center; gap:12px; }
     .page-header h2 { margin:0 0 2px; font-size:1.5rem; font-weight:700; }
-    .subtitle { margin:0; color:#64748b; font-size:0.875rem; }
+    .subtitle { margin:0; color: var(--text-muted); font-size:0.875rem; }
     .upload-layout { display:grid; grid-template-columns:300px 1fr; gap:20px; }
     .drop-zone { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:280px; cursor:pointer; border:2px dashed #e2e8f0 !important; text-align:center; padding:32px 20px !important; transition:border-color 0.2s; }
     .drop-zone:hover { border-color:#3b82f6 !important; }
     .drop-zone.has-file { border-color:#22c55e !important; }
-    .upload-icon { font-size:3rem; height:3rem; width:3rem; color:#94a3b8; margin-bottom:12px; }
+    .upload-icon { font-size:3rem; height:3rem; width:3rem; color: var(--text-faint); margin-bottom:12px; }
     .file-icon-lg { font-size:3rem; height:3rem; width:3rem; color:#3b82f6; margin-bottom:8px; }
-    .drop-text { font-weight:600; color:#1e293b; margin:0 0 4px; }
-    .drop-sub { color:#64748b; margin:0 0 8px; }
-    .drop-formats { font-size:0.75rem; color:#94a3b8; margin:0; }
-    .file-name { font-weight:600; color:#1e293b; word-break:break-all; margin:0 0 4px; }
-    .file-size { color:#64748b; font-size:0.875rem; margin:0 0 12px; }
+    .drop-text { font-weight:600; color: var(--text-primary); margin:0 0 4px; }
+    .drop-sub { color: var(--text-muted); margin:0 0 8px; }
+    .drop-formats { font-size:0.75rem; color: var(--text-faint); margin:0; }
+    .file-name { font-weight:600; color: var(--text-primary); word-break:break-all; margin:0 0 4px; }
+    .file-size { color: var(--text-muted); font-size:0.875rem; margin:0 0 12px; }
     .full-width { width:100%; }
     .two-col { display:grid; grid-template-columns:1fr 1fr; gap:0 16px; }
     mat-card-actions { display:flex; justify-content:flex-end; gap:8px; padding:16px !important; }

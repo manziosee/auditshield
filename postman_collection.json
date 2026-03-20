@@ -1,24 +1,80 @@
 {
   "info": {
     "name": "AuditShield API",
-    "description": "Complete REST API collection for AuditShield — Global SME Compliance Platform.\n\n## Setup\n1. Set the `base_url` variable to your server (default: `http://localhost:8000`).\n2. Run **Auth / Login** — the `access_token` and `refresh_token` variables are set automatically.\n3. All other requests use `{{access_token}}` in the Authorization header.\n\n## Variables\n- `base_url` — API base URL\n- `access_token` — JWT access token (auto-set on login)\n- `refresh_token` — JWT refresh token (auto-set on login)\n- `company_id` — set after fetching company profile\n- `employee_id` — set after creating/listing employees\n- `document_id` — set after uploading a document\n- `compliance_id` — set after creating a compliance record\n- `report_id` — set after creating a report",
+    "description": "Complete REST API collection for AuditShield \u2014 Global SME Compliance Platform.\n\n## Setup\n1. Set the `base_url` variable to your server (default: `http://localhost:8000`).\n2. Run **Auth / Login** \u2014 the `access_token` and `refresh_token` variables are set automatically.\n3. All other requests use `{{access_token}}` in the Authorization header.\n\n## Variables\n- `base_url` \u2014 API base URL\n- `access_token` \u2014 JWT access token (auto-set on login)\n- `refresh_token` \u2014 JWT refresh token (auto-set on login)\n- `company_id` \u2014 set after fetching company profile\n- `employee_id` \u2014 set after creating/listing employees\n- `document_id` \u2014 set after uploading a document\n- `compliance_id` \u2014 set after creating a compliance record\n- `report_id` \u2014 set after creating a report",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "version": { "major": 1, "minor": 0, "patch": 0 }
+    "version": {
+      "major": 1,
+      "minor": 0,
+      "patch": 0
+    }
   },
   "variable": [
-    { "key": "base_url",       "value": "https://auditshield-backend.fly.dev", "type": "string" },
-    { "key": "access_token",   "value": "", "type": "string" },
-    { "key": "refresh_token",  "value": "", "type": "string" },
-    { "key": "company_id",     "value": "", "type": "string" },
-    { "key": "employee_id",    "value": "", "type": "string" },
-    { "key": "department_id",  "value": "", "type": "string" },
-    { "key": "document_id",    "value": "", "type": "string" },
-    { "key": "compliance_id",  "value": "", "type": "string" },
-    { "key": "requirement_id", "value": "", "type": "string" },
-    { "key": "report_id",      "value": "", "type": "string" },
-    { "key": "notification_id", "value": "", "type": "string" },
-    { "key": "payroll_run_id",  "value": "", "type": "string" },
-    { "key": "webhook_id",      "value": "", "type": "string" }
+    {
+      "key": "base_url",
+      "value": "https://auditshield-backend.fly.dev",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refresh_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "company_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "employee_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "department_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "document_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "compliance_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "requirement_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "report_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "notification_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "payroll_run_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "webhook_id",
+      "value": "",
+      "type": "string"
+    }
   ],
   "item": [
     {
@@ -29,7 +85,7 @@
           "request": {
             "method": "GET",
             "url": "{{base_url}}/health/",
-            "description": "Liveness probe — no authentication required."
+            "description": "Liveness probe \u2014 no authentication required."
           }
         }
       ]
@@ -42,7 +98,12 @@
           "request": {
             "method": "POST",
             "url": "{{base_url}}/api/v1/companies/onboard/",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"company_name\": \"Acme Corp\",\n  \"company_type\": \"sme\",\n  \"company_email\": \"info@acme.com\",\n  \"company_phone\": \"+250788123456\",\n  \"country_iso\": \"RW\",\n  \"tax_identifier\": \"100123456\",\n  \"admin_first_name\": \"Alice\",\n  \"admin_last_name\": \"Smith\",\n  \"admin_email\": \"admin@acme.com\",\n  \"admin_password\": \"StrongP@ssw0rd!\"\n}"
@@ -69,7 +130,12 @@
           "request": {
             "method": "POST",
             "url": "{{base_url}}/api/v1/auth/login/",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"email\": \"admin@acme.com\",\n  \"password\": \"StrongP@ssw0rd!\"\n}"
@@ -93,7 +159,12 @@
           "request": {
             "method": "POST",
             "url": "{{base_url}}/api/v1/auth/token/refresh/",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{ \"refresh\": \"{{refresh_token}}\" }"
@@ -106,8 +177,14 @@
             "method": "POST",
             "url": "{{base_url}}/api/v1/auth/logout/",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -121,7 +198,12 @@
           "request": {
             "method": "GET",
             "url": "{{base_url}}/api/v1/auth/me/",
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ]
           }
         },
         {
@@ -130,8 +212,14 @@
             "method": "POST",
             "url": "{{base_url}}/api/v1/auth/change-password/",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -160,7 +248,12 @@
           "request": {
             "method": "GET",
             "url": "{{base_url}}/api/v1/companies/me/",
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ]
           }
         },
         {
@@ -169,8 +262,14 @@
             "method": "PATCH",
             "url": "{{base_url}}/api/v1/companies/me/",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -183,7 +282,12 @@
           "request": {
             "method": "GET",
             "url": "{{base_url}}/api/v1/companies/export/",
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
             "description": "Downloads a full JSON export of all company data (employees, documents, compliance, audit logs)."
           }
         }
@@ -199,14 +303,37 @@
             "url": {
               "raw": "{{base_url}}/api/v1/employees/?page=1&page_size=25",
               "query": [
-                { "key": "page", "value": "1" },
-                { "key": "page_size", "value": "25" },
-                { "key": "search", "value": "", "disabled": true },
-                { "key": "department", "value": "", "disabled": true },
-                { "key": "status", "value": "", "disabled": true }
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "page_size",
+                  "value": "25"
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "department",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "disabled": true
+                }
               ]
             },
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ]
           }
         },
         {
@@ -226,8 +353,14 @@
             "method": "POST",
             "url": "{{base_url}}/api/v1/employees/",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -240,7 +373,12 @@
           "request": {
             "method": "GET",
             "url": "{{base_url}}/api/v1/employees/{{employee_id}}/",
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ]
           }
         },
         {
@@ -249,8 +387,14 @@
             "method": "PATCH",
             "url": "{{base_url}}/api/v1/employees/{{employee_id}}/",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -263,7 +407,12 @@
           "request": {
             "method": "DELETE",
             "url": "{{base_url}}/api/v1/employees/{{employee_id}}/",
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ]
           }
         },
         {
@@ -271,10 +420,21 @@
           "request": {
             "method": "POST",
             "url": "{{base_url}}/api/v1/employees/bulk-import/",
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
             "body": {
               "mode": "formdata",
-              "formdata": [{ "key": "file", "type": "file", "src": "/path/to/employees.xlsx" }]
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "/path/to/employees.xlsx"
+                }
+              ]
             }
           }
         },
@@ -283,7 +443,12 @@
           "request": {
             "method": "GET",
             "url": "{{base_url}}/api/v1/employees/export/",
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ]
           }
         },
         {
@@ -291,7 +456,12 @@
           "request": {
             "method": "GET",
             "url": "{{base_url}}/api/v1/employees/departments/",
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ]
           }
         },
         {
@@ -311,8 +481,14 @@
             "method": "POST",
             "url": "{{base_url}}/api/v1/employees/departments/",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -326,8 +502,14 @@
             "method": "PATCH",
             "url": "{{base_url}}/api/v1/employees/departments/{{department_id}}/",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -340,7 +522,12 @@
           "request": {
             "method": "DELETE",
             "url": "{{base_url}}/api/v1/employees/departments/{{department_id}}/",
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ]
           }
         }
       ]
@@ -355,15 +542,42 @@
             "url": {
               "raw": "{{base_url}}/api/v1/documents/?page=1&page_size=25",
               "query": [
-                { "key": "page", "value": "1" },
-                { "key": "page_size", "value": "25" },
-                { "key": "document_type", "value": "", "disabled": true },
-                { "key": "status", "value": "", "disabled": true },
-                { "key": "search", "value": "", "disabled": true },
-                { "key": "expiring_soon", "value": "true", "disabled": true }
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "page_size",
+                  "value": "25"
+                },
+                {
+                  "key": "document_type",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "expiring_soon",
+                  "value": "true",
+                  "disabled": true
+                }
               ]
             },
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ]
           }
         },
         {
@@ -382,18 +596,55 @@
           "request": {
             "method": "POST",
             "url": "{{base_url}}/api/v1/documents/",
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
             "body": {
               "mode": "formdata",
               "formdata": [
-                { "key": "title",          "value": "Employment Contract — John Doe", "type": "text" },
-                { "key": "document_type",  "value": "employment_contract",           "type": "text" },
-                { "key": "employee",       "value": "{{employee_id}}",               "type": "text" },
-                { "key": "description",    "value": "Signed employment contract",    "type": "text" },
-                { "key": "status",         "value": "active",                         "type": "text" },
-                { "key": "issue_date",     "value": "2024-01-15",                     "type": "text" },
-                { "key": "expiry_date",    "value": "2027-01-14",                     "type": "text" },
-                { "key": "file",           "src":   "/path/to/contract.pdf",          "type": "file" }
+                {
+                  "key": "title",
+                  "value": "Employment Contract \u2014 John Doe",
+                  "type": "text"
+                },
+                {
+                  "key": "document_type",
+                  "value": "employment_contract",
+                  "type": "text"
+                },
+                {
+                  "key": "employee",
+                  "value": "{{employee_id}}",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Signed employment contract",
+                  "type": "text"
+                },
+                {
+                  "key": "status",
+                  "value": "active",
+                  "type": "text"
+                },
+                {
+                  "key": "issue_date",
+                  "value": "2024-01-15",
+                  "type": "text"
+                },
+                {
+                  "key": "expiry_date",
+                  "value": "2027-01-14",
+                  "type": "text"
+                },
+                {
+                  "key": "file",
+                  "src": "/path/to/contract.pdf",
+                  "type": "file"
+                }
               ]
             }
           }
@@ -403,7 +654,12 @@
           "request": {
             "method": "GET",
             "url": "{{base_url}}/api/v1/documents/{{document_id}}/",
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ]
           }
         },
         {
@@ -411,7 +667,12 @@
           "request": {
             "method": "GET",
             "url": "{{base_url}}/api/v1/documents/{{document_id}}/download/",
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
             "description": "Returns the decrypted file as an octet-stream."
           }
         },
@@ -421,8 +682,14 @@
             "method": "PATCH",
             "url": "{{base_url}}/api/v1/documents/{{document_id}}/",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -435,7 +702,12 @@
           "request": {
             "method": "DELETE",
             "url": "{{base_url}}/api/v1/documents/{{document_id}}/",
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ]
           }
         }
       ]
@@ -448,7 +720,12 @@
           "request": {
             "method": "GET",
             "url": "{{base_url}}/api/v1/compliance/dashboard/",
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ]
           }
         },
         {
@@ -456,7 +733,12 @@
           "request": {
             "method": "GET",
             "url": "{{base_url}}/api/v1/compliance/requirements/",
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ]
           }
         },
         {
@@ -464,7 +746,12 @@
           "request": {
             "method": "GET",
             "url": "{{base_url}}/api/v1/compliance/categories/",
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ]
           }
         },
         {
@@ -474,14 +761,37 @@
             "url": {
               "raw": "{{base_url}}/api/v1/compliance/records/?page=1&page_size=25",
               "query": [
-                { "key": "page", "value": "1" },
-                { "key": "page_size", "value": "25" },
-                { "key": "status", "value": "", "disabled": true },
-                { "key": "authority", "value": "Tax Authority", "disabled": true },
-                { "key": "search", "value": "", "disabled": true }
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "page_size",
+                  "value": "25"
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "authority",
+                  "value": "Tax Authority",
+                  "disabled": true
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "disabled": true
+                }
               ]
             },
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ]
           }
         },
         {
@@ -501,8 +811,14 @@
             "method": "POST",
             "url": "{{base_url}}/api/v1/compliance/records/",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -515,7 +831,12 @@
           "request": {
             "method": "GET",
             "url": "{{base_url}}/api/v1/compliance/records/{{compliance_id}}/",
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ]
           }
         },
         {
@@ -524,8 +845,14 @@
             "method": "PATCH",
             "url": "{{base_url}}/api/v1/compliance/records/{{compliance_id}}/",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -538,7 +865,12 @@
           "request": {
             "method": "DELETE",
             "url": "{{base_url}}/api/v1/compliance/records/{{compliance_id}}/",
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ]
           }
         }
       ]
@@ -551,7 +883,12 @@
           "request": {
             "method": "GET",
             "url": "{{base_url}}/api/v1/reports/?page=1&page_size=25",
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ]
           }
         },
         {
@@ -571,8 +908,14 @@
             "method": "POST",
             "url": "{{base_url}}/api/v1/reports/",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -585,7 +928,12 @@
           "request": {
             "method": "GET",
             "url": "{{base_url}}/api/v1/reports/{{report_id}}/",
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ]
           }
         },
         {
@@ -593,7 +941,12 @@
           "request": {
             "method": "GET",
             "url": "{{base_url}}/api/v1/reports/{{report_id}}/download/",
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ]
           }
         }
       ]
@@ -608,13 +961,32 @@
             "url": {
               "raw": "{{base_url}}/api/v1/notifications/?page=1&page_size=25",
               "query": [
-                { "key": "page", "value": "1" },
-                { "key": "page_size", "value": "25" },
-                { "key": "is_read", "value": "false", "disabled": true },
-                { "key": "notification_type", "value": "", "disabled": true }
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "page_size",
+                  "value": "25"
+                },
+                {
+                  "key": "is_read",
+                  "value": "false",
+                  "disabled": true
+                },
+                {
+                  "key": "notification_type",
+                  "value": "",
+                  "disabled": true
+                }
               ]
             },
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ]
           }
         },
         {
@@ -622,7 +994,12 @@
           "request": {
             "method": "GET",
             "url": "{{base_url}}/api/v1/notifications/unread-count/",
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ]
           }
         },
         {
@@ -630,7 +1007,12 @@
           "request": {
             "method": "POST",
             "url": "{{base_url}}/api/v1/notifications/mark-all-read/",
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ]
           }
         },
         {
@@ -639,8 +1021,14 @@
             "method": "PATCH",
             "url": "{{base_url}}/api/v1/notifications/{{notification_id}}/",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -660,14 +1048,37 @@
             "url": {
               "raw": "{{base_url}}/api/v1/audit-logs/?page=1&page_size=25",
               "query": [
-                { "key": "page", "value": "1" },
-                { "key": "page_size", "value": "25" },
-                { "key": "search", "value": "", "disabled": true },
-                { "key": "method", "value": "POST", "disabled": true },
-                { "key": "status_range", "value": "2xx", "disabled": true }
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "page_size",
+                  "value": "25"
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "method",
+                  "value": "POST",
+                  "disabled": true
+                },
+                {
+                  "key": "status_range",
+                  "value": "2xx",
+                  "disabled": true
+                }
               ]
             },
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ]
           }
         }
       ]
@@ -680,7 +1091,12 @@
           "request": {
             "method": "GET",
             "url": "{{base_url}}/api/v1/geo/countries/",
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ]
           }
         },
         {
@@ -688,7 +1104,12 @@
           "request": {
             "method": "GET",
             "url": "{{base_url}}/api/v1/geo/currencies/",
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ]
           }
         },
         {
@@ -696,7 +1117,12 @@
           "request": {
             "method": "GET",
             "url": "{{base_url}}/api/v1/geo/exchange-rates/",
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ]
           }
         }
       ]
@@ -705,13 +1131,19 @@
       "name": "GraphQL",
       "item": [
         {
-          "name": "GraphQL — Company + Employees Query",
+          "name": "GraphQL \u2014 Company + Employees Query",
           "request": {
             "method": "POST",
             "url": "{{base_url}}/graphql/",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -720,13 +1152,19 @@
           }
         },
         {
-          "name": "GraphQL — Compliance Dashboard",
+          "name": "GraphQL \u2014 Compliance Dashboard",
           "request": {
             "method": "POST",
             "url": "{{base_url}}/graphql/",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -737,14 +1175,19 @@
       ]
     },
     {
-      "name": "🧠 Innovation Features",
+      "name": "\ud83e\udde0 Innovation Features",
       "item": [
         {
           "name": "Compliance Health Pulse",
           "request": {
             "method": "GET",
             "url": "{{base_url}}/api/v1/compliance/health-pulse/",
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
             "description": "Returns 6-month rolling compliance trend + 30-day AI prediction.\n\nResponse: { current_score, trend, predicted_30d, risk_level, days_to_threshold, history[] }"
           }
         },
@@ -753,7 +1196,12 @@
           "request": {
             "method": "GET",
             "url": "{{base_url}}/api/v1/compliance/gap-analysis/",
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
             "description": "Returns requirements missing from your company's tracked records, filtered by country + industry.\n\nResponse: { total_gaps, coverage_percent, gaps[] }"
           }
         },
@@ -763,8 +1211,14 @@
             "method": "POST",
             "url": "{{base_url}}/api/v1/compliance/records/bulk-update/",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -779,15 +1233,37 @@
             "method": "GET",
             "url": {
               "raw": "{{base_url}}/api/v1/audit-logs/export/?format=csv&date_from=2026-01-01&date_to=2026-03-31",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "audit-logs", "export", ""],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "audit-logs",
+                "export",
+                ""
+              ],
               "query": [
-                { "key": "format", "value": "csv" },
-                { "key": "date_from", "value": "2026-01-01" },
-                { "key": "date_to", "value": "2026-03-31" }
+                {
+                  "key": "format",
+                  "value": "csv"
+                },
+                {
+                  "key": "date_from",
+                  "value": "2026-01-01"
+                },
+                {
+                  "key": "date_to",
+                  "value": "2026-03-31"
+                }
               ]
             },
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
             "description": "Download audit trail as CSV (or JSON). Supports date_from, date_to, method, status_range filters. Max 10,000 rows."
           }
         },
@@ -796,7 +1272,12 @@
           "request": {
             "method": "GET",
             "url": "{{base_url}}/api/v1/audit-logs/export/?format=json",
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
             "description": "Download audit trail as JSON array."
           }
         },
@@ -805,7 +1286,12 @@
           "request": {
             "method": "GET",
             "url": "{{base_url}}/api/v1/companies/portfolio/",
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
             "description": "Returns all tenant companies with live compliance scores. Only accessible to super_admin role.\n\nResponse: { total_companies, companies[{ id, name, country, compliance_score, employee_count, ... }] }"
           }
         },
@@ -814,7 +1300,12 @@
           "request": {
             "method": "POST",
             "url": "{{base_url}}/api/v1/payroll/runs/{{payroll_run_id}}/variance-check/",
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
             "description": "Compares current payroll run against the previous completed run. Flags salary spikes >15%, missing employees, and new additions."
           }
         },
@@ -824,8 +1315,14 @@
             "method": "POST",
             "url": "{{base_url}}/api/v1/auth/toggle-2fa/",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -839,21 +1336,31 @@
           "request": {
             "method": "GET",
             "url": "{{base_url}}/api/v1/documents/{{document_id}}/extracted-fields/",
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
             "description": "Returns AI-extracted fields from document OCR: name, start_date, salary, contract_end."
           }
         }
       ]
     },
     {
-      "name": "🔗 Webhooks",
+      "name": "\ud83d\udd17 Webhooks",
       "item": [
         {
           "name": "List Webhooks",
           "request": {
             "method": "GET",
             "url": "{{base_url}}/api/v1/webhooks/",
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
             "description": "List all configured webhook endpoints for your company."
           }
         },
@@ -874,8 +1381,14 @@
             "method": "POST",
             "url": "{{base_url}}/api/v1/webhooks/",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -890,8 +1403,14 @@
             "method": "PATCH",
             "url": "{{base_url}}/api/v1/webhooks/{{webhook_id}}/",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -904,8 +1423,1554 @@
           "request": {
             "method": "DELETE",
             "url": "{{base_url}}/api/v1/webhooks/{{webhook_id}}/",
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ]
           }
+        }
+      ]
+    },
+    {
+      "name": "\u270d\ufe0f Signatures",
+      "item": [
+        {
+          "name": "List Signature Requests",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/signatures/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "signatures",
+                ""
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Create Signature Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/signatures/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "signatures",
+                ""
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"document\": \"{{doc_id}}\",\n  \"title\": \"Sign: Employment Contract\",\n  \"message\": \"Please review and sign.\",\n  \"expires_at\": \"2026-04-30T00:00:00Z\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Signature Request",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/signatures/{{sig_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "signatures",
+                "{{sig_id}}",
+                ""
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Signature Request",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/signatures/{{sig_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "signatures",
+                "{{sig_id}}",
+                ""
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "\ud83d\ude80 Onboarding",
+      "item": [
+        {
+          "name": "List Templates",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/onboarding/templates/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "onboarding",
+                "templates",
+                ""
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Create Template",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/onboarding/templates/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "onboarding",
+                "templates",
+                ""
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Standard Onboarding\",\n  \"description\": \"Default checklist\",\n  \"is_default\": true\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Employee Onboardings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/onboarding/employee-onboardings/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "onboarding",
+                "employee-onboardings",
+                ""
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Create Employee Onboarding",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/onboarding/employee-onboardings/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "onboarding",
+                "employee-onboardings",
+                ""
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"employee\": \"{{emp_id}}\",\n  \"template\": \"{{tmpl_id}}\",\n  \"start_date\": \"2026-04-01\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Task Completion",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/onboarding/task-completions/{{tc_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "onboarding",
+                "task-completions",
+                "{{tc_id}}",
+                ""
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"completed\": true\n}"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "\ud83c\udf93 Training & Certifications",
+      "item": [
+        {
+          "name": "List Certification Types",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/training/certification-types/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "training",
+                "certification-types",
+                ""
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Create Certification Type",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/training/certification-types/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "training",
+                "certification-types",
+                ""
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"OSHA Safety\",\n  \"validity_months\": 12,\n  \"is_mandatory\": true,\n  \"reminder_days\": 30\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Employee Certifications",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/training/certifications/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "training",
+                "certifications",
+                ""
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Add Certification",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/training/certifications/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "training",
+                "certifications",
+                ""
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"employee\": \"{{emp_id}}\",\n  \"certification_type\": \"{{ct_id}}\",\n  \"issue_date\": \"2026-01-15\",\n  \"expiry_date\": \"2027-01-15\",\n  \"certificate_number\": \"CERT-12345\",\n  \"issuing_body\": \"OSHA\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Expiring Certifications",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/training/certifications/?status=expiring_soon",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "training",
+                "certifications",
+                "?status=expiring_soon"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "\ud83d\udccb Policies",
+      "item": [
+        {
+          "name": "List Policies",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/policies/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "policies",
+                ""
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Create Policy",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/policies/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "policies",
+                ""
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Remote Work Policy\",\n  \"content\": \"## Policy\\n...\",\n  \"category\": \"hr\",\n  \"status\": \"active\",\n  \"requires_acknowledgment\": true\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Policy",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/policies/{{policy_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "policies",
+                "{{policy_id}}",
+                ""
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Acknowledge Policy",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/policies/acknowledgments/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "policies",
+                "acknowledgments",
+                ""
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"policy\": \"{{policy_id}}\",\n  \"employee\": \"{{emp_id}}\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Acknowledgments",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/policies/acknowledgments/?policy={{policy_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "policies",
+                "acknowledgments",
+                "?policy={{policy_id}}"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "\ud83d\udea8 Incidents",
+      "item": [
+        {
+          "name": "List Incidents",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/incidents/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "incidents",
+                ""
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Create Incident",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/incidents/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "incidents",
+                ""
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Data Access Violation\",\n  \"description\": \"Unauthorised access attempt detected.\",\n  \"incident_type\": \"data_breach\",\n  \"severity\": \"high\",\n  \"incident_date\": \"2026-03-20\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Incident",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/incidents/{{incident_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "incidents",
+                "{{incident_id}}",
+                ""
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Update Incident",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/incidents/{{incident_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "incidents",
+                "{{incident_id}}",
+                ""
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"investigating\",\n  \"corrective_action\": \"Access revoked.\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Incident Update",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/incidents/{{incident_id}}/updates/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "incidents",
+                "{{incident_id}}",
+                "updates",
+                ""
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"Investigation complete. Access revoked and audit log reviewed.\"\n}"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "\u2705 Approvals",
+      "item": [
+        {
+          "name": "List Workflows",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/approvals/workflows/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "approvals",
+                "workflows",
+                ""
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Create Workflow",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/approvals/workflows/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "approvals",
+                "workflows",
+                ""
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Document Approval\",\n  \"workflow_type\": \"document\",\n  \"is_active\": true\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Requests",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/approvals/requests/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "approvals",
+                "requests",
+                ""
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Create Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/approvals/requests/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "approvals",
+                "requests",
+                ""
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"workflow\": \"{{wf_id}}\",\n  \"title\": \"Approve: Employment Contract\",\n  \"object_type\": \"document\",\n  \"object_id\": \"{{doc_id}}\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Approve Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/approvals/decisions/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "approvals",
+                "decisions",
+                ""
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"request\": \"{{req_id}}\",\n  \"decision\": \"approved\",\n  \"comment\": \"Reviewed and approved.\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reject Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/approvals/decisions/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "approvals",
+                "decisions",
+                ""
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"request\": \"{{req_id}}\",\n  \"decision\": \"rejected\",\n  \"comment\": \"Needs revision.\"\n}"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "\ud83c\udfed Vendors",
+      "item": [
+        {
+          "name": "List Vendors",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/vendors/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "vendors",
+                ""
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Create Vendor",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/vendors/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "vendors",
+                ""
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"CloudSec Ltd\",\n  \"vendor_type\": \"service_provider\",\n  \"contact_name\": \"Jane Doe\",\n  \"contact_email\": \"jane@cloudsec.com\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Vendor",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/vendors/{{vendor_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "vendors",
+                "{{vendor_id}}",
+                ""
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "List Vendor Documents",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/vendors/documents/?vendor={{vendor_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "vendors",
+                "documents",
+                "?vendor={{vendor_id}}"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Add Vendor Document",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/vendors/documents/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "vendors",
+                "documents",
+                ""
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vendor\": \"{{vendor_id}}\",\n  \"document_type\": \"insurance\",\n  \"title\": \"Liability Insurance 2026\",\n  \"expiry_date\": \"2027-01-01\"\n}"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "\ud83d\udcdd Custom Forms",
+      "item": [
+        {
+          "name": "List Form Templates",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/forms/templates/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "forms",
+                "templates",
+                ""
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Create Form Template",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/forms/templates/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "forms",
+                "templates",
+                ""
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"New Hire Form\",\n  \"category\": \"hr\",\n  \"is_active\": true\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Form Template",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/forms/templates/{{tmpl_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "forms",
+                "templates",
+                "{{tmpl_id}}",
+                ""
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "List Submissions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/forms/submissions/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "forms",
+                "submissions",
+                ""
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Submit Form",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/forms/submissions/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "forms",
+                "submissions",
+                ""
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"template\": \"{{tmpl_id}}\",\n  \"employee\": \"{{emp_id}}\",\n  \"data\": {\n    \"Full Name\": \"John Doe\",\n    \"Department\": \"Engineering\"\n  }\n}"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "\ud83e\udd1d Partners",
+      "item": [
+        {
+          "name": "List Partners",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/partners/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "partners",
+                ""
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Create Partner",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/partners/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "partners",
+                ""
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"AccountCo\",\n  \"partner_type\": \"accounting_firm\",\n  \"contact_email\": \"contact@accountco.com\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Partner",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/partners/{{partner_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "partners",
+                "{{partner_id}}",
+                ""
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Partner Branding",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/partners/branding/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "partners",
+                "branding",
+                ""
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "\ud83d\udd0c Integrations",
+      "item": [
+        {
+          "name": "List Integrations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/integrations/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "integrations",
+                ""
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Create Integration",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/integrations/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "integrations",
+                ""
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"integration_type\": \"quickbooks\",\n  \"name\": \"QuickBooks\",\n  \"is_active\": true\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Integration",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/integrations/{{int_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "integrations",
+                "{{int_id}}",
+                ""
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Toggle Integration",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/integrations/{{int_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "integrations",
+                "{{int_id}}",
+                ""
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"is_active\": false\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sync Integration",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/integrations/{{int_id}}/sync/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "integrations",
+                "{{int_id}}",
+                "sync",
+                ""
+              ]
+            },
+            "description": ""
+          },
+          "response": []
         }
       ]
     }

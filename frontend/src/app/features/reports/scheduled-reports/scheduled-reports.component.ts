@@ -160,7 +160,7 @@ interface ScheduledReport {
     .page-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
     .page-title { margin:0 0 2px; font-size:1.5rem; font-weight:800; font-family:'Outfit',sans-serif; color:var(--text-primary); letter-spacing:-0.03em; }
     .subtitle { margin:0; color:var(--text-muted); font-size:0.875rem; }
-    .btn-brand { background:linear-gradient(135deg,#22c55e,#16a34a) !important; color:#052e16 !important; font-weight:700 !important; }
+    .btn-brand { background:linear-gradient(135deg,#22c55e,#16a34a) !important; color: var(--brand-mid) !important; font-weight:700 !important; }
     .schedule-form { padding:20px !important; }
     .form-title { display:flex; align-items:center; gap:8px; font-size:1rem; font-weight:700; color:var(--text-primary); margin-bottom:16px; font-family:'Outfit',sans-serif; }
     .form-title mat-icon { color:#22c55e; }
@@ -179,9 +179,9 @@ interface ScheduledReport {
     .report-meta { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
     .freq-chip { padding:2px 8px; border-radius:10px; font-size:0.72rem; font-weight:600; }
     .freq-daily { background:rgba(34,197,94,0.1); color:#16a34a; }
-    .freq-weekly { background:#dbeafe; color:#1d4ed8; }
-    .freq-monthly { background:#fef9c3; color:#a16207; }
-    .freq-quarterly { background:#f3e8ff; color:#7c3aed; }
+    .freq-weekly { background:rgba(59,130,246,0.12); color:#60a5fa; }
+    .freq-monthly { background:rgba(234,179,8,0.12); color:#fbbf24; }
+    .freq-quarterly { background:rgba(139,92,246,0.12); color:#a78bfa; }
     .recipients-label { font-size:0.78rem; color:var(--text-muted); }
     .recipients-list { display:flex; flex-wrap:wrap; gap:4px; }
     .email-chip { background:rgba(0,0,0,0.06); color:var(--text-secondary); padding:2px 8px; border-radius:10px; font-size:0.72rem; }

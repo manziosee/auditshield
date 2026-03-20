@@ -205,7 +205,11 @@ SIMPLE_JWT = {
 }
 
 # ─── CORS ─────────────────────────────────────────────────────────────────────
-CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default=["http://localhost:3000"])
+CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default=[
+    "http://localhost:3000",
+    "http://localhost:4200",
+    "http://localhost:4201",
+])
 CORS_ALLOW_CREDENTIALS = True
 
 # ─── Redis / Cache ────────────────────────────────────────────────────────────

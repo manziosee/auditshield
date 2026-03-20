@@ -88,7 +88,9 @@ interface GapAnalysisResult {
           </mat-card>
 
           <mat-card class="stat-card">
-            <mat-icon class="stat-icon icon-neutral">analytics</mat-icon>
+            <div class="stat-icon-box neutral">
+              <mat-icon class="stat-icon icon-neutral">analytics</mat-icon>
+            </div>
             <div class="stat-body">
               <span class="stat-num">{{ result()!.total_gaps }}</span>
               <span class="stat-label">Total Gaps</span>
@@ -96,7 +98,9 @@ interface GapAnalysisResult {
           </mat-card>
 
           <mat-card class="stat-card">
-            <mat-icon class="stat-icon icon-critical">error</mat-icon>
+            <div class="stat-icon-box critical">
+              <mat-icon class="stat-icon icon-critical">error_outline</mat-icon>
+            </div>
             <div class="stat-body">
               <span class="stat-num">{{ criticalCount() }}</span>
               <span class="stat-label">Critical</span>
@@ -104,10 +108,12 @@ interface GapAnalysisResult {
           </mat-card>
 
           <mat-card class="stat-card">
-            <mat-icon class="stat-icon icon-high">warning</mat-icon>
+            <div class="stat-icon-box high">
+              <mat-icon class="stat-icon icon-high">warning_amber</mat-icon>
+            </div>
             <div class="stat-body">
               <span class="stat-num">{{ highCount() }}</span>
-              <span class="stat-label">High</span>
+              <span class="stat-label">High Priority</span>
             </div>
           </mat-card>
         </div>
@@ -129,11 +135,21 @@ interface GapAnalysisResult {
         </div>
 
         <!-- Gap cards -->
-        @if (filteredGaps().length === 0) {
+        @if (filteredGaps().length === 0 && result()!.total_gaps === 0) {
           <div class="empty-state">
-            <mat-icon>check_circle</mat-icon>
-            <h3>No gaps found</h3>
-            <p>No compliance gaps match the selected filter.</p>
+            <div class="empty-icon-wrap">
+              <mat-icon>verified</mat-icon>
+            </div>
+            <h3>All obligations tracked</h3>
+            <p>No compliance gaps detected. Your company is tracking all known requirements.</p>
+          </div>
+        } @else if (filteredGaps().length === 0) {
+          <div class="empty-state">
+            <div class="empty-icon-wrap">
+              <mat-icon>filter_alt</mat-icon>
+            </div>
+            <h3>No gaps in this priority</h3>
+            <p>Try a different filter to see other gaps.</p>
           </div>
         } @else {
           <div class="gap-list">
@@ -180,11 +196,11 @@ interface GapAnalysisResult {
       }
 
       @if (!loading() && !result()) {
-        <div class="empty-state">
-          <mat-icon>analytics</mat-icon>
-          <h3>Could not load gap analysis</h3>
-          <p>Please try again later.</p>
-          <button mat-raised-button color="primary" (click)="load()">
+        <div class="nodata-state">
+          <mat-icon class="nodata-icon">analytics</mat-icon>
+          <h3>Gap analysis unavailable</h3>
+          <p>The backend could not return data right now. This usually means no compliance requirements have been seeded for your company's industry yet.</p>
+          <button mat-stroked-button (click)="load()" style="color:var(--brand);border-color:var(--brand);">
             <mat-icon>refresh</mat-icon> Retry
           </button>
         </div>
@@ -192,135 +208,298 @@ interface GapAnalysisResult {
     </div>
   `,
   styles: [`
-    .page-container { display: flex; flex-direction: column; gap: 20px; }
+    :host { display: block; }
+    .page-container { display: flex; flex-direction: column; gap: 24px; padding-bottom: 32px; }
 
-    /* Header */
+    /* ── Header ──────────────────────────────────────────────────────────────── */
     .page-header { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
-    .header-left { display: flex; align-items: center; gap: 8px; }
-    .back-btn { color: #22c55e !important; }
-    .header-text h2 { margin: 0 0 2px; font-size: 1.5rem; font-weight: 700; }
-    .subtitle { margin: 0; color: #64748b; font-size: 0.875rem; }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .back-btn { color: var(--brand) !important; }
+    .header-text h2 {
+      margin: 0 0 3px;
+      font-family: var(--font-display);
+      font-size: 1.5rem; font-weight: 800;
+      color: var(--text-primary);
+    }
+    .subtitle { margin: 0; color: var(--text-muted); font-size: 0.875rem; }
 
-    /* Loading */
+    /* ── Loading ─────────────────────────────────────────────────────────────── */
     .loading-state {
       display: flex; flex-direction: column; align-items: center;
       justify-content: center; gap: 16px; padding: 80px 24px;
-      color: #64748b;
+      color: var(--text-muted);
     }
+    .loading-state p { margin: 0; font-size: 0.9rem; }
 
-    /* Stats row */
-    .stats-row { display: grid; grid-template-columns: auto 1fr 1fr 1fr; gap: 16px; }
-    .stat-card { padding: 20px !important; display: flex; align-items: center; gap: 16px; }
+    /* ── Stats row ───────────────────────────────────────────────────────────── */
+    .stats-row {
+      display: grid; grid-template-columns: auto 1fr 1fr 1fr; gap: 16px;
+    }
+    .stat-card {
+      padding: 20px !important;
+      display: flex; align-items: center; gap: 16px;
+      background: var(--surface-1) !important;
+      border: 1px solid var(--border-color) !important;
+      border-radius: 16px !important;
+      box-shadow: var(--shadow-sm) !important;
+    }
     .stat-coverage { min-width: 180px; }
     .coverage-wrap { display: flex; align-items: center; gap: 16px; }
-    .donut-ring { position: relative; width: 72px; height: 72px; flex-shrink: 0; }
+
+    /* Donut ring */
+    .donut-ring { position: relative; width: 76px; height: 76px; flex-shrink: 0; }
     .donut-svg { width: 100%; height: 100%; transform: rotate(-90deg); }
-    .donut-track { fill: none; stroke: #e2e8f0; stroke-width: 4; }
+    .donut-track { fill: none; stroke: var(--border-color); stroke-width: 4; }
     .donut-fill {
-      fill: none; stroke: #22c55e; stroke-width: 4;
+      fill: none; stroke: var(--brand); stroke-width: 4;
       stroke-linecap: round;
-      transition: stroke-dasharray 0.6s ease;
+      transition: stroke-dasharray 0.8s cubic-bezier(.4,0,.2,1);
+      filter: drop-shadow(0 0 4px rgba(34,197,94,0.4));
     }
     .donut-label {
       position: absolute; inset: 0;
       display: flex; align-items: center; justify-content: center;
-      font-size: 0.85rem; font-weight: 800; color: #1e293b;
+      font-family: var(--font-display);
+      font-size: 0.9rem; font-weight: 800;
+      color: var(--text-primary);
     }
-    .coverage-text { display: flex; flex-direction: column; }
-    .coverage-title { font-size: 1rem; font-weight: 700; color: #1e293b; }
-    .coverage-sub { font-size: 0.75rem; color: #64748b; }
+    .coverage-text { display: flex; flex-direction: column; gap: 2px; }
+    .coverage-title {
+      font-family: var(--font-display);
+      font-size: 1rem; font-weight: 700;
+      color: var(--text-primary);
+    }
+    .coverage-sub { font-size: 0.72rem; color: var(--text-muted); }
 
-    .stat-icon { font-size: 2rem; height: 2rem; width: 2rem; }
-    .stat-body { display: flex; flex-direction: column; }
-    .stat-num { font-size: 1.7rem; font-weight: 800; color: #1e293b; }
-    .stat-label { font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; }
-    .icon-neutral { color: #0a0a0a; }
-    .icon-critical { color: #ef4444; }
-    .icon-high { color: #f59e0b; }
+    /* Stat number cards */
+    .stat-icon-box {
+      width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .stat-icon-box.neutral { background: var(--brand-subtle); }
+    .stat-icon-box.critical { background: var(--danger-bg); }
+    .stat-icon-box.high { background: var(--warning-bg); }
+    .stat-icon { font-size: 1.3rem; height: 1.3rem; width: 1.3rem; }
+    .icon-neutral { color: var(--brand); }
+    .icon-critical { color: var(--danger); }
+    .icon-high { color: var(--warning); }
+    .stat-body { display: flex; flex-direction: column; gap: 2px; }
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: 1.8rem; font-weight: 800;
+      color: var(--text-primary); line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.72rem; font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
 
-    /* Filter row */
+    /* ── Filter row ──────────────────────────────────────────────────────────── */
     .filter-row {
       display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
-      padding: 12px 0;
+      padding: 4px 0;
     }
-    .filter-label { font-size: 0.875rem; font-weight: 600; color: #64748b; }
+    .filter-label {
+      font-size: 0.8rem; font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.08em;
+    }
     .filter-chips { display: flex; gap: 8px; flex-wrap: wrap; }
     .filter-chip {
-      padding: 6px 16px; border-radius: 20px; border: 1.5px solid #e2e8f0;
-      background: transparent; color: #64748b; font-size: 0.8rem; font-weight: 500;
-      cursor: pointer; transition: all 0.15s;
+      padding: 6px 18px; border-radius: 20px;
+      border: 1.5px solid var(--border-color);
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.8rem; font-weight: 500;
+      font-family: var(--font-body);
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s, background 0.15s;
     }
-    .filter-chip:hover { border-color: #22c55e; color: #22c55e; background: rgba(34,197,94,0.06); }
-    .filter-chip--active { border-color: #22c55e; color: #22c55e; background: rgba(34,197,94,0.1); font-weight: 700; }
+    .filter-chip:hover {
+      border-color: var(--brand);
+      color: var(--brand);
+      background: var(--brand-subtle);
+    }
+    .filter-chip--active {
+      border-color: var(--brand);
+      color: var(--brand);
+      background: var(--brand-subtle);
+      font-weight: 700;
+    }
 
-    /* Gap list */
+    /* ── Gap list ────────────────────────────────────────────────────────────── */
     .gap-list { display: flex; flex-direction: column; gap: 12px; }
 
-    .gap-card { padding: 20px !important; }
+    .gap-card {
+      padding: 20px !important;
+      background: var(--surface-1) !important;
+      border: 1px solid var(--border-color) !important;
+      border-radius: 16px !important;
+      box-shadow: var(--shadow-xs) !important;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .gap-card:hover {
+      border-color: rgba(34,197,94,0.25) !important;
+      box-shadow: var(--shadow-sm), 0 0 0 1px rgba(34,197,94,0.1) !important;
+    }
     .gap-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
 
     /* Priority badges */
     .priority-badge {
-      display: inline-flex; align-items: center; gap: 4px;
-      padding: 3px 10px; border-radius: 20px;
-      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.04em;
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 12px; border-radius: 20px;
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.04em; text-transform: uppercase;
     }
-    .priority-badge.critical { background: #fee2e2; color: #ef4444; }
-    .priority-badge.high { background: #fff7ed; color: #f59e0b; }
-    .priority-badge.medium { background: #fefce8; color: #ca8a04; }
-    .badge-icon { font-size: 0.9rem; height: 0.9rem; width: 0.9rem; }
+    .priority-badge.critical {
+      background: var(--danger-bg);
+      color: var(--danger);
+      border: 1px solid rgba(239,68,68,0.2);
+    }
+    .priority-badge.high {
+      background: var(--warning-bg);
+      color: var(--warning);
+      border: 1px solid rgba(245,158,11,0.2);
+    }
+    .priority-badge.medium {
+      background: rgba(234,179,8,0.1);
+      color: #fbbf24;
+      border: 1px solid rgba(234,179,8,0.2);
+    }
+    html.dark-theme .priority-badge.medium { color: #fbbf24; }
+    .badge-icon { font-size: 0.85rem; height: 0.85rem; width: 0.85rem; }
 
     .mandatory-badge {
-      display: inline-block; padding: 2px 8px; border-radius: 4px;
-      background: #dbeafe; color: #1e40af;
-      font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+      display: inline-flex; align-items: center;
+      padding: 3px 10px; border-radius: 6px;
+      background: rgba(99,102,241,0.12);
+      color: #a78bfa;
+      border: 1px solid rgba(99,102,241,0.2);
+      font-size: 0.68rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.07em;
     }
 
     /* Gap body layout */
-    .gap-body { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+    .gap-body {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 24px; flex-wrap: wrap;
+    }
     .gap-main { flex: 1; min-width: 200px; }
-    .gap-title { font-size: 1rem; font-weight: 600; color: #1e293b; margin-bottom: 4px; }
-    .gap-category { font-size: 0.8rem; color: #64748b; }
+    .gap-title {
+      font-size: 1rem; font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 5px;
+    }
+    .gap-category { font-size: 0.8rem; color: var(--text-muted); }
 
     .gap-meta { display: flex; flex-direction: column; gap: 10px; min-width: 200px; }
     .meta-chips { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 
+    /* Authority chips — theme-aware */
     .authority-chip {
-      display: inline-block; padding: 3px 10px; border-radius: 4px;
-      font-size: 0.75rem; font-weight: 600;
+      display: inline-flex; align-items: center;
+      padding: 3px 10px; border-radius: 6px;
+      font-size: 0.72rem; font-weight: 600;
+      border: 1px solid transparent;
     }
-    .auth-tax { background: #fef9c3; color: #854d0e; }
-    .auth-social_security { background: #dbeafe; color: #1e40af; }
-    .auth-labour { background: #dcfce7; color: #14532d; }
-    .auth-registry { background: #f3e8ff; color: #6b21a8; }
-    .auth-other { background: #f1f5f9; color: #475569; }
+    .auth-tax {
+      background: rgba(234,179,8,0.12); color: #fbbf24;
+      border-color: rgba(234,179,8,0.2);
+    }
+    html.dark-theme .auth-tax { color: #fbbf24; background: rgba(234,179,8,0.1); }
+    .auth-social_security {
+      background: rgba(59,130,246,0.1); color: #3b82f6;
+      border-color: rgba(59,130,246,0.2);
+    }
+    .auth-labour {
+      background: var(--brand-subtle); color: var(--brand);
+      border-color: rgba(34,197,94,0.2);
+    }
+    .auth-registry {
+      background: rgba(168,85,247,0.1); color: #a855f7;
+      border-color: rgba(168,85,247,0.2);
+    }
+    .auth-other {
+      background: var(--surface-2); color: var(--text-muted);
+      border-color: var(--border-color);
+    }
 
     .freq-chip {
-      display: inline-block; padding: 3px 10px; border-radius: 20px;
-      background: #f1f5f9; color: #475569;
-      font-size: 0.75rem; font-weight: 500;
+      display: inline-flex; align-items: center;
+      padding: 3px 10px; border-radius: 20px;
+      background: var(--surface-2);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+      font-size: 0.72rem; font-weight: 500;
     }
 
     .penalty-text {
       display: flex; align-items: flex-start; gap: 6px;
-      cursor: help; color: #64748b;
+      cursor: help;
     }
-    .penalty-icon { font-size: 1rem; height: 1rem; width: 1rem; color: #94a3b8; flex-shrink: 0; margin-top: 1px; }
+    .penalty-icon {
+      font-size: 0.95rem; height: 0.95rem; width: 0.95rem;
+      color: var(--text-faint); flex-shrink: 0; margin-top: 2px;
+    }
     .penalty-desc {
-      font-size: 0.8rem; line-height: 1.4;
+      font-size: 0.8rem; line-height: 1.5;
+      color: var(--text-muted);
       overflow: hidden; display: -webkit-box;
       -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-      max-width: 320px;
+      max-width: 340px;
     }
 
-    /* Empty state */
-    .empty-state { text-align: center; padding: 60px 24px; color: #64748b; }
-    .empty-state mat-icon { font-size: 3rem; height: 3rem; width: 3rem; opacity: 0.35; display: block; margin: 0 auto 12px; }
-    .empty-state h3 { margin: 0 0 8px; color: #1e293b; }
-    .empty-state p { margin: 0 0 20px; }
+    /* ── Empty / All-clear state ─────────────────────────────────────────────── */
+    .empty-state {
+      text-align: center; padding: 64px 24px;
+      background: var(--surface-1);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+    }
+    .empty-icon-wrap {
+      width: 72px; height: 72px; border-radius: 20px; margin: 0 auto 20px;
+      background: var(--brand-subtle);
+      border: 1px solid rgba(34,197,94,0.2);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .empty-icon-wrap mat-icon {
+      font-size: 2rem; height: 2rem; width: 2rem;
+      color: var(--brand);
+    }
+    .empty-state h3 {
+      margin: 0 0 8px;
+      font-family: var(--font-display);
+      font-size: 1.2rem; font-weight: 700;
+      color: var(--text-primary);
+    }
+    .empty-state p { margin: 0 0 20px; color: var(--text-muted); font-size: 0.9rem; }
+
+    /* No-data state */
+    .nodata-state {
+      text-align: center; padding: 64px 24px;
+      background: var(--surface-1);
+      border: 1px dashed var(--border-color);
+      border-radius: 20px;
+    }
+    .nodata-icon {
+      font-size: 3rem; height: 3rem; width: 3rem;
+      color: var(--text-faint);
+      display: block; margin: 0 auto 16px;
+    }
+    .nodata-state h3 {
+      margin: 0 0 8px;
+      font-family: var(--font-display);
+      font-size: 1.1rem; font-weight: 700;
+      color: var(--text-primary);
+    }
+    .nodata-state p { margin: 0 0 20px; color: var(--text-muted); font-size: 0.875rem; line-height: 1.6; }
 
     @media (max-width: 900px) { .stats-row { grid-template-columns: 1fr 1fr; } }
-    @media (max-width: 600px) { .stats-row { grid-template-columns: 1fr 1fr; } .gap-body { flex-direction: column; } }
+    @media (max-width: 600px) {
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .gap-body { flex-direction: column; }
+    }
   `],
 })
 export class GapAnalysisComponent implements OnInit {

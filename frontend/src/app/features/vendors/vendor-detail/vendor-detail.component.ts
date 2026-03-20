@@ -167,15 +167,15 @@ interface VendorDetail {
     .center-spin { display:flex; justify-content:center; padding:80px; }
     .header-card { padding:24px !important; }
     .vendor-header { display:flex; align-items:center; gap:20px; flex-wrap:wrap; }
-    .vendor-avatar-lg { width:64px; height:64px; border-radius:16px; background:linear-gradient(135deg,#22c55e,#16a34a); color:#052e16; font-size:1.5rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .vendor-avatar-lg { width:64px; height:64px; border-radius:16px; background:linear-gradient(135deg,#22c55e,#16a34a); color: var(--brand-mid); font-size:1.5rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
     .vendor-info { flex:1; }
     .vendor-name { margin:0 0 8px; font-size:1.4rem; font-weight:800; font-family:'Outfit',sans-serif; color:var(--text-primary); }
     .vendor-meta { display:flex; gap:8px; align-items:center; margin-bottom:6px; }
     .type-chip { background:rgba(34,197,94,0.1); color:#16a34a; padding:2px 8px; border-radius:10px; font-size:0.75rem; font-weight:600; }
     .status-badge { padding:2px 8px; border-radius:10px; font-size:0.75rem; font-weight:600; }
-    .status-active { background:#dcfce7; color:#16a34a; }
-    .status-suspended { background:#fee2e2; color:#dc2626; }
-    .status-pending { background:#fef9c3; color:#a16207; }
+    .status-active { background:rgba(34,197,94,0.12); color:#4ade80; }
+    .status-suspended { background:rgba(239,68,68,0.12); color:#f87171; }
+    .status-pending { background:rgba(234,179,8,0.12); color:#fbbf24; }
     .vendor-address { display:flex; align-items:center; gap:4px; font-size:0.8rem; color:var(--text-muted); }
     .inline-icon { font-size:0.9rem; height:0.9rem; width:0.9rem; color:#22c55e; }
     .score-ring-container { position:relative; width:100px; height:100px; flex-shrink:0; }
@@ -200,9 +200,9 @@ interface VendorDetail {
     .file-name { display:flex; align-items:center; gap:4px; font-size:0.875rem; }
     .file-icon { font-size:0.9rem; height:0.9rem; width:0.9rem; color:#22c55e; }
     .chip { display:inline-block; padding:2px 8px; border-radius:10px; font-size:0.75rem; font-weight:500; }
-    .chip-green { background:#dcfce7; color:#16a34a; }
-    .chip-red { background:#fee2e2; color:#dc2626; }
-    .chip-amber { background:#fef9c3; color:#a16207; }
+    .chip-green { background:rgba(34,197,94,0.12); color:#4ade80; }
+    .chip-red { background:rgba(239,68,68,0.12); color:#f87171; }
+    .chip-amber { background:rgba(234,179,8,0.12); color:#fbbf24; }
     .empty-docs { text-align:center; padding:32px; color:var(--text-muted); }
     .empty-docs mat-icon { font-size:2rem; height:2rem; width:2rem; opacity:0.3; display:block; margin:0 auto 8px; }
     .empty-docs p { margin:0; }

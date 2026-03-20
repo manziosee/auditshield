@@ -7,6 +7,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDividerModule } from '@angular/material/divider';
 import { ApiService } from '../../../core/services/api.service';
 import { NotificationService } from '../../../core/services/notification.service';
 
@@ -29,7 +30,7 @@ interface Partner {
   imports: [
     CommonModule,
     MatButtonModule, MatIconModule, MatCardModule, MatTableModule,
-    MatMenuModule, MatProgressSpinnerModule, MatTooltipModule,
+    MatMenuModule, MatProgressSpinnerModule, MatTooltipModule, MatDividerModule,
   ],
   template: `
     <div class="page-container">
@@ -131,7 +132,7 @@ interface Partner {
     .page-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
     .page-title { margin:0 0 2px; font-size:1.5rem; font-weight:800; font-family:'Outfit',sans-serif; color:var(--text-primary); letter-spacing:-0.03em; }
     .subtitle { margin:0; color:var(--text-muted); font-size:0.875rem; }
-    .btn-brand { background:linear-gradient(135deg,#22c55e,#16a34a) !important; color:#052e16 !important; font-weight:700 !important; }
+    .btn-brand { background:linear-gradient(135deg,#22c55e,#16a34a) !important; color: var(--brand-mid) !important; font-weight:700 !important; }
     .table-card { overflow:hidden; padding:0 !important; position:relative; }
     .loading-overlay { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.2); z-index:10; min-height:200px; }
     .table-wrapper { overflow-x:auto; }
@@ -144,9 +145,9 @@ interface Partner {
     .contact-email { font-size:0.75rem; color:var(--text-muted); }
     .companies-badge { background:rgba(34,197,94,0.12); color:#16a34a; padding:2px 10px; border-radius:12px; font-size:0.8rem; font-weight:700; }
     .chip { display:inline-block; padding:2px 10px; border-radius:20px; font-size:0.75rem; font-weight:500; }
-    .chip-green { background:#dcfce7; color:#16a34a; }
-    .chip-red { background:#fee2e2; color:#dc2626; }
-    .chip-amber { background:#fef9c3; color:#a16207; }
+    .chip-green { background:rgba(34,197,94,0.12); color:#4ade80; }
+    .chip-red { background:rgba(239,68,68,0.12); color:#f87171; }
+    .chip-amber { background:rgba(234,179,8,0.12); color:#fbbf24; }
     .branding-preview { display:flex; align-items:center; gap:8px; }
     .color-swatch { width:20px; height:20px; border-radius:4px; border:1px solid rgba(255,255,255,0.15); cursor:pointer; flex-shrink:0; }
     .logo-link { font-size:0.75rem; color:#22c55e; font-weight:500; }

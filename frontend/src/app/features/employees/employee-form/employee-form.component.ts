@@ -198,7 +198,7 @@ import { Employee, Department } from '../../../core/models/employee.models';
     .page-container { display:flex; flex-direction:column; gap:20px; }
     .page-header { display:flex; align-items:center; gap:12px; }
     .page-header h2 { margin:0 0 2px; font-size:1.5rem; font-weight:700; }
-    .subtitle { margin:0; color:#64748b; font-size:0.875rem; }
+    .subtitle { margin:0; color: var(--text-muted); font-size:0.875rem; }
     mat-card { margin:0; }
     mat-card-header { margin-bottom:8px; }
     .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:0 16px; }
