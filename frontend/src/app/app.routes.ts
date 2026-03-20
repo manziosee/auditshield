@@ -67,6 +67,47 @@ export const routes: Routes = [
         loadComponent: () => import('./features/self-service/self-service.component').then((m) => m.SelfServiceComponent),
         title: 'My Profile — AuditShield',
       },
+      {
+        path: 'signatures',
+        loadChildren: () => import('./features/signatures/signatures.routes').then(m => m.SIGNATURES_ROUTES),
+      },
+      {
+        path: 'onboarding',
+        loadChildren: () => import('./features/onboarding/onboarding.routes').then(m => m.ONBOARDING_ROUTES),
+      },
+      {
+        path: 'training',
+        loadChildren: () => import('./features/training/training.routes').then(m => m.TRAINING_ROUTES),
+      },
+      {
+        path: 'policies',
+        loadChildren: () => import('./features/policies/policies.routes').then(m => m.POLICIES_ROUTES),
+      },
+      {
+        path: 'incidents',
+        loadChildren: () => import('./features/incidents/incidents.routes').then(m => m.INCIDENTS_ROUTES),
+      },
+      {
+        path: 'approvals',
+        loadChildren: () => import('./features/approvals/approvals.routes').then(m => m.APPROVALS_ROUTES),
+      },
+      {
+        path: 'vendors',
+        loadChildren: () => import('./features/vendors/vendors.routes').then(m => m.VENDORS_ROUTES),
+      },
+      {
+        path: 'forms',
+        loadChildren: () => import('./features/forms/forms.routes').then(m => m.FORMS_ROUTES),
+      },
+      {
+        path: 'partners',
+        canActivate: [roleGuard('super_admin')],
+        loadChildren: () => import('./features/partners/partners.routes').then(m => m.PARTNERS_ROUTES),
+      },
+      {
+        path: 'integrations',
+        loadChildren: () => import('./features/integrations/integrations.routes').then(m => m.INTEGRATIONS_ROUTES),
+      },
     ],
   },
 
