@@ -8,6 +8,10 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ApiService } from '../../../core/services/api.service';
 import { NotificationService } from '../../../core/services/notification.service';
 
@@ -33,6 +37,7 @@ interface Policy {
     CommonModule, RouterLink,
     MatButtonModule, MatIconModule, MatCardModule,
     MatProgressBarModule, MatProgressSpinnerModule, MatMenuModule, MatTooltipModule,
+    MatFormFieldModule, MatInputModule, MatSelectModule, MatCheckboxModule,
   ],
   template: `
     <div class="page-container">
@@ -41,10 +46,48 @@ interface Policy {
           <h2 class="page-title">Policy Management</h2>
           <p class="subtitle">Manage company policies and track acknowledgments</p>
         </div>
-        <button mat-raised-button class="btn-brand">
+        <button mat-raised-button class="btn-brand" (click)="showCreate.set(true)">
           <mat-icon>add</mat-icon> New Policy
         </button>
       </div>
+
+      @if (showCreate()) {
+        <div class="create-panel">
+          <h3 class="create-panel-title">New Policy</h3>
+          <div class="create-form">
+            <mat-form-field appearance="outline" class="create-field create-field--full">
+              <mat-label>Policy Title</mat-label>
+              <input matInput [value]="newPolicyTitle()" (input)="newPolicyTitle.set($any($event.target).value)" placeholder="e.g. Remote Work Policy">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="create-field">
+              <mat-label>Category</mat-label>
+              <mat-select [value]="newPolicyCategory()" (valueChange)="newPolicyCategory.set($event)">
+                <mat-option value="HR">HR</mat-option>
+                <mat-option value="IT Security">IT Security</mat-option>
+                <mat-option value="Finance">Finance</mat-option>
+                <mat-option value="Operations">Operations</mat-option>
+                <mat-option value="Compliance">Compliance</mat-option>
+                <mat-option value="Other">Other</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="create-field create-field--full">
+              <mat-label>Content / Summary</mat-label>
+              <textarea matInput rows="3" [value]="newPolicyContent()" (input)="newPolicyContent.set($any($event.target).value)" placeholder="Describe the policy..."></textarea>
+            </mat-form-field>
+            <div class="create-check">
+              <mat-checkbox [checked]="newRequiresAck()" (change)="newRequiresAck.set($event.checked)" color="primary">
+                Requires employee acknowledgment
+              </mat-checkbox>
+            </div>
+          </div>
+          <div class="create-actions">
+            <button mat-stroked-button (click)="showCreate.set(false)">Cancel</button>
+            <button mat-raised-button class="btn-brand" (click)="createPolicy()" [disabled]="creating() || !newPolicyTitle().trim()">
+              <mat-icon>policy</mat-icon> {{ creating() ? 'Saving...' : 'Create Policy' }}
+            </button>
+          </div>
+        </div>
+      }
 
       <!-- Status filter chips -->
       <div class="filter-chips">
@@ -119,7 +162,7 @@ interface Policy {
     .page-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
     .page-title { margin:0 0 2px; font-size:1.5rem; font-weight:800; font-family:'Outfit',sans-serif; color:var(--text-primary); letter-spacing:-0.03em; }
     .subtitle { margin:0; color:var(--text-muted); font-size:0.875rem; }
-    .btn-brand { background:linear-gradient(135deg,#22c55e,#16a34a) !important; color:#052e16 !important; font-weight:700 !important; }
+    .btn-brand { background:linear-gradient(135deg,#22c55e,#16a34a) !important; color: var(--brand-mid) !important; font-weight:700 !important; }
     .filter-chips { display:flex; gap:8px; flex-wrap:wrap; }
     .filter-chip { padding:6px 16px; border-radius:20px; border:1px solid var(--border-color); background:transparent; color:var(--text-secondary); font-size:0.85rem; font-weight:500; cursor:pointer; transition:all 0.15s; font-family:'Plus Jakarta Sans',sans-serif; }
     .filter-chip:hover { border-color:#22c55e; color:#22c55e; }
@@ -133,11 +176,11 @@ interface Policy {
     .card-top { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
     .category-badge { background:rgba(34,197,94,0.1); color:#16a34a; padding:2px 8px; border-radius:10px; font-size:0.72rem; font-weight:600; }
     .version-badge { background:rgba(0,0,0,0.08); color:var(--text-secondary); padding:2px 8px; border-radius:10px; font-size:0.72rem; font-weight:500; }
-    .ack-chip { display:flex; align-items:center; gap:3px; background:rgba(59,130,246,0.1); color:#1d4ed8; padding:2px 8px; border-radius:10px; font-size:0.72rem; font-weight:500; }
+    .ack-chip { display:flex; align-items:center; gap:3px; background:rgba(59,130,246,0.1); color: #60a5fa; padding:2px 8px; border-radius:10px; font-size:0.72rem; font-weight:500; }
     .ack-icon { font-size:0.85rem; height:0.85rem; width:0.85rem; }
     .status-badge { margin-left:auto; padding:2px 8px; border-radius:10px; font-size:0.72rem; font-weight:600; }
-    .status-draft { background:#fef9c3; color:#a16207; }
-    .status-active { background:#dcfce7; color:#16a34a; }
+    .status-draft { background:rgba(234,179,8,0.12); color:#fbbf24; }
+    .status-active { background:rgba(34,197,94,0.12); color:#4ade80; }
     .status-archived { background:rgba(0,0,0,0.06); color:var(--text-muted); }
     .policy-title { margin:0; font-size:1rem; font-weight:700; font-family:'Outfit',sans-serif; color:var(--text-primary); line-height:1.3; }
     .ack-section { display:flex; flex-direction:column; gap:6px; }
@@ -151,15 +194,29 @@ interface Policy {
     .empty-state h3 { margin:0 0 8px; color:var(--text-primary); }
     .empty-state p { margin:0; }
     @media(max-width:600px) { .policies-grid { grid-template-columns:1fr; } }
+    .create-panel { background:var(--surface-1); border:1px solid var(--brand); border-radius:16px; padding:24px; animation:slideDown 0.2s ease; }
+    .create-panel-title { font-family:'Outfit',sans-serif; font-size:18px; font-weight:600; color:var(--text-primary); margin:0 0 16px; }
+    .create-form { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .create-field { width:100%; }
+    .create-field--full { grid-column:1/-1; }
+    .create-check { grid-column:1/-1; display:flex; align-items:center; }
+    .create-actions { display:flex; gap:12px; justify-content:flex-end; margin-top:16px; }
+    @keyframes slideDown { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
   `],
 })
 export class PolicyListComponent implements OnInit {
   private readonly api    = inject(ApiService);
   private readonly notify = inject(NotificationService);
 
-  policies     = signal<Policy[]>([]);
-  loading      = signal(false);
-  statusFilter = signal<string>('');
+  policies          = signal<Policy[]>([]);
+  loading           = signal(false);
+  statusFilter      = signal<string>('');
+  showCreate        = signal(false);
+  creating          = signal(false);
+  newPolicyTitle    = signal('');
+  newPolicyCategory = signal('');
+  newPolicyContent  = signal('');
+  newRequiresAck    = signal(false);
 
   filters = [
     { label: 'All', value: '' },
@@ -184,6 +241,29 @@ export class PolicyListComponent implements OnInit {
         this.loading.set(false);
       },
       error: () => { this.loading.set(false); this.notify.error('Failed to load policies.'); },
+    });
+  }
+
+  createPolicy(): void {
+    if (!this.newPolicyTitle().trim()) return;
+    this.creating.set(true);
+    this.api.post('policies/', {
+      title: this.newPolicyTitle(),
+      category: this.newPolicyCategory() || 'Other',
+      content: this.newPolicyContent(),
+      requires_acknowledgment: this.newRequiresAck(),
+    }).subscribe({
+      next: () => {
+        this.showCreate.set(false);
+        this.newPolicyTitle.set('');
+        this.newPolicyCategory.set('');
+        this.newPolicyContent.set('');
+        this.newRequiresAck.set(false);
+        this.creating.set(false);
+        this.load();
+        this.notify.success('Policy created.');
+      },
+      error: () => { this.creating.set(false); this.notify.error('Failed to create policy.'); },
     });
   }
 

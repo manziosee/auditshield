@@ -101,29 +101,48 @@ Every company is a **fully isolated tenant** with UUID-keyed records and scoped 
 
 ## Features
 
+### Core Platform
+
 | 🏷️ Area | ✨ Capabilities |
 |---------|----------------|
 | 🏢 **Multi-tenancy** | Each company is a fully isolated tenant — UUID PKs, cascading row-level scoping |
-| 👥 **Employees** | Full CRUD, department management, bulk Excel/CSV import, one-click export |
-| 🔒 **Documents** | Fernet AES-128 encryption at rest, OCR extraction, expiry tracking & email alerts |
+| 👥 **Employees** | Full CRUD, department management, bulk Excel/CSV import, one-click export, risk scoring |
+| 🔒 **Documents** | Fernet AES-128 encryption at rest, OCR extraction, version control, expiry tracking & email alerts |
 | 🤖 **AI Extraction** | OCR auto-extracts employee name, salary, start/end dates from uploaded contracts |
 | ✅ **Compliance** | Tax, social security & labour law tracker; authority dashboards; full CRUD; bulk updates |
-| 🧠 **Health Pulse** | Rolling 6-month compliance trend + 30-day AI risk prediction ("declining — hits 70% in 14 days") |
-| 🔍 **Gap Analysis** | Auto-detects missing requirements vs your country + industry — turns platform into a consultant |
-| 📅 **Deadline Calendar** | Monthly calendar view of all compliance deadlines with one-click iCal export to Google/Outlook |
-| 👤 **Self-Service Portal** | Employees see only their own payslips, documents, and compliance status — zero HR involvement |
-| 📊 **Reports** | Async PDF generation (WeasyPrint + Celery), download when ready |
-| 📈 **Expiry Timeline** | Gantt-style document expiry view with visual 30-day red zone |
-| 💰 **Payroll** | Country-specific tax rule engine, payroll runs, payslip generation |
-| ⚠️ **Variance Alerts** | Compares payroll runs — flags >15% salary spikes, missing employees, and new additions |
+| 🧠 **Health Pulse** | Rolling 6-month compliance trend + 30-day AI risk prediction |
+| 🔍 **Gap Analysis** | Auto-detects missing requirements vs your country + industry |
+| 📅 **Deadline Calendar** | Monthly calendar view of all compliance deadlines with iCal export |
+| 👤 **Self-Service Portal** | Employees see only their own payslips, documents, and compliance status |
+| 📊 **Reports** | Async PDF generation (WeasyPrint + Celery); scheduled delivery via email |
+| 💰 **Payroll** | Country-specific tax rule engine, payroll runs, payslip generation, variance alerts |
 | 🌍 **Geography** | 16+ countries, 17+ currencies, live exchange rate support |
-| 🔑 **Auth & 2FA** | JWT rotate-on-refresh, Argon2 hashing, brute-force lockout (django-axes), 2FA toggle |
-| 📜 **Audit Trail** | Immutable middleware log of every POST/PUT/PATCH/DELETE; CSV/PDF export for auditors |
+| 🔑 **Auth** | JWT rotate-on-refresh, Argon2 hashing, brute-force lockout (django-axes) |
+| 📜 **Audit Trail** | Immutable middleware log of every POST/PUT/PATCH/DELETE; CSV/PDF export |
 | 🔔 **Notifications** | In-app + email alerts, unread badge, mark-all-read |
-| 🏛️ **Portfolio View** | Super-admin sees all tenant companies with live compliance scores in one dashboard |
-| 🔗 **Webhooks** | Configure outbound webhooks for events (employee added, payroll run, document expired) |
-| 🔗 **GraphQL** | Strawberry endpoint — Apollo-compatible at `/graphql/` with GraphiQL playground |
-| 📖 **REST API** | Full DRF REST API with auto OpenAPI/Swagger docs at `/api/docs/` |
+| 🏛️ **Portfolio** | Super-admin sees all tenant companies with live compliance scores |
+| 🔗 **Webhooks** | Outbound HMAC-signed webhooks for all platform events |
+| 🔗 **GraphQL** | Strawberry endpoint — Apollo-compatible at `/graphql/` |
+| 📖 **REST API** | Full DRF REST API with OpenAPI/Swagger docs at `/api/docs/` |
+
+### New Features (v2)
+
+| 🏷️ Area | ✨ Capabilities |
+|---------|----------------|
+| ✍️ **E-Signatures** | Request legally-binding document signatures from employees; track signing status per signer |
+| 🚀 **Onboarding** | Configurable onboarding checklists with task types (document, form, training, sign); progress tracking |
+| 🎓 **Training & Certifications** | Track employee certifications with validity periods, expiry alerts, and compliance reports |
+| 📋 **Policy Management** | Version-controlled policies with mandatory employee acknowledgment tracking and audit trail |
+| 🚨 **Incident Log** | Report and investigate compliance violations, data breaches, and safety incidents; update trail |
+| ✅ **Approval Workflows** | Configurable multi-step approval chains for documents, expenses, leave; full audit trail |
+| 🏭 **Vendor Compliance** | Vendor registry with compliance scores, insurance tracking, contract expiry monitoring |
+| 📝 **Custom Forms** | Drag-and-drop form builder; collect employee and vendor data with structured field types |
+| 🤝 **Partner / White-Label** | Partner portal with custom branding, sub-company management, revenue dashboards |
+| 🔌 **Integration Hub** | Connect QuickBooks, Xero, BambooHR, Slack, Google Workspace via OAuth; sync status & logs |
+| 📊 **Employee Risk Scores** | Composite risk scoring per employee based on document status, training gaps, compliance history |
+| 📅 **Scheduled Reports** | Schedule PDF reports for automatic email delivery (daily/weekly/monthly) |
+| 🔍 **Audit Prep Assistant** | Step-by-step audit readiness checklist with live progress score per regulatory framework |
+| 📱 **Mobile PWA** | Progressive Web App — installable on iOS/Android, offline capability, responsive design |
 
 ---
 
@@ -309,7 +328,11 @@ make dev
 # 5. Create your admin user
 make createsuperuser
 
-# 6. Open the app 🎉
+# 6. (Optional) Seed realistic demo data across all 18 modules
+docker compose exec backend python manage.py seed_demo_data
+# Login: admin@technova.com / Demo@12345
+
+# 7. Open the app 🎉
 ```
 
 | Service | URL |
@@ -319,6 +342,18 @@ make createsuperuser
 | 📖 **Swagger UI** | http://localhost:8000/api/docs/ |
 | 🔗 **GraphiQL** | http://localhost:8000/graphql/ |
 | 🌸 **Flower (Celery)** | http://localhost:5555 |
+
+### Demo Credentials
+
+After running `seed_demo_data`:
+
+| Role | Email | Password |
+|------|-------|----------|
+| Admin | admin@technova.com | Demo@12345 |
+| HR | hr@technova.com | Demo@12345 |
+| Accountant | accountant@technova.com | Demo@12345 |
+| Auditor | auditor@technova.com | Demo@12345 |
+| Employee | emp1@technova.com | Demo@12345 |
 
 ---
 

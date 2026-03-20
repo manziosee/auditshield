@@ -499,7 +499,7 @@ interface ActivityItem {
     .welcome-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
     .action-btn-primary {
       background: linear-gradient(135deg, #4ade80, #22c55e) !important;
-      color: #052e16 !important;
+      color: var(--brand-mid) !important;
       border: none !important; border-radius: 12px !important;
       padding: 10px 22px !important;
       font-weight: 700 !important; font-family: 'Outfit', sans-serif !important;
@@ -1028,22 +1028,51 @@ export class DashboardComponent implements OnInit {
       label: 'Compliance %',
       data: [],
       borderColor: '#22c55e',
-      backgroundColor: 'rgba(34,197,94,0.15)',
+      backgroundColor: (ctx: any) => {
+        const canvas = ctx.chart.ctx;
+        const gradient = canvas.createLinearGradient(0, 0, 0, 220);
+        gradient.addColorStop(0, 'rgba(34,197,94,0.35)');
+        gradient.addColorStop(0.6, 'rgba(34,197,94,0.08)');
+        gradient.addColorStop(1, 'rgba(34,197,94,0)');
+        return gradient;
+      },
       fill: true,
-      tension: 0.45,
+      tension: 0,          // 0 = sharp zigzag lines
+      borderWidth: 2.5,
       pointBackgroundColor: '#22c55e',
       pointBorderColor: '#fff',
-      pointBorderWidth: 2,
-      pointRadius: 4,
-      pointHoverRadius: 6,
+      pointBorderWidth: 2.5,
+      pointRadius: 5,
+      pointHoverRadius: 8,
+      pointHoverBackgroundColor: '#4ade80',
+      pointHoverBorderColor: '#fff',
+      pointHoverBorderWidth: 2,
     }],
   };
 
   docActivityData: ChartData<'bar'> = {
     labels: [],
     datasets: [
-      { label: 'Uploaded', data: [], backgroundColor: 'rgba(34,197,94,0.85)',  borderRadius: 7, borderSkipped: false },
-      { label: 'Expired',  data: [], backgroundColor: 'rgba(239,68,68,0.72)', borderRadius: 7, borderSkipped: false },
+      {
+        label: 'Uploaded',
+        data: [],
+        backgroundColor: 'rgba(34,197,94,0.88)',
+        hoverBackgroundColor: '#22c55e',
+        borderRadius: 10,
+        borderSkipped: false,
+        borderColor: 'transparent',
+        borderWidth: 0,
+      },
+      {
+        label: 'Expired',
+        data: [],
+        backgroundColor: 'rgba(239,68,68,0.75)',
+        hoverBackgroundColor: '#ef4444',
+        borderRadius: 10,
+        borderSkipped: false,
+        borderColor: 'transparent',
+        borderWidth: 0,
+      },
     ],
   };
 
@@ -1053,12 +1082,12 @@ export class DashboardComponent implements OnInit {
       label: 'Employees',
       data: [],
       backgroundColor: [
-        'rgba(34,197,94,0.85)', 'rgba(74,222,128,0.85)',
-        'rgba(22,163,74,0.85)', 'rgba(187,247,208,0.85)',
-        'rgba(134,239,172,0.85)', 'rgba(240,253,244,0.8)',
-        'rgba(16,185,129,0.85)',
+        '#22c55e', '#16a34a', '#4ade80', '#15803d', '#86efac', '#14532d', '#dcfce7',
       ],
-      borderRadius: 6,
+      hoverBackgroundColor: [
+        '#4ade80', '#22c55e', '#86efac', '#4ade80', '#22c55e', '#22c55e', '#4ade80',
+      ],
+      borderRadius: 10,
       borderSkipped: false,
     }],
   };
@@ -1067,10 +1096,12 @@ export class DashboardComponent implements OnInit {
     labels: ['Permanent', 'Fixed-Term', 'Internship', 'Consultant', 'Part-Time'],
     datasets: [{
       data: [0, 0, 0, 0, 0],
-      backgroundColor: ['#0a0a0a', '#22c55e', '#f59e0b', '#ef4444', '#1c1f26'],
-      borderColor: 'var(--surface-card)',
-      borderWidth: 3,
-      hoverOffset: 8,
+      backgroundColor: ['#22c55e', '#0a0a0a', '#f59e0b', '#3b82f6', '#8b5cf6'],
+      hoverBackgroundColor: ['#4ade80', '#1c1f26', '#fbbf24', '#60a5fa', '#a78bfa'],
+      borderColor: 'transparent',
+      borderWidth: 0,
+      hoverOffset: 12,
+      spacing: 3,
     }],
   };
 
@@ -1087,10 +1118,12 @@ export class DashboardComponent implements OnInit {
     labels: ['Active', 'Probation', 'On Leave', 'Terminated'],
     datasets: [{
       data: [0, 0, 0, 0],
-      backgroundColor: ['#22c55e', '#f59e0b', '#ef4444', '#252830'],
-      borderColor: 'var(--surface-card)',
-      borderWidth: 3,
-      hoverOffset: 8,
+      backgroundColor: ['#22c55e', '#f59e0b', '#3b82f6', '#ef4444'],
+      hoverBackgroundColor: ['#4ade80', '#fbbf24', '#60a5fa', '#f87171'],
+      borderColor: 'transparent',
+      borderWidth: 0,
+      hoverOffset: 12,
+      spacing: 3,
     }],
   };
 
@@ -1421,29 +1454,45 @@ export class DashboardComponent implements OnInit {
         legend: { display: false },
         tooltip: {
           backgroundColor: c.tooltipBg,
-          titleColor: c.tooltipTitle,
+          titleColor: '#22c55e',
           bodyColor: c.tooltipBody,
-          borderColor: c.tooltipBorder,
+          borderColor: 'rgba(34,197,94,0.4)',
           borderWidth: 1,
-          cornerRadius: 10,
-          padding: 10,
+          cornerRadius: 12,
+          padding: 12,
+          displayColors: false,
+          callbacks: {
+            title: (items) => `Month: ${items[0].label}`,
+            label: (item) => `Compliance: ${item.raw}%`,
+          },
         },
       },
       scales: {
         x: {
-          grid:  { display: false },
-          ticks: { color: c.tickColor, font: { family: 'Inter', size: 11 } },
+          grid: { display: false },
+          ticks: { color: c.tickColor, font: { family: 'Plus Jakarta Sans', size: 11, weight: 500 } },
           border: { display: false },
         },
         y: {
           min: 0, max: 100,
-          grid:  { color: 'rgba(0,0,0,0.04)', drawTicks: false },
-          ticks: { color: c.tickColor, font: { family: 'Inter', size: 11 }, callback: (v) => `${v}%` },
+          grid: { color: c.gridColor, drawTicks: false },
+          ticks: {
+            color: c.tickColor,
+            font: { family: 'Plus Jakarta Sans', size: 11 },
+            callback: (v) => `${v}%`,
+            stepSize: 20,
+          },
           border: { display: false },
         },
       },
       interaction: { intersect: false, mode: 'index' },
-      animation: { duration: 800, easing: 'easeInOutQuart' },
+      animation: {
+        duration: 1200,
+        easing: 'easeInOutCubic',
+      },
+      elements: {
+        line: { borderCapStyle: 'round', borderJoinStyle: 'miter' },
+      },
     };
   }
 
@@ -1453,18 +1502,44 @@ export class DashboardComponent implements OnInit {
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
-        legend: { display: false },
+        legend: {
+          display: true,
+          position: 'top' as const,
+          align: 'end' as const,
+          labels: {
+            color: c.tickColor,
+            font: { family: 'Plus Jakarta Sans', size: 11 },
+            boxWidth: 10,
+            boxHeight: 10,
+            borderRadius: 3,
+            padding: 16,
+            usePointStyle: true,
+            pointStyle: 'rectRounded',
+          },
+        },
         tooltip: {
-          backgroundColor: c.tooltipBg, titleColor: c.tooltipTitle,
-          bodyColor: c.tooltipBody, borderColor: c.tooltipBorder,
-          borderWidth: 1, cornerRadius: 10, padding: 10,
+          backgroundColor: c.tooltipBg,
+          titleColor: '#22c55e',
+          bodyColor: c.tooltipBody,
+          borderColor: 'rgba(34,197,94,0.4)',
+          borderWidth: 1,
+          cornerRadius: 12,
+          padding: 12,
         },
       },
       scales: {
-        x: { grid: { display: false }, ticks: { color: c.tickColor, font: { family: 'Inter', size: 11 } }, border: { display: false } },
-        y: { grid: { color: c.gridColor, drawTicks: false }, ticks: { color: c.tickColor, font: { family: 'Inter', size: 11 }, stepSize: 5 }, border: { display: false } },
+        x: {
+          grid: { display: false },
+          ticks: { color: c.tickColor, font: { family: 'Plus Jakarta Sans', size: 11 } },
+          border: { display: false },
+        },
+        y: {
+          grid: { color: c.gridColor, drawTicks: false },
+          ticks: { color: c.tickColor, font: { family: 'Plus Jakarta Sans', size: 11 }, stepSize: 5 },
+          border: { display: false },
+        },
       },
-      animation: { duration: 700, easing: 'easeInOutQuart' },
+      animation: { duration: 900, easing: 'easeInOutCubic' },
     };
   }
 
@@ -1517,25 +1592,37 @@ export class DashboardComponent implements OnInit {
 
   private buildDoughnutOptions(): ChartConfiguration['options'] {
     const c = this.theme.chartColors();
-    // Use unknown cast to include doughnut-specific 'cutout' option
     return {
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
         legend: {
           display: true,
-          position: 'right',
-          labels: { color: c.tickColor, font: { family: 'Inter', size: 11 }, boxWidth: 12, padding: 12 },
+          position: 'bottom' as const,
+          labels: {
+            color: c.tickColor,
+            font: { family: 'Plus Jakarta Sans', size: 11 },
+            boxWidth: 10,
+            boxHeight: 10,
+            borderRadius: 3,
+            padding: 12,
+            usePointStyle: true,
+            pointStyle: 'rectRounded',
+          },
         },
         tooltip: {
-          backgroundColor: c.tooltipBg, titleColor: c.tooltipTitle,
-          bodyColor: c.tooltipBody, borderColor: c.tooltipBorder,
-          borderWidth: 1, cornerRadius: 10, padding: 10,
+          backgroundColor: c.tooltipBg,
+          titleColor: '#22c55e',
+          bodyColor: c.tooltipBody,
+          borderColor: 'rgba(34,197,94,0.4)',
+          borderWidth: 1,
+          cornerRadius: 12,
+          padding: 12,
         },
       },
-      // @ts-ignore — cutout + animateRotate are valid doughnut options not in the generic type
-      cutout: '72%',
-      animation: { duration: 1000, easing: 'easeInOutQuart', animateRotate: true },
+      // @ts-ignore
+      cutout: '76%',
+      animation: { duration: 1400, easing: 'easeInOutCubic', animateRotate: true, animateScale: true },
     } as ChartConfiguration['options'];
   }
 }

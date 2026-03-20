@@ -87,491 +87,306 @@ import { NotificationService } from '../../../core/services/notification.service
           <!-- Form -->
           <form [formGroup]="form" (ngSubmit)="submit()">
             <div class="field-group">
-              <label class="field-label">Email address</label>
-              <div class="input-wrap"
-                [class.input-error]="form.get('email')?.invalid && form.get('email')?.touched"
-                [class.input-focused]="emailFocused">
-                <mat-icon class="input-icon">email</mat-icon>
-                <input
-                  type="email" formControlName="email"
-                  placeholder="you@company.com" autocomplete="email"
-                  (focus)="emailFocused=true" (blur)="emailFocused=false"
-                />
+
+              <!-- Email field -->
+              <div class="field-wrap">
+                <label class="field-label">Email address</label>
+                <div class="field-input-wrap">
+                  <mat-icon class="field-icon">mail_outline</mat-icon>
+                  <input
+                    class="field-input"
+                    type="email"
+                    placeholder="you@company.com"
+                    formControlName="email"
+                    autocomplete="email"
+                  />
+                </div>
               </div>
-              @if (form.get('email')?.hasError('required') && form.get('email')?.touched) {
-                <span class="field-error"><mat-icon>error_outline</mat-icon>Email is required</span>
-              }
-              @if (form.get('email')?.hasError('email') && form.get('email')?.touched) {
-                <span class="field-error"><mat-icon>error_outline</mat-icon>Enter a valid email</span>
-              }
+
+              <!-- Password field -->
+              <div class="field-wrap">
+                <label class="field-label">Password</label>
+                <div class="field-input-wrap">
+                  <mat-icon class="field-icon">lock_outline</mat-icon>
+                  <input
+                    class="field-input"
+                    [type]="showPw() ? 'text' : 'password'"
+                    placeholder="••••••••"
+                    formControlName="password"
+                    autocomplete="current-password"
+                  />
+                  <button type="button" class="toggle-pw" (click)="showPw.set(!showPw())">
+                    <mat-icon>{{ showPw() ? 'visibility_off' : 'visibility' }}</mat-icon>
+                  </button>
+                </div>
+              </div>
+
             </div>
 
-            <div class="field-group">
-              <div class="label-row">
-                <label class="field-label">Password</label>
-                <a href="#" class="forgot-link">Forgot password?</a>
-              </div>
-              <div class="input-wrap"
-                [class.input-error]="form.get('password')?.invalid && form.get('password')?.touched"
-                [class.input-focused]="pwFocused">
-                <mat-icon class="input-icon">lock</mat-icon>
-                <input
-                  [type]="showPassword ? 'text' : 'password'"
-                  formControlName="password"
-                  placeholder="••••••••" autocomplete="current-password"
-                  (focus)="pwFocused=true" (blur)="pwFocused=false"
-                />
-                <button type="button" class="eye-btn" (click)="showPassword = !showPassword">
-                  <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-                </button>
-              </div>
-              @if (form.get('password')?.hasError('required') && form.get('password')?.touched) {
-                <span class="field-error"><mat-icon>error_outline</mat-icon>Password is required</span>
-              }
+            <div class="field-meta">
+              <label class="remember-wrap">
+                <input type="checkbox" />
+                <span class="remember-label">Remember me</span>
+              </label>
+              <a href="#" class="forgot-link">Forgot password?</a>
             </div>
 
             @if (errorMessage) {
-              <div class="error-alert">
+              <div class="error-msg">
                 <mat-icon>error_outline</mat-icon>
                 {{ errorMessage }}
               </div>
             }
 
-            <button type="submit" class="submit-btn" [class.loading]="loading()" [disabled]="loading() || form.invalid">
+            <button type="submit" class="btn-submit" [disabled]="loading()">
               @if (loading()) {
-                <mat-spinner diameter="20" />
-                <span>Signing in…</span>
+                <mat-spinner diameter="18"></mat-spinner> Signing in...
               } @else {
-                <mat-icon>login</mat-icon>
-                <span>Sign In</span>
+                <mat-icon>login</mat-icon> Sign in to AuditShield
               }
             </button>
           </form>
 
-          <p class="register-link">
-            Don't have an account?
-            <a routerLink="/auth/register">Register your company →</a>
-          </p>
+          <div class="form-footer">
+            <p>Don't have an account? <a routerLink="/auth/register">Register your company</a></p>
+          </div>
+
+          <div class="trust-row">
+            <div class="trust-item"><mat-icon>lock</mat-icon>256-bit encryption</div>
+            <div class="trust-item"><mat-icon>shield</mat-icon>SOC 2 compliant</div>
+            <div class="trust-item"><mat-icon>cloud_done</mat-icon>Daily backups</div>
+          </div>
         </div>
       </div>
 
     </div>
   `,
   styles: [`
-    /* ── Page layout ────────────────────────────────────────────────────────── */
+    /* PAGE LAYOUT */
     .page {
-      min-height: 100vh;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+      display: flex; min-height: 100vh; font-family: 'Plus Jakarta Sans', sans-serif;
+      background: #070c08;
     }
 
-    /* ═══════════════════════════════════════════════════════════════════════════
-       LEFT PANEL — always dark
-    ═══════════════════════════════════════════════════════════════════════════ */
+    /* LEFT PANEL */
     .panel-left {
-      background: linear-gradient(135deg, #030a04 0%, #071a0c 50%, #0a0a0a 100%);
-      padding: 40px 48px;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      overflow: hidden;
+      flex: 1; display: flex; flex-direction: column; justify-content: center;
+      padding: 60px 64px;
+      background: linear-gradient(160deg, #070c08 0%, #0d1a10 40%, #0a1f12 70%, #081508 100%);
+      position: relative; overflow: hidden;
     }
     .panel-left::before {
-      content: '';
-      position: absolute; inset: 0;
-      background:
-        radial-gradient(ellipse 500px 400px at 110% 70%, rgba(34,197,94,0.2), transparent),
-        radial-gradient(ellipse 300px 200px at -10% 20%, rgba(34,197,94,0.1), transparent);
-      pointer-events: none;
+      content: ''; position: absolute;
+      width: 600px; height: 600px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(34,197,94,0.12) 0%, transparent 65%);
+      top: -150px; left: -150px; pointer-events: none;
     }
-
+    .panel-left::after {
+      content: ''; position: absolute;
+      width: 400px; height: 400px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(34,197,94,0.07) 0%, transparent 65%);
+      bottom: -100px; right: -100px; pointer-events: none;
+    }
     .back-link {
       display: inline-flex; align-items: center; gap: 6px;
-      color: rgba(255,255,255,0.4);
-      font-size: 0.82rem; text-decoration: none;
-      transition: color 0.15s; position: relative; z-index: 1;
+      color: rgba(255,255,255,0.45); text-decoration: none;
+      font-size: 13px; font-weight: 500; margin-bottom: 48px;
+      transition: color 0.2s;
     }
-    .back-link:hover { color: rgba(255,255,255,0.85); text-decoration: none; }
-    .back-link mat-icon { font-size: 1rem; width: 1rem; height: 1rem; }
+    .back-link:hover { color: #4ade80; }
+    .back-link mat-icon { font-size: 16px; width: 16px; height: 16px; }
 
-    .brand-block {
-      flex: 1; display: flex; flex-direction: column;
-      justify-content: center; position: relative; z-index: 1;
-    }
+    .brand-block { margin-bottom: 48px; }
     .brand-logo {
-      width: 72px; height: 72px;
-      background: linear-gradient(135deg, rgba(34,197,94,0.2), rgba(22,163,74,0.12));
-      border: 1px solid rgba(74,222,128,0.3);
-      border-radius: 20px;
+      width: 64px; height: 64px; border-radius: 18px;
+      background: linear-gradient(135deg, rgba(34,197,94,0.2), rgba(34,197,94,0.05));
+      border: 1px solid rgba(34,197,94,0.3);
       display: flex; align-items: center; justify-content: center;
-      margin-bottom: 24px; padding: 12px;
-      box-shadow: 0 0 0 4px rgba(34,197,94,0.08), 0 8px 24px rgba(34,197,94,0.15);
-      animation: logoPulse 3.5s ease-in-out infinite;
-      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.3s;
+      margin-bottom: 20px;
+      box-shadow: 0 0 24px rgba(34,197,94,0.15);
     }
-    .brand-logo img {
-      width: 44px; height: 44px;
-      filter: drop-shadow(0 0 8px rgba(34,197,94,0.8)) brightness(1.4) saturate(1.8);
-    }
+    .brand-logo img { filter: drop-shadow(0 0 8px rgba(34,197,94,0.4)); }
     .brand-block h1 {
-      font-size: 3rem; font-weight: 900;
-      margin: 0 0 14px; letter-spacing: -2px; line-height: 1;
-      background: linear-gradient(135deg, #ffffff 0%, #d1fae5 50%, #4ade80 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      font-family: 'Outfit', sans-serif; font-size: 32px; font-weight: 800;
+      background: linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #16a34a 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; margin: 0 0 10px; letter-spacing: -0.5px;
     }
-    .brand-block p {
-      font-size: 1rem; color: rgba(255,255,255,0.5);
-      max-width: 320px; line-height: 1.7; margin: 0;
-    }
+    .brand-block p { color: rgba(255,255,255,0.5); font-size: 15px; line-height: 1.6; margin: 0; }
 
-    /* Stat cards */
-    .stat-cards {
-      display: flex; gap: 12px; margin-bottom: 24px;
-      position: relative; z-index: 1;
-    }
+    /* STAT CARDS */
+    .stat-cards { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
     .stat-card {
-      flex: 1; display: flex; align-items: center; gap: 12px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 12px; padding: 14px;
+      display: flex; align-items: center; gap: 14px;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px; padding: 14px 18px;
+      backdrop-filter: blur(8px);
+      transition: border-color 0.2s, background 0.2s;
     }
+    .stat-card:hover { background: rgba(34,197,94,0.07); border-color: rgba(34,197,94,0.2); }
     .stat-icon {
-      width: 38px; height: 38px; border-radius: 9px;
+      width: 40px; height: 40px; border-radius: 10px;
       display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
-    .stat-icon mat-icon { font-size: 1.2rem; }
-    .stat-val { font-size: 1.1rem; font-weight: 800; color: white; line-height: 1; }
-    .stat-lbl { font-size: 0.68rem; color: rgba(255,255,255,0.4); margin-top: 2px; }
+    .stat-icon mat-icon { font-size: 20px; width: 20px; height: 20px; }
+    .stat-val { font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 700; color: #fff; }
+    .stat-lbl { font-size: 12px; color: rgba(255,255,255,0.45); margin-top: 2px; }
 
+    /* TESTIMONIAL */
     .testimonial {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px; padding: 22px 24px;
-      margin-bottom: 24px; position: relative; z-index: 1;
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+      border-left: 3px solid #22c55e;
+      border-radius: 14px; padding: 20px 24px; margin-bottom: 24px;
     }
     .testimonial blockquote {
-      margin: 0 0 16px;
-      font-size: 0.875rem;
-      color: rgba(255,255,255,0.65);
-      line-height: 1.7; font-style: italic;
+      color: rgba(255,255,255,0.7); font-size: 14px; line-height: 1.7;
+      margin: 0 0 16px; font-style: italic;
     }
-    .testimonial-author { display: flex; align-items: center; gap: 12px; }
+    .testimonial-author { display: flex; align-items: center; gap: 10px; }
     .ta-avatar {
       width: 36px; height: 36px; border-radius: 50%;
       background: linear-gradient(135deg, #22c55e, #16a34a);
-      color: #052e16; font-size: 0.75rem; font-weight: 700;
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: #fff; flex-shrink: 0;
     }
-    .ta-name  { font-size: 0.82rem; font-weight: 700; color: white; }
-    .ta-title { font-size: 0.72rem; color: rgba(255,255,255,0.4); margin-top: 1px; }
+    .ta-name { font-size: 13px; font-weight: 600; color: #fff; }
+    .ta-title { font-size: 11px; color: rgba(255,255,255,0.4); }
 
-    .left-chips { display: flex; flex-wrap: wrap; gap: 8px; position: relative; z-index: 1; }
+    .left-chips { display: flex; flex-wrap: wrap; gap: 8px; }
     .lchip {
       display: inline-flex; align-items: center; gap: 5px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      color: rgba(255,255,255,0.45);
-      font-size: 0.75rem; padding: 5px 12px; border-radius: 999px;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px; padding: 5px 12px 5px 8px;
+      color: rgba(255,255,255,0.55); font-size: 12px;
     }
-    .lchip mat-icon { font-size: 0.85rem; width: 0.85rem; height: 0.85rem; color: #22c55e; }
+    .lchip mat-icon { font-size: 13px; width: 13px; height: 13px; color: #22c55e; }
 
-    /* ═══════════════════════════════════════════════════════════════════════════
-       RIGHT PANEL — theme-aware
-    ═══════════════════════════════════════════════════════════════════════════ */
+    /* RIGHT PANEL */
     .panel-right {
-      background: var(--surface-bg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 40px 32px;
-    }
-    .form-card {
-      width: 100%; max-width: 460px;
-      background: var(--surface-card);
-      border-radius: 28px;
-      padding: 44px 40px 36px;
-      box-shadow: 0 32px 80px rgba(0,0,0,0.14), 0 8px 24px rgba(0,0,0,0.08), 0 0 0 1px var(--border-color);
-      border-top: 3px solid #22c55e;
-      position: relative; overflow: hidden;
-      animation: slideUpFade 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-    }
-    .form-card::before {
-      content: '';
-      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-      background: radial-gradient(ellipse 300px 200px at 100% 0%, rgba(34,197,94,0.05), transparent);
-      pointer-events: none;
+      width: 520px; display: flex; align-items: center; justify-content: center;
+      padding: 40px 48px;
+      background: #0d1610;
+      border-left: 1px solid rgba(255,255,255,0.06);
     }
 
-    /* Header */
-    .form-header { margin-bottom: 24px; text-align: center; }
+    /* FORM CARD */
+    .form-card { width: 100%; max-width: 420px; }
+
+    .form-header { text-align: center; margin-bottom: 32px; }
     .form-header-icon {
-      width: 60px; height: 60px; border-radius: 18px;
-      background: linear-gradient(135deg, rgba(34,197,94,0.15), rgba(34,197,94,0.08));
-      color: #22c55e;
-      border: 1px solid rgba(34,197,94,0.25);
+      width: 64px; height: 64px; border-radius: 18px; margin: 0 auto 16px;
+      background: linear-gradient(135deg, rgba(34,197,94,0.25), rgba(34,197,94,0.05));
+      border: 1px solid rgba(34,197,94,0.35);
       display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 18px;
-      box-shadow: 0 4px 16px rgba(34,197,94,0.15);
+      box-shadow: 0 0 32px rgba(34,197,94,0.2);
     }
-    .form-header-icon mat-icon { font-size: 1.8rem; width: 1.8rem; height: 1.8rem; }
+    .form-header-icon mat-icon { font-size: 28px; width: 28px; height: 28px; color: #4ade80; }
     .form-header h2 {
-      font-size: 1.75rem; font-weight: 900;
-      color: var(--text-primary);
-      margin: 0 0 6px; letter-spacing: -0.04em;
-      font-family: 'Outfit', sans-serif;
+      font-family: 'Outfit', sans-serif; font-size: 26px; font-weight: 700;
+      color: #fff; margin: 0 0 6px; letter-spacing: -0.3px;
     }
-    .form-header p { font-size: 0.875rem; color: var(--text-muted); margin: 0; }
+    .form-header p { color: rgba(255,255,255,0.45); font-size: 14px; margin: 0; }
 
-    /* Fields */
-    .field-group { margin-bottom: 16px; }
+    /* FORM FIELDS */
+    .field-group { display: flex; flex-direction: column; gap: 14px; margin-bottom: 24px; }
+
+    .field-wrap { position: relative; }
     .field-label {
-      display: block; font-size: 0.8rem; font-weight: 600;
-      color: var(--text-secondary); margin-bottom: 6px;
+      display: block; font-size: 12px; font-weight: 600;
+      color: rgba(255,255,255,0.5); letter-spacing: 0.5px; text-transform: uppercase;
+      margin-bottom: 6px;
     }
-    .label-row {
-      display: flex; justify-content: space-between;
-      align-items: center; margin-bottom: 6px;
+    .field-input-wrap { position: relative; }
+    .field-icon {
+      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+      color: rgba(255,255,255,0.3); font-size: 18px; width: 18px; height: 18px;
+      pointer-events: none; z-index: 1;
     }
-    .forgot-link { font-size: 0.78rem; color: var(--brand); text-decoration: none; }
-    .forgot-link:hover { text-decoration: underline; }
-
-    .input-wrap {
-      display: flex; align-items: center;
-      border: 1.5px solid var(--border-color);
-      border-radius: 14px;
-      background: var(--surface-input);
-      transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
-      overflow: hidden;
-      height: 52px;
+    .field-input {
+      width: 100%; padding: 14px 44px;
+      background: rgba(255,255,255,0.05); border: 1.5px solid rgba(255,255,255,0.1);
+      border-radius: 12px; color: #fff; font-size: 15px; font-family: inherit;
+      outline: none; transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+      box-sizing: border-box;
     }
-    .input-wrap.input-focused {
-      border-color: #22c55e;
-      box-shadow: 0 0 0 4px rgba(34,197,94,0.10);
-      background: var(--surface-card);
+    .field-input:focus {
+      border-color: #22c55e; background: rgba(34,197,94,0.06);
+      box-shadow: 0 0 0 3px rgba(34,197,94,0.12);
     }
-    .input-wrap.input-error { border-color: var(--danger); }
-    .input-wrap.input-error.input-focused { box-shadow: 0 0 0 3px rgba(239,68,68,0.12); }
-
-    .input-icon {
-      color: var(--text-faint);
-      font-size: 1.1rem; width: 1.1rem; height: 1.1rem;
-      padding: 0 4px 0 12px; flex-shrink: 0;
+    .field-input::placeholder { color: rgba(255,255,255,0.25); }
+    .field-input:-webkit-autofill {
+      -webkit-box-shadow: 0 0 0 100px #0d1f12 inset !important;
+      -webkit-text-fill-color: #fff !important;
     }
-    .input-wrap input {
-      flex: 1; border: none; outline: none;
-      background: transparent;
-      padding: 12px;
-      font-size: 0.875rem;
-      color: var(--text-primary);
-      font-family: inherit;
-    }
-    .input-wrap input::placeholder { color: var(--text-faint); }
-
-    .eye-btn {
+    .toggle-pw {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
       background: none; border: none; cursor: pointer;
-      color: var(--text-faint); padding: 0 12px;
-      display: flex; align-items: center;
-      transition: color 0.15s;
+      color: rgba(255,255,255,0.35); padding: 4px; line-height: 0;
+      transition: color 0.2s;
     }
-    .eye-btn:hover { color: var(--brand); }
-    .eye-btn mat-icon { font-size: 1.1rem; width: 1.1rem; height: 1.1rem; }
+    .toggle-pw:hover { color: #4ade80; }
+    .toggle-pw mat-icon { font-size: 18px; width: 18px; height: 18px; }
 
-    .field-error {
-      display: inline-flex; align-items: center; gap: 4px;
-      font-size: 0.75rem; color: var(--danger);
-      margin-top: 4px;
+    .field-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .remember-wrap { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+    .remember-wrap input[type=checkbox] { width: 16px; height: 16px; accent-color: #22c55e; cursor: pointer; }
+    .remember-label { font-size: 13px; color: rgba(255,255,255,0.5); }
+    .forgot-link { font-size: 13px; color: #4ade80; text-decoration: none; font-weight: 500; }
+    .forgot-link:hover { color: #86efac; }
+
+    /* SUBMIT BUTTON */
+    .btn-submit {
+      width: 100%; padding: 15px; border: none; border-radius: 12px; cursor: pointer;
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      color: #fff; font-size: 15px; font-weight: 700; font-family: 'Outfit', sans-serif;
+      letter-spacing: 0.3px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+      box-shadow: 0 4px 20px rgba(34,197,94,0.35);
     }
-    .field-error mat-icon { font-size: 0.85rem; width: 0.85rem; height: 0.85rem; }
+    .btn-submit:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 28px rgba(34,197,94,0.45);
+    }
+    .btn-submit:active:not(:disabled) { transform: translateY(0); }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-submit mat-icon { font-size: 18px; width: 18px; height: 18px; }
 
-    /* Error alert */
-    .error-alert {
+    /* ERROR */
+    .error-msg {
       display: flex; align-items: center; gap: 8px;
-      background: rgba(239,68,68,0.08);
-      border: 1px solid rgba(239,68,68,0.2);
-      color: var(--danger); border-radius: 10px;
-      padding: 10px 14px; font-size: 0.82rem;
+      background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25);
+      border-radius: 10px; padding: 12px 14px; color: #f87171; font-size: 13px;
       margin-bottom: 16px;
     }
-    .error-alert mat-icon { font-size: 1.1rem; width: 1.1rem; height: 1.1rem; flex-shrink: 0; }
+    .error-msg mat-icon { font-size: 16px; width: 16px; height: 16px; flex-shrink: 0; }
 
-    /* Submit button */
-    .submit-btn {
-      width: 100%; height: 54px;
-      display: flex; align-items: center; justify-content: center; gap: 10px;
-      background: linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #16a34a 100%);
-      background-size: 200% 100%; background-position: 0% 50%;
-      color: #052e16 !important; border: none; border-radius: 14px;
-      font-size: 1rem; font-weight: 800; cursor: pointer;
-      transition: background-position 0.4s, transform 0.15s, box-shadow 0.15s;
-      box-shadow: 0 6px 20px rgba(34,197,94,0.4), 0 1px 0 rgba(255,255,255,0.3) inset;
-      margin-bottom: 20px;
-      font-family: 'Outfit', sans-serif;
-      letter-spacing: -0.01em;
-      position: relative; overflow: hidden;
+    /* DIVIDER + FOOTER */
+    .form-divider {
+      display: flex; align-items: center; gap: 12px; margin: 20px 0;
     }
-    .submit-btn:hover:not(:disabled) {
-      background-position: 100% 50%;
-      transform: translateY(-2px) scale(1.01);
-      box-shadow: 0 10px 28px rgba(34,197,94,0.55), 0 1px 0 rgba(255,255,255,0.3) inset;
+    .form-divider span { font-size: 12px; color: rgba(255,255,255,0.25); white-space: nowrap; }
+    .form-divider::before, .form-divider::after {
+      content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.1);
     }
-    .submit-btn:active:not(:disabled) { transform: translateY(0) scale(0.99); }
-    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-    .submit-btn mat-icon { font-size: 1.2rem; width: 1.2rem; height: 1.2rem; }
+    .form-footer { text-align: center; margin-top: 20px; }
+    .form-footer p { color: rgba(255,255,255,0.4); font-size: 13px; margin: 0; }
+    .form-footer a { color: #4ade80; text-decoration: none; font-weight: 600; }
+    .form-footer a:hover { color: #86efac; }
 
-    .register-link { text-align: center; font-size: 0.82rem; color: var(--text-muted); margin: 0; }
-    .register-link a { color: var(--brand); font-weight: 700; text-decoration: none; }
-    .register-link a:hover { text-decoration: underline; }
+    /* TRUST BADGE */
+    .trust-row {
+      display: flex; justify-content: center; gap: 20px; margin-top: 24px; flex-wrap: wrap;
+    }
+    .trust-item {
+      display: flex; align-items: center; gap: 5px;
+      color: rgba(255,255,255,0.3); font-size: 11px;
+    }
+    .trust-item mat-icon { font-size: 13px; width: 13px; height: 13px; color: rgba(34,197,94,0.6); }
 
-    /* ══════════════════════════════════════════════════════════════════════════
-       ANIMATIONS & INTERACTIONS
-    ══════════════════════════════════════════════════════════════════════════ */
-
-    /* Keyframes */
-    @keyframes slideUpFade {
-      from { opacity: 0; transform: translateY(28px) scale(0.96); }
-      to   { opacity: 1; transform: translateY(0)    scale(1);    }
-    }
-    @keyframes shimmer {
-      0%   { left: -100%; }
-      60%  { left: 160%;  }
-      100% { left: 160%;  }
-    }
-    @keyframes statFloat {
-      0%, 100% { transform: translateY(0px); }
-      50%       { transform: translateY(-7px); }
-    }
-    @keyframes logoPulse {
-      0%, 100% { box-shadow: 0 0 0 0   rgba(34,197,94,0);    }
-      50%       { box-shadow: 0 0 0 10px rgba(34,197,94,0.12); }
-    }
-    @keyframes orbA {
-      0%, 100% { transform: translate(0,   0  ) scale(1);    opacity: 0.6; }
-      33%       { transform: translate(70px,-50px) scale(1.15); opacity: 0.8; }
-      66%       { transform: translate(-30px,40px) scale(0.88); opacity: 0.5; }
-    }
-    @keyframes orbB {
-      0%, 100% { transform: translate(0,   0  ) scale(1);    }
-      40%       { transform: translate(-60px,70px) scale(1.2); }
-      70%       { transform: translate(50px,-30px) scale(0.9); }
-    }
-
-    /* Animated background orbs inside left panel */
-    .panel-left::after {
-      content: ''; position: absolute;
-      width: 380px; height: 380px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(34,197,94,0.13), transparent 70%);
-      bottom: -100px; right: -120px;
-      animation: orbA 11s ease-in-out infinite;
-      pointer-events: none; z-index: 0;
-    }
-
-    /* ── Form card: entrance + hover lift ─────────────────────────────────── */
-    .form-card {
-      animation: slideUpFade 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-      transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.45s ease;
-    }
-    .form-card:hover {
-      transform: translateY(-10px) scale(1.012);
-      box-shadow: 0 32px 80px rgba(0,0,0,0.13), 0 0 0 1.5px color-mix(in srgb, var(--brand) 30%, transparent);
-    }
-
-    /* ── Brand logo: pulse + hover spin ──────────────────────────────────── */
-    .brand-logo {
-      animation: logoPulse 3.5s ease-in-out infinite;
-      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.3s;
-    }
-    .brand-logo:hover {
-      transform: scale(1.12) rotate(8deg);
-      border-color: rgba(74,222,128,0.5);
-      animation-play-state: paused;
-    }
-
-    /* ── Stat cards: staggered float ─────────────────────────────────────── */
-    .stat-card { transition: all 0.3s ease; }
-    .stat-card:nth-child(1) { animation: statFloat 4.5s ease-in-out infinite; }
-    .stat-card:nth-child(2) { animation: statFloat 4.5s ease-in-out 1.2s infinite; }
-    .stat-card:hover {
-      background: rgba(255,255,255,0.09) !important;
-      border-color: rgba(74,222,128,0.25) !important;
-      transform: translateY(-5px) scale(1.03);
-      animation-play-state: paused;
-    }
-    .stat-card:hover .stat-icon { transform: scale(1.15) rotate(-5deg); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
-
-    /* ── Testimonial card ────────────────────────────────────────────────── */
-    .testimonial { transition: all 0.3s ease; }
-    .testimonial:hover {
-      background: rgba(255,255,255,0.07) !important;
-      border-color: rgba(74,222,128,0.18) !important;
-      transform: translateY(-3px);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
-    }
-
-    /* ── Trust chips ─────────────────────────────────────────────────────── */
-    .lchip {
-      transition: all 0.22s ease;
-      cursor: default;
-    }
-    .lchip:hover {
-      background: rgba(74,222,128,0.12) !important;
-      border-color: rgba(74,222,128,0.25) !important;
-      color: rgba(255,255,255,0.75) !important;
-      transform: translateY(-3px) scale(1.04);
-    }
-
-    /* ── Input fields: hover glow ────────────────────────────────────────── */
-    .input-wrap {
-      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
-    }
-    .input-wrap:hover:not(.input-error):not(.input-focused) {
-      border-color: color-mix(in srgb, var(--brand) 55%, var(--border-color));
-      background: var(--surface-card);
-    }
-    .input-icon { transition: color 0.2s, transform 0.2s; }
-    .input-wrap.input-focused .input-icon {
-      color: var(--brand) !important;
-      transform: scale(1.12) rotate(-5deg);
-    }
-
-    /* ── Submit button: shimmer sweep ────────────────────────────────────── */
-    .submit-btn::before {
-      content: '';
-      position: absolute; top: 0; left: -100%; width: 55%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.20), transparent);
-      animation: shimmer 2.5s ease-in-out infinite;
-    }
-
-    /* ── Demo banner: hover glow ─────────────────────────────────────────── */
-    .demo-banner { transition: all 0.28s ease; }
-    .demo-banner:hover {
-      border-color: color-mix(in srgb, var(--brand) 45%, transparent);
-      box-shadow: 0 6px 24px color-mix(in srgb, var(--brand) 10%, rgba(0,0,0,0.04));
-    }
-
-    /* ── Demo cards: slide + icon bounce ─────────────────────────────────── */
-    .demo-card { transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1); }
-    .demo-card:hover {
-      transform: translateX(6px) scale(1.015) !important;
-      box-shadow: 3px 3px 14px color-mix(in srgb, var(--demo-color) 14%, rgba(0,0,0,0.04));
-    }
-    .demo-card-icon { transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1); }
-    .demo-card:hover .demo-card-icon {
-      transform: scale(1.2) rotate(-8deg);
-    }
-
-    /* ── Forgot link hover ───────────────────────────────────────────────── */
-    .forgot-link { transition: color 0.15s, transform 0.15s; display: inline-block; }
-    .forgot-link:hover { transform: translateX(3px); text-decoration: none !important; }
-
-    /* ── Register link hover ─────────────────────────────────────────────── */
-    .register-link a { transition: letter-spacing 0.2s; }
-    .register-link a:hover { letter-spacing: 0.01em; text-decoration: none !important; }
-
-    /* ── Responsive ─────────────────────────────────────────────────────────── */
     @media (max-width: 900px) {
-      .page { grid-template-columns: 1fr; }
       .panel-left { display: none; }
-      .panel-right { padding: 24px 16px; min-height: 100vh; align-items: flex-start; padding-top: 40px; }
+      .panel-right { width: 100%; padding: 32px 24px; }
     }
   `],
 })
@@ -586,11 +401,11 @@ export class LoginComponent {
     password: ['', Validators.required],
   });
 
-  readonly loading = signal(false);
-  showPassword  = false;
-  errorMessage  = '';
-  emailFocused  = false;
-  pwFocused     = false;
+  readonly loading  = signal(false);
+  readonly showPw   = signal(false);
+  errorMessage      = '';
+  emailFocused      = false;
+  pwFocused         = false;
 
   submit(): void {
     if (this.form.invalid) return;

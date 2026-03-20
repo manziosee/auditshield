@@ -55,6 +55,11 @@ services:
              python manage.py seed_global_data --noinput 2>/dev/null || true &&
              python manage.py collectstatic --noinput &&
              python manage.py runserver 0.0.0.0:8000"
+    # To seed realistic demo data (30 employees, 6-month compliance history, all 18 modules):
+    #   docker compose exec backend python manage.py seed_demo_data
+    #   Login: admin@technova.com / Demo@12345
+    # To reset and re-seed:
+    #   docker compose exec backend python manage.py seed_demo_data --reset
     ports:
       - "8000:8000"
     environment:

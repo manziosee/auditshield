@@ -139,26 +139,26 @@ import { Employee } from '../../../core/models/employee.models';
     .profile-main { display:flex; align-items:center; gap:20px; margin-bottom:20px; }
     .avatar-lg { width:72px; height:72px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-weight:700; font-size:1.5rem; flex-shrink:0; }
     .profile-info h3 { margin:0 0 4px; font-size:1.3rem; font-weight:700; }
-    .profile-info p { margin:0 0 10px; color:#64748b; }
+    .profile-info p { margin:0 0 10px; color: var(--text-muted); }
     .bullet { margin:0 6px; }
     .profile-chips { display:flex; gap:6px; flex-wrap:wrap; }
     .profile-meta { display:flex; gap:24px; flex-wrap:wrap; border-top:1px solid #e2e8f0; padding-top:16px; }
-    .meta-item { display:flex; align-items:center; gap:6px; color:#64748b; font-size:0.875rem; }
+    .meta-item { display:flex; align-items:center; gap:6px; color: var(--text-muted); font-size:0.875rem; }
     .meta-item mat-icon { font-size:16px; height:16px; width:16px; }
     .chip { display:inline-block; padding:2px 10px; border-radius:20px; font-size:0.75rem; font-weight:500; }
-    .chip-neutral { background:#f1f5f9; color:#475569; }
-    .chip-success { background:#dcfce7; color:#16a34a; }
-    .chip-warning { background:#fef9c3; color:#a16207; }
-    .chip-danger { background:#fee2e2; color:#dc2626; }
-    .chip-info { background:#dbeafe; color:#1d4ed8; }
+    .chip-neutral { background: var(--surface-2); color: var(--text-secondary); }
+    .chip-success { background:rgba(34,197,94,0.12); color:#4ade80; }
+    .chip-warning { background:rgba(234,179,8,0.12); color:#fbbf24; }
+    .chip-danger { background:rgba(239,68,68,0.12); color:#f87171; }
+    .chip-info { background:rgba(59,130,246,0.12); color:#60a5fa; }
     .tab-content { padding-top:16px; display:flex; flex-direction:column; gap:16px; }
     .info-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
     .full-col { grid-column:1/-1; }
     .info-item { display:flex; flex-direction:column; gap:4px; }
-    .info-item label { font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; color:#94a3b8; font-weight:600; }
-    .info-item span { font-size:0.9rem; color:#1e293b; }
+    .info-item label { font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; color: var(--text-faint); font-weight:600; }
+    .info-item span { font-size:0.9rem; color: var(--text-primary); }
     .mono { font-family:monospace; }
-    .empty-state { text-align:center; padding:60px; color:#64748b; }
+    .empty-state { text-align:center; padding:60px; color: var(--text-muted); }
     .empty-state mat-icon { font-size:3rem; height:3rem; width:3rem; opacity:0.4; margin-bottom:12px; display:block; margin:0 auto 12px; }
     @media(max-width:600px){ .info-grid{grid-template-columns:1fr;} .profile-meta{flex-direction:column;gap:8px;} }
   `],

@@ -101,36 +101,36 @@ import { AppNotification, NotificationType } from '../../../core/models/notifica
     .page-container { display:flex; flex-direction:column; gap:20px; }
     .page-header { display:flex; justify-content:space-between; align-items:center; }
     .page-header h2 { margin:0 0 2px; font-size:1.5rem; font-weight:700; }
-    .subtitle { margin:0; color:#64748b; font-size:0.875rem; }
+    .subtitle { margin:0; color: var(--text-muted); font-size:0.875rem; }
     .filter-row { display:flex; gap:12px; flex-wrap:wrap; }
     .center-spinner { display:flex; justify-content:center; padding:60px; }
     .notif-card { padding:0 !important; overflow:hidden; }
     .notif-item { display:flex; align-items:flex-start; gap:16px; padding:16px 20px; cursor:pointer; transition:background 0.15s; }
-    .notif-item:hover { background:#f8fafc; }
+    .notif-item:hover { background: var(--surface-2); }
     .notif-item.unread { background:#f0f9ff; }
     .notif-item.unread:hover { background:#e0f2fe; }
     .notif-icon-wrap { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
     .notif-icon-wrap mat-icon { font-size:1.2rem; height:1.2rem; width:1.2rem; }
-    .wrap-orange { background:#fff7ed; color:#ea580c; }
+    .wrap-orange { background:rgba(249,115,22,0.12); color:#fb923c; }
     .wrap-red { background:#fff1f2; color:#e11d48; }
-    .wrap-blue { background:#eff6ff; color:#2563eb; }
-    .wrap-purple { background:#faf5ff; color:#7c3aed; }
-    .wrap-gray { background:#f8fafc; color:#64748b; }
+    .wrap-blue { background:rgba(59,130,246,0.12); color:#60a5fa; }
+    .wrap-purple { background:rgba(139,92,246,0.12); color:#a78bfa; }
+    .wrap-gray { background: var(--surface-2); color: var(--text-muted); }
     .notif-body { flex:1; min-width:0; }
-    .notif-title { margin:0 0 2px; font-weight:600; font-size:0.875rem; color:#1e293b; }
-    .notif-msg { margin:0 0 4px; font-size:0.8rem; color:#64748b; }
-    .notif-time { margin:0; font-size:0.7rem; color:#94a3b8; }
+    .notif-title { margin:0 0 2px; font-weight:600; font-size:0.875rem; color: var(--text-primary); }
+    .notif-msg { margin:0 0 4px; font-size:0.8rem; color: var(--text-muted); }
+    .notif-time { margin:0; font-size:0.7rem; color: var(--text-faint); }
     .notif-meta { display:flex; align-items:center; gap:8px; flex-shrink:0; }
     .unread-dot { width:8px; height:8px; border-radius:50%; background:#3b82f6; display:inline-block; }
     .chip { display:inline-block; padding:2px 8px; border-radius:20px; font-size:0.7rem; font-weight:500; }
-    .chip-orange { background:#fff7ed; color:#9a3412; }
+    .chip-orange { background:rgba(249,115,22,0.12); color:#fb923c; }
     .chip-red { background:#fff1f2; color:#9f1239; }
-    .chip-blue { background:#dbeafe; color:#1d4ed8; }
-    .chip-purple { background:#f3e8ff; color:#6b21a8; }
-    .chip-gray { background:#f1f5f9; color:#475569; }
-    .empty-card { text-align:center; padding:60px !important; color:#64748b; }
+    .chip-blue { background:rgba(59,130,246,0.12); color:#60a5fa; }
+    .chip-purple { background:rgba(168,85,247,0.12); color:#c084fc; }
+    .chip-gray { background: var(--surface-2); color: var(--text-secondary); }
+    .empty-card { text-align:center; padding:60px !important; color: var(--text-muted); }
     .empty-card mat-icon { font-size:3rem; height:3rem; width:3rem; opacity:0.4; display:block; margin:0 auto 12px; }
-    .empty-card h3 { margin:0 0 8px; color:#1e293b; }
+    .empty-card h3 { margin:0 0 8px; color: var(--text-primary); }
     .empty-card p { margin:0; }
   `],
 })

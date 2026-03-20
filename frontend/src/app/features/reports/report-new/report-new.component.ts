@@ -103,26 +103,26 @@ import { Report } from '../../../core/models/report.models';
     .page-container { display:flex; flex-direction:column; gap:20px; }
     .page-header { display:flex; align-items:center; gap:12px; }
     .page-header h2 { margin:0 0 2px; font-size:1.5rem; font-weight:700; }
-    .subtitle { margin:0; color:#64748b; font-size:0.875rem; }
+    .subtitle { margin:0; color: var(--text-muted); font-size:0.875rem; }
     .new-layout { display:flex; flex-direction:column; gap:20px; }
     .type-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
     .type-card { display:flex; align-items:flex-start; gap:12px; padding:16px; border:2px solid #e2e8f0; border-radius:8px; cursor:pointer; transition:border-color 0.2s; }
     .type-card:hover { border-color:#3b82f6; }
     .type-card.selected { border-color:#3b82f6; background:#eff6ff; }
     .type-card mat-icon { font-size:1.8rem; height:1.8rem; width:1.8rem; flex-shrink:0; margin-top:2px; }
-    .type-name { margin:0 0 4px; font-weight:600; font-size:0.875rem; color:#1e293b; }
-    .type-desc { margin:0; font-size:0.75rem; color:#64748b; }
+    .type-name { margin:0 0 4px; font-weight:600; font-size:0.875rem; color: var(--text-primary); }
+    .type-desc { margin:0; font-size:0.75rem; color: var(--text-muted); }
     .full-width { width:100%; }
     .two-col { display:grid; grid-template-columns:1fr 1fr; gap:0 16px; }
     .info-box { display:flex; gap:10px; background:#eff6ff; border-radius:8px; padding:12px 16px; margin-top:4px; }
     .info-box mat-icon { color:#3b82f6; flex-shrink:0; }
-    .info-box p { margin:0; font-size:0.875rem; color:#1e40af; }
+    .info-box p { margin:0; font-size:0.875rem; color: #60a5fa; }
     mat-card-actions { display:flex; justify-content:flex-end; gap:8px; padding:16px !important; }
     .icon-purple { color:#8b5cf6; }
     .icon-blue { color:#3b82f6; }
     .icon-green { color:#16a34a; }
     .icon-orange { color:#ea580c; }
-    .icon-teal { color:#0d9488; }
+    .icon-teal { color: var(--brand); }
     .icon-red { color:#dc2626; }
     .icon-indigo { color:#4f46e5; }
     @media(max-width:600px){ .type-grid{grid-template-columns:1fr;} }

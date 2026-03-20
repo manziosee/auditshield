@@ -342,10 +342,10 @@ interface CalendarDay {
       padding: 1px 6px;
       border-radius: 20px;
     }
-    .status-compliant { background: rgba(13,148,136,0.12); color: #0d9488; }
+    .status-compliant { background: rgba(13,148,136,0.12); color: var(--brand); }
     .status-pending   { background: rgba(245,158,11,0.12);  color: #d97706; }
     .status-overdue   { background: rgba(239,68,68,0.12);   color: #dc2626; }
-    .status-exempt    { background: rgba(148,163,184,0.12); color: #64748b; }
+    .status-exempt    { background: rgba(148,163,184,0.12); color: var(--text-muted); }
     @media (max-width: 600px) {
       .cal-day { min-height: 50px; }
       .cal-header { flex-direction: column; align-items: flex-start; }

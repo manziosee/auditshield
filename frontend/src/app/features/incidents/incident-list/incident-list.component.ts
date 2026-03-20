@@ -51,10 +51,55 @@ interface IncidentStats {
           <h2 class="page-title">Incident & Violation Log</h2>
           <p class="subtitle">Track and resolve compliance incidents</p>
         </div>
-        <button mat-raised-button class="btn-brand">
+        <button mat-raised-button class="btn-brand" (click)="showCreate.set(true)">
           <mat-icon>add</mat-icon> Report Incident
         </button>
       </div>
+
+      @if (showCreate()) {
+        <div class="create-panel">
+          <h3 class="create-panel-title">Report Incident</h3>
+          <div class="create-form">
+            <mat-form-field appearance="outline" class="create-field create-field--full">
+              <mat-label>Incident Title</mat-label>
+              <input matInput [value]="newIncTitle()" (input)="newIncTitle.set($any($event.target).value)" placeholder="Brief summary of the incident">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="create-field">
+              <mat-label>Type</mat-label>
+              <mat-select [value]="newIncType()" (valueChange)="newIncType.set($event)">
+                <mat-option value="data_breach">Data Breach</mat-option>
+                <mat-option value="policy_violation">Policy Violation</mat-option>
+                <mat-option value="safety">Safety</mat-option>
+                <mat-option value="financial">Financial</mat-option>
+                <mat-option value="other">Other</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="create-field">
+              <mat-label>Severity</mat-label>
+              <mat-select [value]="newIncSeverity()" (valueChange)="newIncSeverity.set($event)">
+                <mat-option value="critical">Critical</mat-option>
+                <mat-option value="high">High</mat-option>
+                <mat-option value="medium">Medium</mat-option>
+                <mat-option value="low">Low</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="create-field">
+              <mat-label>Incident Date</mat-label>
+              <input matInput type="date" [value]="newIncDate()" (input)="newIncDate.set($any($event.target).value)">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="create-field create-field--full">
+              <mat-label>Description</mat-label>
+              <textarea matInput rows="3" [value]="newIncDesc()" (input)="newIncDesc.set($any($event.target).value)" placeholder="Describe what happened..."></textarea>
+            </mat-form-field>
+          </div>
+          <div class="create-actions">
+            <button mat-stroked-button (click)="showCreate.set(false)">Cancel</button>
+            <button mat-raised-button class="btn-brand" (click)="reportIncident()" [disabled]="creating() || !newIncTitle().trim()">
+              <mat-icon>warning</mat-icon> {{ creating() ? 'Submitting...' : 'Submit Report' }}
+            </button>
+          </div>
+        </div>
+      }
 
       <!-- Stats -->
       <div class="stats-row">
@@ -183,7 +228,7 @@ interface IncidentStats {
     .page-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
     .page-title { margin:0 0 2px; font-size:1.5rem; font-weight:800; font-family:'Outfit',sans-serif; color:var(--text-primary); letter-spacing:-0.03em; }
     .subtitle { margin:0; color:var(--text-muted); font-size:0.875rem; }
-    .btn-brand { background:linear-gradient(135deg,#22c55e,#16a34a) !important; color:#052e16 !important; font-weight:700 !important; }
+    .btn-brand { background:linear-gradient(135deg,#22c55e,#16a34a) !important; color: var(--brand-mid) !important; font-weight:700 !important; }
     .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
     .stat-card { padding:18px 20px !important; display:flex; align-items:center; gap:14px; }
     .stat-card--critical { border-left:3px solid #dc2626 !important; }
@@ -205,14 +250,14 @@ interface IncidentStats {
     .inc-desc { font-size:0.75rem; color:var(--text-muted); }
     .type-chip { background:rgba(34,197,94,0.08); color:#16a34a; padding:2px 8px; border-radius:10px; font-size:0.75rem; font-weight:500; }
     .sev-badge { display:inline-block; padding:2px 8px; border-radius:6px; font-size:0.75rem; font-weight:700; }
-    .sev-critical { background:#fee2e2; color:#dc2626; }
+    .sev-critical { background:rgba(239,68,68,0.12); color:#f87171; }
     .sev-high { background:#ffedd5; color:#ea580c; }
-    .sev-medium { background:#fef9c3; color:#a16207; }
-    .sev-low { background:#dcfce7; color:#16a34a; }
+    .sev-medium { background:rgba(234,179,8,0.12); color:#fbbf24; }
+    .sev-low { background:rgba(34,197,94,0.12); color:#4ade80; }
     .chip { display:inline-block; padding:2px 10px; border-radius:20px; font-size:0.75rem; font-weight:500; }
-    .chip-amber { background:#fef9c3; color:#a16207; }
-    .chip-blue { background:#dbeafe; color:#1d4ed8; }
-    .chip-green { background:#dcfce7; color:#16a34a; }
+    .chip-amber { background:rgba(234,179,8,0.12); color:#fbbf24; }
+    .chip-blue { background:rgba(59,130,246,0.12); color:#60a5fa; }
+    .chip-green { background:rgba(34,197,94,0.12); color:#4ade80; }
     .chip-neutral { background:rgba(0,0,0,0.06); color:var(--text-muted); }
     .clickable-row { cursor:pointer; }
     .clickable-row:hover td { background:var(--surface-2) !important; }
@@ -221,6 +266,13 @@ interface IncidentStats {
     .empty-state h3 { margin:0 0 8px; color:var(--text-primary); }
     .empty-state p { margin:0; }
     @media(max-width:768px) { .stats-row { grid-template-columns:repeat(2,1fr); } }
+    .create-panel { background:var(--surface-1); border:1px solid var(--brand); border-radius:16px; padding:24px; animation:slideDown 0.2s ease; }
+    .create-panel-title { font-family:'Outfit',sans-serif; font-size:18px; font-weight:600; color:var(--text-primary); margin:0 0 16px; }
+    .create-form { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .create-field { width:100%; }
+    .create-field--full { grid-column:1/-1; }
+    .create-actions { display:flex; gap:12px; justify-content:flex-end; margin-top:16px; }
+    @keyframes slideDown { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
   `],
 })
 export class IncidentListComponent implements OnInit {
@@ -232,6 +284,13 @@ export class IncidentListComponent implements OnInit {
   statusFilter   = '';
   severityFilter = '';
   stats          = signal<IncidentStats>({ open: 0, investigating: 0, resolved: 0, critical: 0 });
+  showCreate     = signal(false);
+  creating       = signal(false);
+  newIncTitle    = signal('');
+  newIncType     = signal('');
+  newIncSeverity = signal('medium');
+  newIncDate     = signal('');
+  newIncDesc     = signal('');
 
   filtered = computed(() => {
     let list = this.incidents();
@@ -263,6 +322,31 @@ export class IncidentListComponent implements OnInit {
   }
 
   applyFilters(): void { /* computed() re-evaluates automatically */ }
+
+  reportIncident(): void {
+    if (!this.newIncTitle().trim()) return;
+    this.creating.set(true);
+    this.api.post('incidents/', {
+      title: this.newIncTitle(),
+      incident_type: this.newIncType() || 'other',
+      severity: this.newIncSeverity() || 'medium',
+      incident_date: this.newIncDate() || null,
+      description: this.newIncDesc(),
+    }).subscribe({
+      next: () => {
+        this.showCreate.set(false);
+        this.newIncTitle.set('');
+        this.newIncType.set('');
+        this.newIncSeverity.set('medium');
+        this.newIncDate.set('');
+        this.newIncDesc.set('');
+        this.creating.set(false);
+        this.load();
+        this.notify.success('Incident reported.');
+      },
+      error: () => { this.creating.set(false); this.notify.error('Failed to report incident.'); },
+    });
+  }
 
   severityClass(s: Severity): string {
     const map: Record<Severity, string> = {

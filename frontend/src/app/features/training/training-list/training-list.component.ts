@@ -8,6 +8,9 @@ import { MatTableModule } from '@angular/material/table';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { ApiService } from '../../../core/services/api.service';
 import { NotificationService } from '../../../core/services/notification.service';
 
@@ -37,6 +40,7 @@ interface CertType {
     MatButtonModule, MatIconModule, MatCardModule,
     MatTabsModule, MatTableModule, MatMenuModule,
     MatProgressSpinnerModule, MatTooltipModule,
+    MatFormFieldModule, MatInputModule, MatSelectModule,
   ],
   template: `
     <div class="page-container">
@@ -45,10 +49,44 @@ interface CertType {
           <h2 class="page-title">Training & Certifications</h2>
           <p class="subtitle">Track employee certifications and training records</p>
         </div>
-        <button mat-raised-button class="btn-brand" (click)="showAddForm = !showAddForm">
+        <button mat-raised-button class="btn-brand" (click)="showCreate.set(true)">
           <mat-icon>add</mat-icon> Add Certification
         </button>
       </div>
+
+      @if (showCreate()) {
+        <div class="create-panel">
+          <h3 class="create-panel-title">Add Certification</h3>
+          <div class="create-form">
+            <mat-form-field appearance="outline" class="create-field">
+              <mat-label>Employee Name or Email</mat-label>
+              <input matInput [value]="newEmployeeId()" (input)="newEmployeeId.set($any($event.target).value)" placeholder="Search employee...">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="create-field">
+              <mat-label>Certification Type</mat-label>
+              <mat-select [value]="newCertTypeId()" (valueChange)="newCertTypeId.set($event)">
+                @for (t of certTypes(); track t.id) {
+                  <mat-option [value]="t.id">{{ t.name }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="create-field">
+              <mat-label>Issue Date</mat-label>
+              <input matInput type="date" [value]="newIssueDate()" (input)="newIssueDate.set($any($event.target).value)">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="create-field">
+              <mat-label>Expiry Date</mat-label>
+              <input matInput type="date" [value]="newExpiryDate()" (input)="newExpiryDate.set($any($event.target).value)">
+            </mat-form-field>
+          </div>
+          <div class="create-actions">
+            <button mat-stroked-button (click)="showCreate.set(false)">Cancel</button>
+            <button mat-raised-button class="btn-brand" (click)="addCertification()" [disabled]="creating() || !newEmployeeId().trim()">
+              <mat-icon>workspace_premium</mat-icon> {{ creating() ? 'Saving...' : 'Add Certification' }}
+            </button>
+          </div>
+        </div>
+      }
 
       <mat-tab-group class="tabs" animationDuration="200ms">
         <!-- Certifications Tab -->
@@ -159,17 +197,17 @@ interface CertType {
     .page-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
     .page-title { margin:0 0 2px; font-size:1.5rem; font-weight:800; font-family:'Outfit',sans-serif; color:var(--text-primary); letter-spacing:-0.03em; }
     .subtitle { margin:0; color:var(--text-muted); font-size:0.875rem; }
-    .btn-brand { background:linear-gradient(135deg,#22c55e,#16a34a) !important; color:#052e16 !important; font-weight:700 !important; }
+    .btn-brand { background:linear-gradient(135deg,#22c55e,#16a34a) !important; color: var(--brand-mid) !important; font-weight:700 !important; }
     .tabs { background:var(--surface-1); border-radius:16px; border:1px solid var(--border-color); overflow:hidden; }
     .center-spin { display:flex; justify-content:center; padding:60px; }
     .table-wrapper { overflow-x:auto; }
     table { width:100%; }
     .emp-cell { display:flex; align-items:center; gap:8px; }
-    .emp-dot { width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,#22c55e,#16a34a); color:#052e16; font-size:0.75rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .emp-dot { width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,#22c55e,#16a34a); color: var(--brand-mid); font-size:0.75rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
     .chip { display:inline-block; padding:2px 10px; border-radius:20px; font-size:0.75rem; font-weight:500; }
-    .chip-green { background:#dcfce7; color:#16a34a; }
-    .chip-red { background:#fee2e2; color:#dc2626; }
-    .chip-amber { background:#fef9c3; color:#a16207; }
+    .chip-green { background:rgba(34,197,94,0.12); color:#4ade80; }
+    .chip-red { background:rgba(239,68,68,0.12); color:#f87171; }
+    .chip-amber { background:rgba(234,179,8,0.12); color:#fbbf24; }
     .danger-item { color:#dc2626 !important; }
     .types-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:16px; padding:20px; }
     .type-card { padding:16px !important; display:flex; gap:12px; align-items:flex-start; border-radius:12px !important; border:1px solid var(--border-color) !important; }
@@ -185,17 +223,23 @@ interface CertType {
     .urgency-amber { border-color:#d97706 !important; }
     .urgency-green { border-color:#22c55e !important; }
     .exp-left { display:flex; align-items:center; gap:12px; }
-    .emp-avatar { width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,#22c55e,#16a34a); color:#052e16; font-size:0.8rem; font-weight:700; display:flex; align-items:center; justify-content:center; }
+    .emp-avatar { width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,#22c55e,#16a34a); color: var(--brand-mid); font-size:0.8rem; font-weight:700; display:flex; align-items:center; justify-content:center; }
     .exp-name { font-weight:600; font-size:0.875rem; color:var(--text-primary); }
     .exp-cert { font-size:0.78rem; color:var(--text-muted); }
     .exp-right { text-align:right; }
     .days-badge { font-size:0.85rem; font-weight:700; padding:3px 10px; border-radius:12px; }
-    .days-red { background:#fee2e2; color:#dc2626; }
-    .days-amber { background:#fef9c3; color:#a16207; }
-    .days-green { background:#dcfce7; color:#16a34a; }
+    .days-red { background:rgba(239,68,68,0.12); color:#f87171; }
+    .days-amber { background:rgba(234,179,8,0.12); color:#fbbf24; }
+    .days-green { background:rgba(34,197,94,0.12); color:#4ade80; }
     .exp-date { font-size:0.75rem; color:var(--text-muted); margin-top:4px; }
     .empty-state { text-align:center; padding:48px; color:var(--text-muted); }
     .empty-state mat-icon { font-size:2.5rem; height:2.5rem; width:2.5rem; opacity:0.3; display:block; margin:0 auto 8px; }
+    .create-panel { background:var(--surface-1); border:1px solid var(--brand); border-radius:16px; padding:24px; animation:slideDown 0.2s ease; }
+    .create-panel-title { font-family:'Outfit',sans-serif; font-size:18px; font-weight:600; color:var(--text-primary); margin:0 0 16px; }
+    .create-form { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .create-field { width:100%; }
+    .create-actions { display:flex; gap:12px; justify-content:flex-end; margin-top:16px; }
+    @keyframes slideDown { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
   `],
 })
 export class TrainingListComponent implements OnInit {
@@ -206,7 +250,12 @@ export class TrainingListComponent implements OnInit {
   certTypes    = signal<CertType[]>([]);
   expiringSoon = signal<Certification[]>([]);
   loading      = signal(false);
-  showAddForm  = false;
+  showCreate   = signal(false);
+  creating     = signal(false);
+  newEmployeeId = signal('');
+  newCertTypeId = signal('');
+  newIssueDate  = signal('');
+  newExpiryDate = signal('');
 
   certColumns = ['employee', 'cert_type', 'issued', 'expiry', 'status', 'actions'];
 
@@ -223,12 +272,35 @@ export class TrainingListComponent implements OnInit {
       },
       error: () => { this.loading.set(false); this.notify.error('Failed to load certifications.'); },
     });
-    this.api.get<{ results: CertType[] } | CertType[]>('training/cert-types/').subscribe({
+    this.api.get<{ results: CertType[] } | CertType[]>('training/types/').subscribe({
       next: (res) => {
         const list = Array.isArray(res) ? res : (res as { results: CertType[] }).results ?? [];
         this.certTypes.set(list);
       },
       error: () => {},
+    });
+  }
+
+  addCertification(): void {
+    if (!this.newEmployeeId().trim()) return;
+    this.creating.set(true);
+    this.api.post('training/certifications/', {
+      employee_id: this.newEmployeeId(),
+      cert_type_id: this.newCertTypeId() || null,
+      issued_date: this.newIssueDate() || null,
+      expiry_date: this.newExpiryDate() || null,
+    }).subscribe({
+      next: () => {
+        this.showCreate.set(false);
+        this.newEmployeeId.set('');
+        this.newCertTypeId.set('');
+        this.newIssueDate.set('');
+        this.newExpiryDate.set('');
+        this.creating.set(false);
+        this.load();
+        this.notify.success('Certification added.');
+      },
+      error: () => { this.creating.set(false); this.notify.error('Failed to add certification.'); },
     });
   }
 

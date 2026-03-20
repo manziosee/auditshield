@@ -126,10 +126,10 @@ interface SignatureRequestDetail {
     .subtitle { margin:0; display:flex; align-items:center; gap:8px; color:var(--text-muted); font-size:0.875rem; }
     .inline-icon { font-size:1rem; height:1rem; width:1rem; color:#22c55e; }
     .chip { display:inline-block; padding:2px 10px; border-radius:20px; font-size:0.75rem; font-weight:500; }
-    .chip-amber { background:#fef9c3; color:#a16207; }
-    .chip-blue { background:#dbeafe; color:#1d4ed8; }
-    .chip-green { background:#dcfce7; color:#16a34a; }
-    .chip-red { background:#fee2e2; color:#dc2626; }
+    .chip-amber { background:rgba(234,179,8,0.12); color:#fbbf24; }
+    .chip-blue { background:rgba(59,130,246,0.12); color:#60a5fa; }
+    .chip-green { background:rgba(34,197,94,0.12); color:#4ade80; }
+    .chip-red { background:rgba(239,68,68,0.12); color:#f87171; }
     .header-meta { display:flex; flex-direction:column; align-items:flex-end; }
     .meta-label { font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; }
     .meta-value { font-size:0.95rem; font-weight:600; color:var(--text-primary); }
@@ -139,7 +139,7 @@ interface SignatureRequestDetail {
     .message-text { margin:0; color:var(--text-secondary); line-height:1.6; }
     .signers-list { display:flex; flex-direction:column; gap:12px; }
     .signer-row { display:flex; align-items:center; gap:14px; padding:12px; border-radius:12px; background:var(--surface-2); border:1px solid var(--border-color); }
-    .signer-avatar { width:42px; height:42px; border-radius:50%; background:linear-gradient(135deg,#22c55e,#16a34a); color:#052e16; font-size:0.85rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .signer-avatar { width:42px; height:42px; border-radius:50%; background:linear-gradient(135deg,#22c55e,#16a34a); color: var(--brand-mid); font-size:0.85rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
     .signer-info { flex:1; }
     .signer-name { font-weight:600; font-size:0.9rem; color:var(--text-primary); }
     .signer-email { font-size:0.78rem; color:var(--text-muted); }
@@ -150,7 +150,7 @@ interface SignatureRequestDetail {
     .canvas-container { border:2px dashed var(--border-color); border-radius:12px; overflow:hidden; background:#fff; }
     .sig-canvas { display:block; cursor:crosshair; max-width:100%; touch-action:none; }
     .pad-actions { display:flex; gap:12px; margin-top:16px; align-items:center; }
-    .btn-brand { background:linear-gradient(135deg,#22c55e,#16a34a) !important; color:#052e16 !important; font-weight:700 !important; }
+    .btn-brand { background:linear-gradient(135deg,#22c55e,#16a34a) !important; color: var(--brand-mid) !important; font-weight:700 !important; }
   `],
 })
 export class SignatureDetailComponent implements OnInit, AfterViewInit {

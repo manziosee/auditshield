@@ -704,16 +704,41 @@ export class ShellComponent implements OnInit, OnDestroy {
   }
 
   readonly navItems: NavItem[] = [
-    { label: 'Dashboard',     icon: 'dashboard',     route: '/dashboard' },
-    { label: 'Employees',     icon: 'group',          route: '/employees',    roles: ['super_admin', 'admin', 'hr'] },
-    { label: 'Documents',     icon: 'folder_open',    route: '/documents' },
-    { label: 'Compliance',    icon: 'verified_user',  route: '/compliance' },
-    { label: 'Reports',       icon: 'assessment',     route: '/reports' },
-    { label: 'Notifications', icon: 'notifications',  route: '/notifications' },
-    { label: 'Audit Logs',    icon: 'history',        route: '/audit-logs',   roles: ['super_admin', 'admin'] },
-    { label: 'Company',       icon: 'business',       route: '/company',      roles: ['super_admin', 'admin'] },
-    { label: 'Portfolio',     icon: 'corporate_fare', route: '/portfolio',    roles: ['super_admin'] },
-    { label: 'My Portal',     icon: 'person',         route: '/self-service', roles: ['employee', 'hr', 'accountant', 'auditor'] },
+    // ── Core ────────────────────────────────────────────────────────────────
+    { label: 'Dashboard',        icon: 'dashboard',        route: '/dashboard' },
+    { label: 'Notifications',    icon: 'notifications',    route: '/notifications' },
+
+    // ── People ──────────────────────────────────────────────────────────────
+    { label: 'Employees',        icon: 'group',            route: '/employees',      roles: ['super_admin', 'admin', 'hr'] },
+    { label: 'Onboarding',       icon: 'rocket_launch',    route: '/onboarding',     roles: ['super_admin', 'admin', 'hr'] },
+    { label: 'Training',         icon: 'school',           route: '/training',       roles: ['super_admin', 'admin', 'hr'] },
+    { label: 'Risk Scores',      icon: 'security',         route: '/employees/risk-scores', roles: ['super_admin', 'admin', 'hr'] },
+
+    // ── Compliance ──────────────────────────────────────────────────────────
+    { label: 'Compliance',       icon: 'verified_user',    route: '/compliance' },
+    { label: 'Policies',         icon: 'policy',           route: '/policies' },
+    { label: 'Incidents',        icon: 'warning_amber',    route: '/incidents' },
+    { label: 'Approvals',        icon: 'approval',         route: '/approvals' },
+    { label: 'Gap Analysis',     icon: 'analytics',        route: '/compliance/gap-analysis' },
+
+    // ── Documents ───────────────────────────────────────────────────────────
+    { label: 'Documents',        icon: 'folder_open',      route: '/documents' },
+    { label: 'E-Signatures',     icon: 'draw',             route: '/signatures' },
+    { label: 'Forms',            icon: 'dynamic_form',     route: '/forms' },
+    { label: 'Vendors',          icon: 'business_center',  route: '/vendors' },
+
+    // ── Business ────────────────────────────────────────────────────────────
+    { label: 'Reports',          icon: 'assessment',       route: '/reports' },
+    { label: 'Integrations',     icon: 'hub',              route: '/integrations' },
+
+    // ── Admin / Super-admin ──────────────────────────────────────────────────
+    { label: 'Audit Logs',       icon: 'history',          route: '/audit-logs',     roles: ['super_admin', 'admin'] },
+    { label: 'Company',          icon: 'business',         route: '/company',        roles: ['super_admin', 'admin'] },
+    { label: 'Portfolio',        icon: 'corporate_fare',   route: '/portfolio',      roles: ['super_admin'] },
+    { label: 'Partners',         icon: 'handshake',        route: '/partners',       roles: ['super_admin'] },
+
+    // ── Employee self-service ───────────────────────────────────────────────
+    { label: 'My Portal',        icon: 'person',           route: '/self-service',   roles: ['employee', 'hr', 'accountant', 'auditor'] },
   ];
 
   visibleNavItems(): NavItem[] {
@@ -723,13 +748,13 @@ export class ShellComponent implements OnInit, OnDestroy {
 
   mainNavItems(): NavItem[] {
     return this.visibleNavItems().filter(item =>
-      !['audit-logs', 'company', 'portfolio'].some(r => item.route.includes(r))
+      !['audit-logs', 'company', 'portfolio', 'partners'].some(r => item.route.includes(r))
     );
   }
 
   adminNavItems(): NavItem[] {
     return this.visibleNavItems().filter(item =>
-      ['audit-logs', 'company', 'portfolio'].some(r => item.route.includes(r))
+      ['audit-logs', 'company', 'portfolio', 'partners'].some(r => item.route.includes(r))
     );
   }
 
@@ -742,16 +767,30 @@ export class ShellComponent implements OnInit, OnDestroy {
   currentPageTitle(): string {
     const url = this.router.url.split('?')[0];
     const map: Record<string, string> = {
-      '/dashboard':     'Dashboard',
-      '/employees':     'Employees',
-      '/documents':     'Documents',
-      '/compliance':    'Compliance',
-      '/reports':       'Reports',
-      '/notifications': 'Notifications',
-      '/audit-logs':    'Audit Logs',
-      '/company':       'Company Settings',
-      '/portfolio':     'Portfolio',
-      '/self-service':  'My Portal',
+      '/dashboard':                    'Dashboard',
+      '/employees/risk-scores':        'Risk Scores',
+      '/employees':                    'Employees',
+      '/documents':                    'Documents',
+      '/compliance/gap-analysis':      'Gap Analysis',
+      '/compliance/audit-prep':        'Audit Prep',
+      '/compliance':                   'Compliance',
+      '/reports/scheduled':            'Scheduled Reports',
+      '/reports':                      'Reports',
+      '/notifications':                'Notifications',
+      '/audit-logs':                   'Audit Logs',
+      '/company':                      'Company Settings',
+      '/portfolio':                    'Portfolio',
+      '/self-service':                 'My Portal',
+      '/signatures':                   'E-Signatures',
+      '/onboarding':                   'Onboarding',
+      '/training':                     'Training',
+      '/policies':                     'Policies',
+      '/incidents':                    'Incidents',
+      '/approvals':                    'Approvals',
+      '/vendors':                      'Vendors',
+      '/forms':                        'Forms',
+      '/partners':                     'Partners',
+      '/integrations':                 'Integration Hub',
     };
     const key = Object.keys(map).find(k => url.startsWith(k));
     return key ? map[key] : 'AuditShield';

@@ -12,6 +12,11 @@ export const EMPLOYEES_ROUTES: Routes = [
     title: 'Add Employee — AuditShield',
   },
   {
+    path: 'risk-scores',
+    loadComponent: () => import('./risk-scores/risk-scores.component').then((m) => m.RiskScoresComponent),
+    title: 'Employee Risk Scores — AuditShield',
+  },
+  {
     path: ':id',
     loadComponent: () => import('./employee-detail/employee-detail.component').then((m) => m.EmployeeDetailComponent),
     title: 'Employee Profile — AuditShield',

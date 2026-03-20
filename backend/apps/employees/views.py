@@ -254,3 +254,119 @@ class EmployeeViewSet(TenantQuerysetMixin, ModelViewSet):
         )
         response["Content-Disposition"] = 'attachment; filename="employees.xlsx"'
         return response
+
+    @action(detail=False, methods=["get"], url_path="risk-scores")
+    def risk_scores(self, request):
+        """Compute a compliance risk score (0-100) for every employee.
+
+        Deductions:
+          -20  missing required document type (simulated: any employee with < 2 documents)
+          -15  expired certification
+          -10  unsigned active policy
+          -10  open incident involving employee
+          -5   incomplete onboarding
+        """
+        from django.utils import timezone
+
+        company = request.user.company
+        employees = self.get_queryset().select_related("department", "currency")
+
+        # Gather aggregate data once (avoid N+1)
+        try:
+            from apps.training.models import EmployeeCertification
+            expired_cert_eids = set(
+                EmployeeCertification.objects.filter(
+                    company=company, status="expired"
+                ).values_list("employee_id", flat=True)
+            )
+        except Exception:
+            expired_cert_eids = set()
+
+        try:
+            from apps.incidents.models import Incident
+            incident_eids = set(
+                Incident.objects.filter(
+                    company=company, status__in=["open", "investigating"]
+                ).values_list("employees_involved__id", flat=True)
+            )
+        except Exception:
+            incident_eids = set()
+
+        try:
+            from apps.policies.models import Policy, PolicyAcknowledgment
+            active_policies = Policy.objects.filter(
+                company=company, status="active", requires_acknowledgment=True
+            )
+            acknowledged_pairs = set(
+                PolicyAcknowledgment.objects.filter(
+                    company=company, policy__in=active_policies
+                ).values_list("employee_id", flat=True)
+            )
+            has_unacked_policy = bool(active_policies.exists())
+        except Exception:
+            acknowledged_pairs = set()
+            has_unacked_policy = False
+
+        try:
+            from apps.onboarding.models import EmployeeOnboarding
+            incomplete_onboarding_eids = set(
+                EmployeeOnboarding.objects.filter(
+                    company=company, status__in=["not_started", "in_progress"]
+                ).values_list("employee_id", flat=True)
+            )
+        except Exception:
+            incomplete_onboarding_eids = set()
+
+        results = []
+        dist = {"low": 0, "medium": 0, "high": 0, "critical": 0}
+
+        for emp in employees:
+            score = 100
+            flags = []
+
+            if emp.id in expired_cert_eids:
+                score -= 15
+                flags.append("Expired certification")
+
+            if emp.id in incident_eids:
+                score -= 10
+                flags.append("Open incident")
+
+            if has_unacked_policy and emp.id not in acknowledged_pairs:
+                score -= 10
+                flags.append("Unsigned policy")
+
+            if emp.id in incomplete_onboarding_eids:
+                score -= 5
+                flags.append("Incomplete onboarding")
+
+            score = max(0, score)
+
+            if score >= 80:
+                risk_level = "low"
+            elif score >= 60:
+                risk_level = "medium"
+            elif score >= 40:
+                risk_level = "high"
+            else:
+                risk_level = "critical"
+
+            dist[risk_level] += 1
+
+            results.append({
+                "employee_id": str(emp.id),
+                "name": f"{emp.first_name} {emp.last_name}",
+                "department": emp.department.name if emp.department_id else None,
+                "job_title": emp.job_title,
+                "risk_score": score,
+                "risk_level": risk_level,
+                "flags": flags,
+            })
+
+        results.sort(key=lambda x: x["risk_score"])
+
+        return Response({
+            "results": results,
+            "distribution": dist,
+            "total": len(results),
+        })

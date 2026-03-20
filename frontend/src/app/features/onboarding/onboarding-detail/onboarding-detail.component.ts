@@ -115,7 +115,7 @@ interface OnboardingDetail {
     .center-spin { display:flex; justify-content:center; padding:80px; }
     .emp-header-card { padding:20px !important; }
     .emp-header { display:flex; align-items:center; gap:16px; margin-bottom:16px; flex-wrap:wrap; }
-    .emp-avatar { width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,#22c55e,#16a34a); color:#052e16; font-size:1rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .emp-avatar { width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,#22c55e,#16a34a); color: var(--brand-mid); font-size:1rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
     .emp-info { flex:1; }
     .emp-name { margin:0 0 6px; font-size:1.3rem; font-weight:800; font-family:'Outfit',sans-serif; color:var(--text-primary); }
     .emp-meta { display:flex; gap:16px; flex-wrap:wrap; }
@@ -135,9 +135,9 @@ interface OnboardingDetail {
     .task-checkbox { flex-shrink:0; margin-top:2px; }
     .task-icon-wrap { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
     .task-icon-wrap mat-icon { font-size:1.1rem; height:1.1rem; width:1.1rem; }
-    .type-document { background:rgba(59,130,246,0.12); color:#1d4ed8; }
+    .type-document { background:rgba(59,130,246,0.12); color: #60a5fa; }
     .type-form { background:rgba(34,197,94,0.12); color:#16a34a; }
-    .type-training { background:rgba(168,85,247,0.12); color:#7c3aed; }
+    .type-training { background:rgba(168,85,247,0.12); color: #a78bfa; }
     .type-other { background:rgba(0,0,0,0.06); color:var(--text-muted); }
     .task-content { flex:1; }
     .task-title { font-weight:600; font-size:0.9rem; color:var(--text-primary); }
@@ -145,7 +145,7 @@ interface OnboardingDetail {
     .task-meta { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
     .due-date { display:flex; align-items:center; gap:2px; font-size:0.75rem; color:var(--text-muted); }
     .tiny-icon { font-size:0.8rem; height:0.8rem; width:0.8rem; }
-    .required-badge { background:#fee2e2; color:#dc2626; padding:1px 6px; border-radius:8px; font-size:0.7rem; font-weight:600; }
+    .required-badge { background:rgba(239,68,68,0.12); color:#f87171; padding:1px 6px; border-radius:8px; font-size:0.7rem; font-weight:600; }
     .check-done { color:#22c55e; font-size:1.3rem; height:1.3rem; width:1.3rem; flex-shrink:0; margin-top:2px; }
   `],
 })

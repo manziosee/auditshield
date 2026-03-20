@@ -128,19 +128,19 @@ import { Document as Doc } from '../../../core/models/document.models';
     .doc-header { display:flex; align-items:flex-start; gap:16px; margin-bottom:8px; }
     .doc-type-icon { font-size:2.5rem; height:2.5rem; width:2.5rem; }
     .doc-header h3 { margin:0 0 4px; font-size:1.2rem; font-weight:700; }
-    .doc-header p { margin:0 0 8px; color:#64748b; }
+    .doc-header p { margin:0 0 8px; color: var(--text-muted); }
     .chips-row { display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
     .chip { display:inline-flex; align-items:center; gap:4px; padding:2px 10px; border-radius:20px; font-size:0.75rem; font-weight:500; }
-    .chip-neutral { background:#f1f5f9; color:#475569; }
-    .chip-success { background:#dcfce7; color:#16a34a; }
-    .chip-warning { background:#fef9c3; color:#a16207; }
-    .chip-danger { background:#fee2e2; color:#dc2626; }
-    .chip-info { background:#dbeafe; color:#1d4ed8; }
+    .chip-neutral { background: var(--surface-2); color: var(--text-secondary); }
+    .chip-success { background:rgba(34,197,94,0.12); color:#4ade80; }
+    .chip-warning { background:rgba(234,179,8,0.12); color:#fbbf24; }
+    .chip-danger { background:rgba(239,68,68,0.12); color:#f87171; }
+    .chip-info { background:rgba(59,130,246,0.12); color:#60a5fa; }
     .info-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
     .full-col { grid-column:1/-1; }
     .info-item { display:flex; flex-direction:column; gap:4px; }
-    .info-item label { font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; color:#94a3b8; font-weight:600; }
-    .info-item span { font-size:0.875rem; color:#1e293b; }
+    .info-item label { font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; color: var(--text-faint); font-weight:600; }
+    .info-item span { font-size:0.875rem; color: var(--text-primary); }
     .mono { font-family:monospace; font-size:0.8rem; }
     .small { font-size:0.7rem; word-break:break-all; }
     .text-danger { color:#dc2626; }
@@ -150,9 +150,9 @@ import { Document as Doc } from '../../../core/models/document.models';
     .icon-image { color:#3b82f6; }
     .icon-excel { color:#16a34a; }
     .icon-default { color:#8b5cf6; }
-    .ocr-text { background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:16px; font-size:0.8rem; max-height:300px; overflow-y:auto; white-space:pre-wrap; word-break:break-word; margin:0; }
-    .ocr-pending { display:flex; align-items:center; gap:12px; color:#64748b; padding:8px; }
-    .empty-state { text-align:center; padding:60px; color:#64748b; }
+    .ocr-text { background: var(--surface-2); border:1px solid #e2e8f0; border-radius:8px; padding:16px; font-size:0.8rem; max-height:300px; overflow-y:auto; white-space:pre-wrap; word-break:break-word; margin:0; }
+    .ocr-pending { display:flex; align-items:center; gap:12px; color: var(--text-muted); padding:8px; }
+    .empty-state { text-align:center; padding:60px; color: var(--text-muted); }
     .empty-state mat-icon { font-size:3rem; height:3rem; width:3rem; opacity:0.4; display:block; margin:0 auto 12px; }
     @media(max-width:600px){ .info-grid{grid-template-columns:1fr;} }
   `],
